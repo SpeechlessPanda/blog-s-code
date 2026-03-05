@@ -10,6 +10,10 @@ hexo.extend.filter.register('after_generate', () => {
         return
     }
 
-    fs.copyFileSync(sourceFile, targetFile)
-    hexo.log.info('[readme-sync] Synced README.md to public/README.md')
+    try {
+        fs.copyFileSync(sourceFile, targetFile)
+        hexo.log.info('[readme-sync] Synced README.md to public/README.md')
+    } catch (error) {
+        hexo.log.warn(`[readme-sync] Failed to sync README.md: ${error.message}`)
+    }
 })
