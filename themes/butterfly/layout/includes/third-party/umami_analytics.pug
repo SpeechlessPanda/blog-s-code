@@ -1,0 +1,177 @@
+- let { serverURL, script_name, website_id, option, UV_PV } = theme.umami_analytics
+- const isServerURL = !!serverURL
+- const baseURL = serverURL ? serverURL.replace(/\/$/, '') : 'https://cloud.umami.is'
+- const apiUrl = serverURL ? serverURL.replace(/\/$/, '') + '/api' : 'https://api.umami.is/v1'
+
+script.
+  (() => {
+    const option = !{JSON.stringify(option)}
+    const config = !{JSON.stringify(UV_PV)}
+    const cachePrefix = 'umami_stats_cache'
+    const requestTimeout = Number(config.timeout) > 0 ? Number(config.timeout) : 8000
+    const maxRetries = Number(config.retries) >= 0 ? Number(config.retries) : 2
+
+    const getCacheKey = isPost => `${cachePrefix}:${isPost ? window.location.pathname : 'site'}`
+
+    const readCache = isPost => {
+      try {
+        const raw = localStorage.getItem(getCacheKey(isPost))
+        if (!raw) return null
+        const parsed = JSON.parse(raw)
+        if (!parsed || typeof parsed !== 'object' || !parsed.data) return null
+        return parsed.data
+      } catch {
+        return null
+      }
+    }
+
+    const writeCache = (isPost, data) => {
+      try {
+        localStorage.setItem(getCacheKey(isPost), JSON.stringify({ data, ts: Date.now() }))
+      } catch {}
+    }
+
+    const runTrack = () => {
+      if (typeof umami !== 'undefined' && typeof umami.track === 'function') {
+        umami.track(props => ({ ...props, url: window.location.pathname, title: GLOBAL_CONFIG_SITE.title }))
+      } else {
+        console.warn('Umami Analytics: umami.track is not available')
+      }
+    }
+
+    const loadUmamiJS = () => {
+      btf.getScript('!{baseURL}/!{script_name}', {
+        'data-website-id': '!{website_id}',
+        'data-auto-track': 'false',
+        ...option
+      }).then(() => {
+        runTrack()
+      }).catch(error => {
+        console.error('Umami Analytics: Error loading script', error)
+      })
+    }
+
+    const getData = async (isPost) => {
+      const keyUrl = isPost ? `&url=${window.location.pathname}&path=${window.location.pathname}` : ''
+      const headerList = { 'Accept': 'application/json' }
+      const requestUrl = `!{apiUrl}/websites/!{website_id}/stats?startAt=0000000000&endAt=${Date.now()}${keyUrl}`
+
+      if (!{isServerURL}) {
+        headerList['Authorization'] = `Bearer ${config.token}`
+      } else {
+        headerList['x-umami-api-key'] = config.token
+      }
+
+      const runFetch = async () => {
+        const controller = typeof AbortController !== 'undefined' ? new AbortController() : null
+        const timer = controller ? setTimeout(() => controller.abort(), requestTimeout) : null
+
+        try {
+          const res = await fetch(requestUrl, {
+            method: 'GET',
+            headers: headerList,
+            signal: controller ? controller.signal : undefined
+          })
+
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`)
+          }
+
+          return await res.json()
+        } finally {
+          if (timer) clearTimeout(timer)
+        }
+      }
+
+      try {
+        let attempt = 0
+        let lastError = null
+
+        while (attempt <= maxRetries) {
+          try {
+            const data = await runFetch()
+            writeCache(isPost, data)
+            return data
+          } catch (error) {
+            lastError = error
+            attempt += 1
+
+            if (attempt <= maxRetries) {
+              await new Promise(resolve => setTimeout(resolve, 250 * attempt))
+            }
+          }
+        }
+
+        const cacheData = readCache(isPost)
+        if (cacheData) {
+          console.warn('Umami Analytics: Request failed, using cached data')
+          return cacheData
+        }
+
+        throw lastError || new Error('Unknown request error')
+      } catch (error) {
+        console.error('Umami Analytics: Failed to fetch data', error)
+        throw error
+      }
+    }
+
+    const insertData = async () => {
+      try {
+        if (GLOBAL_CONFIG_SITE.pageType === 'post' && config.page_pv) {
+          const pagePV = document.getElementById('umamiPV')
+          if (pagePV) {
+            const data = await getData(true)
+            if (data && typeof data.pageviews !== 'undefined') {
+              pagePV.textContent = typeof data.pageviews.value !== 'undefined' ? data.pageviews.value : data.pageviews
+            } else {
+              console.warn('Umami Analytics: Invalid page view data received')
+              pagePV.textContent = '--'
+            }
+          }
+        }
+
+        if (config.site_uv || config.site_pv) {
+          const data = await getData(false)
+
+          if (config.site_uv) {
+            const siteUV = document.getElementById('umami-site-uv')
+            if (siteUV && data && typeof data.visitors !== 'undefined') {
+              siteUV.textContent = typeof data.visitors.value !== 'undefined' ? data.visitors.value : data.visitors
+            } else if (siteUV) {
+              console.warn('Umami Analytics: Invalid site UV data received')
+              siteUV.textContent = '--'
+            }
+          }
+
+          if (config.site_pv) {
+            const sitePV = document.getElementById('umami-site-pv')
+            if (sitePV && data && typeof data.pageviews !== 'undefined') {
+              sitePV.textContent = typeof data.pageviews.value !== 'undefined' ? data.pageviews.value : data.pageviews
+            } else if (sitePV) {
+              console.warn('Umami Analytics: Invalid site PV data received')
+              sitePV.textContent = '--'
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Umami Analytics: Failed to insert data', error)
+        const ids = ['umamiPV', 'umami-site-uv', 'umami-site-pv']
+        ids.forEach(id => {
+          const el = document.getElementById(id)
+          if (el) el.textContent = '--'
+        })
+      }
+    }
+
+    btf.addGlobalFn('pjaxComplete', runTrack, 'umami_analytics_run_track')
+    btf.addGlobalFn('pjaxComplete', insertData, 'umami_analytics_insert')
+
+
+    loadUmamiJS()
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', insertData)
+    } else {
+      setTimeout(insertData, 100)
+    }
+  })()
