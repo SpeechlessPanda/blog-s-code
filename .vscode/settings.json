@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "**/.deploy_git": true
+  },
+  "search.exclude": {
+    "**/.deploy_git": true
+  },
+  "files.watcherExclude": {
+    "**/.deploy_git/**": true
+  }
+}
