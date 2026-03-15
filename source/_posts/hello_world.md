@@ -1,7 +1,9 @@
 ---
 title: hello_world
 date: 2026-03-08 10:44:15
-tags: 短篇
+tags: 
+- 短篇
+- 技术
 ---
 
 我高考专业是在知道什么不想选，然后在剩下的里面挑一个的情况下，选择了计算机。一开始并没有什么兴趣可言，直到我接触了很多种语言之后，反复在每种语言学习的一开始，输出一个“ hello world ”。我开始觉得技术是一件很有意思的事，甚至有一瞬间觉得是神圣的。这算是我对计算机的热情和兴趣被点燃的时刻，为了纪念这一时刻，有了这一短篇。我将在这里，用各种我学过的语言输出一遍“ hello world ”。
@@ -67,5 +69,11 @@ public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("hello world");
     }
+}
+```
+
+``` rust
+fn main() {
+    println!("hello world");
 }
 ```
