@@ -832,7 +832,7 @@ beautify:
 # Global font settings
 # Don't modify the following settings unless you know how they work
 font:
-  global_font_size: 16px
+  global_font_size: 20px
   code_font_size:
   font_family: "'LXGW WenKai','Source Han Serif SC','Noto Serif SC','PingFang SC','Microsoft YaHei',serif"
   code_font_family: "'Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
