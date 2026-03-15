@@ -832,7 +832,7 @@ beautify:
 # Global font settings
 # Don't modify the following settings unless you know how they work
 font:
-  global_font_size: 20px
+  global_font_size:
   code_font_size:
   font_family: "'LXGW WenKai','Source Han Serif SC','Noto Serif SC','PingFang SC','Microsoft YaHei',serif"
   code_font_family: "'Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
@@ -1284,6 +1284,11 @@ inject:
 
         .avatar-img {
           animation: avatar_turn_around 8s linear infinite !important;
+        }
+
+        /* Only enlarge article body text on post pages */
+        #post #article-container {
+          font-size: 1.08em;
         }
       </style>
   bottom:
