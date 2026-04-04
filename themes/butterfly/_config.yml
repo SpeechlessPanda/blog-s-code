@@ -1289,7 +1289,7 @@ inject:
 
         /* Only enlarge article body text on post pages */
         #post #article-container {
-          font-size: 1.08em;
+          font-size: 1.12em;
         }
       </style>
   bottom:
