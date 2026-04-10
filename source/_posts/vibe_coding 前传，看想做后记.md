@@ -1,5 +1,5 @@
 ---
-title: vibe_coding前传，看想做后记
+title: vibe_coding 前传，看想做后记
 date: 2026-04-04 12:12:54
 tags:
 - 思考
