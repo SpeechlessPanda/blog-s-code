@@ -1,5 +1,5 @@
 ---
-title: hello_world
+title: hello world
 date: 2026-03-08 10:44:15
 tags: 
 - 短篇
