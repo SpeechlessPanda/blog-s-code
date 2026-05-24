@@ -168,10 +168,11 @@ subtitle:
   source: false
   # If you close the typewriter effect, the subtitle will only show the first line of sub
   sub:
-    - 谨以此博客，来承载我所有想说的话，让我被世界看见。
+    - 保持思考，保持努力，这是本博客唯一不变的正确，也应该是你对本博客的原则。
     - 世界上有难的内容，但大多是新的内容，只要去学，就不难。
     - 做自己，接受自己，成为自己。
     - 人生的容错很高，三次右转就变成了左转。
+    - 不要失去从头再来的勇气。
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -299,7 +300,7 @@ aside:
       link: https://github.com/SpeechlessPanda
   card_announcement:
     enable: true
-    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~
+    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了本博客之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~记得，保持思考，保持努力！愿你和我一起做思考和行动路上的同行者。
   card_recent_post:
     enable: true
     # If set 0 will show all
