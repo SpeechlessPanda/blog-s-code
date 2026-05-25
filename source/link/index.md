@@ -15,7 +15,7 @@ aside: false
 			descr: 汀苇乱摇寒夜雨，沙鸥闲弄夕阳天。
 		- name: HITSZ 自动化课程攻略共享计划
 			link: https://hoa.moe
-			avatar: https://hoa.moe/images/logo.webp
+			avatar: https://hoa.moe/_next/image?url=%2FHITSZOpenAuto-Shadow.png&w=640&q=75
 			descr: HITSZ 学生必须知道的攻略网站
 		- name: Wh1isper's Blog
 			link: https://blog.wh1isper.top/
