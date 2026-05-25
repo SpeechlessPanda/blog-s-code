@@ -48,7 +48,7 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
-  fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#24292e'
+  fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
   fas fa-envelope: mailto:859635282@qq.com || Email || '#4a7dbe'
   fas fa-rss: /atom.xml || RSS || '#ff6600'
 
@@ -482,7 +482,7 @@ math:
 search:
   # Choose: algolia_search / local_search / docsearch
   # leave it empty if you don't need search
-  use:
+  use: local_search
   placeholder:
 
   # Algolia Search
@@ -1073,6 +1073,7 @@ css_prefix: true
 inject:
   head:
     - |
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
       <style>
         #page-header.full_page {
           background-image: linear-gradient(135deg, #6ec6ff 0%, #90b7ff 48%, #ffd2a8 100%) !important;
@@ -1291,6 +1292,24 @@ inject:
         /* Only enlarge article body text on post pages */
         #post #article-container {
           font-size: 1.12em;
+        }
+
+        /* Fix X/Twitter share icon visibility */
+        .social-share .icon-x {
+          color: #ffffff !important;
+          border-color: rgba(255, 255, 255, 0.85) !important;
+        }
+        .social-share .icon-x:hover {
+          background: #000000 !important;
+          color: #ffffff !important;
+        }
+        [data-theme='dark'] .social-share .icon-x {
+          color: #ffffff !important;
+          border-color: rgba(255, 255, 255, 0.7) !important;
+        }
+        [data-theme='dark'] .social-share .icon-x:hover {
+          background: rgba(255, 255, 255, 0.9) !important;
+          color: #000000 !important;
         }
       </style>
   bottom:
