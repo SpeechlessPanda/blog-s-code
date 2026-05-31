@@ -33,6 +33,10 @@ aside: false
 			link: https://saurlax.com/
 			avatar: 
 			descr: 一位更新博客非常多的大佬，博客里 pinned 了很多好用的工具和框架。
+		- name: vaaandark's blog
+			link: https://vaaandark.top/
+			avatar: https://vaaandark.top/image/vaaandark.png
+			descr: 同样是一位更新博客非常多的大佬，涉猎极其广泛，任何人都可以从中学到东西。
 {% endflink %}
 
 ## 本站信息
