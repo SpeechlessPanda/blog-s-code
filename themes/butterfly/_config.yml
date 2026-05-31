@@ -834,7 +834,7 @@ font:
   global_font_size: 1.1em
   code_font_size:
   font_family: "'LXGW WenKai','Source Han Serif SC','Noto Serif SC','PingFang SC','Microsoft YaHei',serif"
-  code_font_family: "'Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
+  code_font_family: "'LXGW WenKai','Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
 
 # Font settings for the site title and site subtitle
 blog_title_font:
