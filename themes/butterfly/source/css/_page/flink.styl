@@ -90,3 +90,41 @@
       margin-bottom: 5px
       font-weight: bold
       font-size: 1.5em
+
+    // 无 avatar 资源卡：左侧彩色竖条 + 左对齐文字
+    .flink-list.no-avatar
+      & > .flink-list-item
+        a
+          position: relative
+          display: block
+          box-sizing: border-box
+          height: 120px
+          padding: 0 14px 0 28px
+
+          &:before
+            position: absolute
+            top: 22px
+            bottom: 22px
+            left: 12px
+            z-index: 1
+            width: 4px
+            border-radius: 2px
+            background: var(--text-bg-hover)
+            content: ''
+            transition: background .3s ease-out
+
+        &:hover a:before
+          background: var(--theme-color, #425aef)
+
+        .flink-item-icon
+          display: none
+
+        .flink-item-name
+          padding: 24px 0 0 0
+          height: 36px
+          font-size: 1.25em
+
+        .flink-item-desc
+          padding: 6px 0 0 0
+          height: 54px
+          -webkit-line-clamp: 2
