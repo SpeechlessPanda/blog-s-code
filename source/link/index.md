@@ -37,6 +37,10 @@ aside: false
       link: https://vaaandark.top/
       avatar: https://vaaandark.top/image/vaaandark.png
       descr: 技术博客更新极多，涉猎广泛，干货满满。
+    - name: Gaster的个人博客
+      link: https://wdgaster703.github.io
+      avatar: https://wdgaster703.github.io/img/about/WDGaster.jpg
+      descr: 喜欢收集知识涉猎广泛的电气学长。
 {% endflink %}
 
 ## 有用资源
