@@ -33,11 +33,11 @@ aside: false
       link: https://saurlax.com/
       avatar:
       descr: 一位更新博客非常多的大佬，博客里 pinned 了很多好用的工具和框架。
-    - name: vaaandark's blog
+    - name: Vaaandark's Blog
       link: https://vaaandark.top/
       avatar: https://vaaandark.top/image/vaaandark.png
       descr: 技术博客更新极多，涉猎广泛，干货满满。
-    - name: Gaster的个人博客
+    - name: Gaster's Blog
       link: https://wdgaster703.github.io
       avatar: https://wdgaster703.github.io/img/about/WDGaster.jpg
       descr: 喜欢收集知识涉猎广泛的电气学长。
