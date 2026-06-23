@@ -27,11 +27,11 @@ aside: false
       descr: frp-panel 与 vaala ai 的开发者，字节飞书优秀员工。
     - name: jyi
       link: https://jyi2ya.github.io/
-      avatar:
+      avatar: https://avatars.githubusercontent.com/u/86813521?v=4
       descr: rvs 机器人的主人，博客里有可爱能互动的 rvs 3D 模型。
     - name: Saurlax's Blog
       link: https://saurlax.com/
-      avatar:
+      avatar: https://avatars.githubusercontent.com/u/49343742?v=4
       descr: 一位更新博客非常多的大佬，博客里 pinned 了很多好用的工具和框架。
     - name: Vaaandark's Blog
       link: https://vaaandark.top/
