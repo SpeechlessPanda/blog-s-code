@@ -134,3 +134,16 @@ search:
   field: post
   content: true
   format: html
+
+# OG Image (auto-generated social preview cards)
+og_image:
+  enable: true
+  width: 1200
+  height: 630
+  output_dir: og-images
+  font_dir: fonts
+  font_regular: LXGWWenKai-Regular.ttf
+  font_bold: LXGWWenKai-Bold.ttf
+  font_regular_url: https://github.com/lxgw/LxgwWenKai/releases/download/v1.330/LXGWWenKai-Regular.ttf
+  font_bold_url: https://github.com/lxgw/LxgwWenKai/releases/download/v1.330/LXGWWenKai-Bold.ttf
+  site_name: SpeechlessPanda

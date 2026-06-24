@@ -1,6 +1,6 @@
 if theme.Open_Graph_meta.enable
   -
-    const coverVal = page.cover_type === 'img' ? page.cover : theme.avatar.img
+    const coverVal = (globalPageType === 'post' ? og_image_url(page) : '') || (page.cover_type === 'img' ? page.cover : theme.avatar.img)
     let ogOption = Object.assign({
       type: globalPageType === 'post' ? 'article' : 'website',
       image: coverVal ? full_url_for(coverVal) : '',

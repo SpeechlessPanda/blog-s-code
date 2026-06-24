@@ -9,3 +9,6 @@ _multiconfig.yml
 
 # git worktrees (local isolation)
 .worktrees/
+
+# og-image fonts (downloaded at build time, not committed)
+fonts/
