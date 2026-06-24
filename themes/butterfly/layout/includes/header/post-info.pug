@@ -61,11 +61,7 @@
             block
 
       mixin otherPV()
-        if theme.umami_analytics.enable && theme.umami_analytics.UV_PV.page_pv
-          +pvBlock('', '', '')
-            span#umamiPV(data-path=url_for(page.path))
-              i.fa-solid.fa-spinner.fa-spin
-        else if theme.busuanzi.page_pv
+        if theme.busuanzi.page_pv
           +pvBlock('', 'post-meta-pv-cv', '')
             span#busuanzi_value_page_pv
               i.fa-solid.fa-spinner.fa-spin

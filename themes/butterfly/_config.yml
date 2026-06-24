@@ -293,7 +293,7 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 主要分享我的个人成长心得，可能偏日记性质，偶尔可能会分享一些技术文章，欢迎关注~
+    description: 主要分享我的个人成长心得，偶尔可能会分享一些技术文章，欢迎关注~（右上角有碎碎念可以看）
     button:
       enable: true
       icon: fab fa-github
@@ -448,9 +448,9 @@ wordcount:
 
 # Busuanzi count for PV / UV in site
 busuanzi:
-  site_uv: false
-  site_pv: false
-  page_pv: false
+  site_uv: true
+  site_pv: true
+  page_pv: true
 
 # --------------------------------------
 # Math
@@ -710,21 +710,6 @@ cloudflare_analytics:
 
 # https://clarity.microsoft.com/
 microsoft_clarity:
-
-# https://umami.is/
-umami_analytics:
-  enable: true
-  # For self-hosted setups, configure the hostname of the Umami instance
-  serverURL:
-  script_name: script.js
-  website_id: 73bdaa22-e18b-4d30-8756-37d0cbd70a98
-  option:
-  UV_PV:
-    site_uv: true
-    site_pv: true
-    page_pv: true
-    # Umami Cloud (API key) / self-hosted Umami (token)
-    token: api_HBbafbzOVvnWoIHr2HkHruO0zN75i9m6
 
 # https://www.googletagmanager.com/
 google_tag_manager:
