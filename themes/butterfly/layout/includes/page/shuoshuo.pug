@@ -125,14 +125,13 @@
           const content = dataSlice.map(item => {
             const formattedDate = formatToTimeZone(item.date)
             const tags = item.tags && item.tags.map(tag => `<span class="shuoshuo-tag">${tag}</span>`).join('') || ''
-            const commentButton = item.key && !{commentsJsLoad}
+            const itemKey = item.key || ('memo-' + String(item.date || index).replace(/[^0-9a-zA-Z]/g, '-'))
+            const commentButton = !{commentsJsLoad}
               ? `<div class="shuoshuo-comment-btn" onclick="addCommentToShuoshuo(event)">
                   <i class="fa-solid fa-comments"></i>
                 </div>`
               : ''
-            const commentContainer = item.key
-              ? `<div class="shuoshuo-comment no-comment" data-key="${item.key}"></div>`
-              : ''
+            const commentContainer = `<div class="shuoshuo-comment no-comment" data-key="${itemKey}"></div>`
 
             return `
               <div class="shuoshuo-item">
