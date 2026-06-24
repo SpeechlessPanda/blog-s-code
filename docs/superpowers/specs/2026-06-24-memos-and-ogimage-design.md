@@ -34,6 +34,7 @@
 | OG 是否含封面 | 不含,统一渐变 | 视觉一致;且大部分文章无 cover |
 | OG 输出格式 | PNG | 微信/Twitter/Discord 不支持 SVG 作为 og:image |
 | 渲染库 | `@resvg/resvg-js` | 原生支持加载本地字体,中文跨平台稳定;sharp 对 SVG 嵌入字体支持差 |
+| Memos 实现 | 复用主题 shuoshuo 系统 | 零新代码,功能更强(分页/独立评论/标签),不改主题核心文件 |
 
 ## 4. 子系统一:OG Image 静态生成
 
@@ -94,55 +95,62 @@ og_image:
   site_name: SpeechlessPanda
 ```
 
-## 5. 子系统二:Memos 碎碎念
+## 5. 子系统二:Memos 碎碎念(复用主题 shuoshuo 系统)
+
+> **修订(2026-06-24)**:探索阶段发现 Butterfly 主题已内置成熟的 `shuoshuo`(说说)系统——`page.pug:28` 已注册 `when 'shuoshuo'`,`shuoshuo.pug` + `shuoshuo.styl` + `shuoshuoFN` helper(`scripts/helpers/page.js:135`)齐全,支持分页、每条独立评论、标签、相对时间、图片懒加载。经与原方案对比,改为**直接复用现成系统**:零新代码、功能更强、不改动主题核心文件。
 
 ### 5.1 架构
 
 ```
-source/_data/memos.yml  ──(hexo site.data.memos)──▶  themes/butterfly/layout/includes/page/memos.pug
+source/_data/shuoshuo.yml  ──(site.data.shuoshuo)──▶  主题现成 shuoshuo.pug(shuoshuoFN 处理)
                                                             │
-source/memos/index.md (type: memos) ────────────────────────┘
-themes/butterfly/layout/page.pug  ── 注册 when 'memos'
+source/memos/index.md (type: shuoshuo) ─────────────────────┘
 _config.butterfly.yml menu  ── 加「碎碎念 /memos/」
 ```
 
-### 5.2 数据结构(`source/_data/memos.yml`)
+不改 `page.pug`、不写新 pug/styl。
+
+### 5.2 数据结构(`source/_data/shuoshuo.yml`)
+
+数组,每项字段(由 `shuoshuoFN` 处理:按 `date` 倒序、时区转换、`content` 渲染为 markdown):
+
+- `content`(markdown,必填)
+- `date`(字符串,必填)
+- `author`(可选,默认 `config.author`)
+- `avatar`(可选,默认 `theme.avatar.img`)
+- `tags`(可选数组)
+- `key`(可选;设了该条才显示独立评论按钮,用作 Giscus mapping)
 
 ```yaml
-- class_name: 碎碎念
-  memo_list:
-    - content: 一条碎碎念的正文,支持纯文本。
-      date: 2026-06-24 14:00
-    - content: 带图片的一条。
-      image: https://example.com/x.jpg
-      date: 2026-06-23 09:30
+- author: SpeechlessPanda
+  date: 2026-06-24 14:00
+  content: 第一条碎碎念,支持 **markdown** 与 [链接](https://example.com)。
+  tags: [随手]
+  key: memo-2026-06-24-01
+- date: 2026-06-23 09:30
+  content: 第二条,没设 key 则不显示该条评论按钮。
 ```
 
-- 按时间倒序展示(脚本/模板排序)。
-- `image` 可选;`content` 支持 markdown 内联(加粗、链接、emoji)。
+### 5.3 入口与导航
 
-### 5.3 页面模板(`themes/butterfly/layout/includes/page/memos.pug`)
+- `source/memos/index.md`:
 
-- 时间线布局:左侧时间轴竖线 + 圆点,右侧卡片。
-- 卡片:内容文本 + 可选图片(走主题已有 fancybox 灯箱)。
-- 顶部 `h1` 页标题 + 小提示「静态部署,记录随手想法」。
-- 最多展示全部(条目预期不多,不分页;若超过 50 条再考虑分页)。
-
-### 5.4 样式
-
-- 新增 `themes/butterfly/source/css/_memos.styl`(Stylus,匹配主题现有 `.styl` 约定),并在主题主 styl 入口 `import`,或用 `_config.butterfly.yml` 的 `inject.head` 注入。
-- 配色:卡片浅底 + 主题蓝点缀;暗色模式适配(`[data-theme='dark']`)。
-- 响应式:移动端单列,时间轴简化。
-
-### 5.5 入口与导航
-
-- `source/memos/index.md`:`title: 碎碎念 / type: memos / aside: false / comments: true`。
-- `themes/butterfly/layout/page.pug` 的 `case page.type` 增加:
-  ```pug
-  when 'memos'
-    include includes/page/memos.pug
+  ```yaml
+  ---
+  title: 碎碎念
+  date: 2026-06-24 00:00:00
+  type: shuoshuo
+  aside: false
+  comments: true
+  ---
   ```
-- `_config.butterfly.yml` 的 `menu` 在「关于」后加 `碎碎念: /memos/ || fas fa-comment-dots`。
+
+  (可选 `limit: { type: num, value: 50 }` 限制展示条数;不设则全部分页展示,每页 8 条。)
+- `_config.butterfly.yml` 的 `menu` 在「关于」后加:`碎碎念: /memos/ || fas fa-comment-dots`。
+
+### 5.4 现成能力(无需实现)
+
+主题 shuoshuo 系统已提供:卡片布局、分页(每页 8 条 + 页码输入框)、按日期倒序、每条独立评论、标签、头像、相对时间、图片懒加载、暗色模式适配。
 
 ## 6. 产出物清单
 
@@ -150,13 +158,9 @@ _config.butterfly.yml menu  ── 加「碎碎念 /memos/」
 |------|------|------|
 | `scripts/og-image.js` | 新建 | OG 图生成 filter |
 | `fonts/*.ttf` | 新建(gitignore) | LXGW WenKai 字体,构建时自动下载 |
-| `source/_data/memos.yml` | 新建 | Memos 数据(含示例条目) |
-| `source/memos/index.md` | 新建 | Memos 入口页 |
-| `themes/butterfly/layout/includes/page/memos.pug` | 新建 | Memos 页面模板 |
-| `themes/butterfly/source/css/_memos.styl` | 新建 | Memos 样式 |
-| `themes/butterfly/layout/page.pug` | 改 1 处 | 注册 `when 'memos'` |
+| `source/_data/shuoshuo.yml` | 新建 | Memos 数据(含示例条目) |
+| `source/memos/index.md` | 新建 | Memos 入口页(type: shuoshuo) |
 | `themes/butterfly/layout/includes/head.pug` | 改 0~1 处 | og:image 注入(方案 A 时) |
-| `themes/butterfly/source/css/<主入口>.styl` 或 inject | 改 1 处 | 引入 `_memos.styl` |
 | `_config.yml` | 改 | 加 `og_image` 配置块 |
 | `_config.butterfly.yml` | 改 | menu 加碎碎念项 |
 | `.gitignore` | 改 | 忽略 `fonts/`、`public/og-images/` |
@@ -172,8 +176,8 @@ OG Image:
 
 Memos:
 1. Playwright 打开 `hexo s` 的 `/memos/`,桌面(1280宽)+ 移动(375宽)两视口截图。
-2. 检查:时间线布局、卡片样式、暗色模式、图片灯箱、响应式。
-3. 验证排序倒序、image 可选渲染。
+2. 检查:卡片布局、分页、暗色模式、图片灯箱、响应式。
+3. 验证:按日期倒序、tags 渲染、设了 `key` 的条目评论按钮可展开。
 
 ## 8. 不做的事(YAGNI)
 
