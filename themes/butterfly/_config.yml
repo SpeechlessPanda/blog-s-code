@@ -24,6 +24,7 @@ menu:
   标签: /tags/ || fas fa-tags
   关于: /about/ || fas fa-user
   友链: /link/ || fas fa-link
+  碎碎念: /memos/ || fas fa-comment-dots
 
 # --------------------------------------
 # Code Blocks Settings
