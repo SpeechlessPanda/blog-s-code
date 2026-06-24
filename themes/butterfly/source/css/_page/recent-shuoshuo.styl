@@ -1,0 +1,43 @@
+.recent-shuoshuo
+  @extend .cardHover
+  margin-bottom: 20px
+  padding: 18px 24px
+
+  &__link
+    display: block
+    color: inherit
+    text-decoration: none
+
+  &__head
+    display: flex
+    align-items: center
+    margin-bottom: 8px
+
+  &__icon
+    color: $light-blue
+    margin-right: 6px
+
+  &__label
+    font-weight: 600
+
+  &__date
+    margin-left: 4px
+    color: #858585
+    font-size: .85em
+
+  &__content
+    line-height: 1.7
+    display: -webkit-box
+    -webkit-line-clamp: 3
+    -webkit-box-orient: vertical
+    overflow: hidden
+
+  &__more
+    margin-top: 8px
+    color: $light-blue
+    font-size: .9em
+    text-align: right
+    transition: transform .2s ease-in-out
+
+  &:hover &__more
+    transform: translateX(3px)

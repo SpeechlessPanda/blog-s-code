@@ -1,0 +1,10 @@
+- const memo = latest_memo()
+if memo
+  .recent-shuoshuo
+    a.recent-shuoshuo__link(href=url_for('/memos/'))
+      .recent-shuoshuo__head
+        i.fas.fa-comment-dots.recent-shuoshuo__icon
+        span.recent-shuoshuo__label 最新碎碎念
+        span.recent-shuoshuo__date= ' · ' + date(memo.date, config.date_format)
+      .recent-shuoshuo__content= memo.excerpt
+      .recent-shuoshuo__more 查看全部碎碎念 →
