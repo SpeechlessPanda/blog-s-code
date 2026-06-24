@@ -41,6 +41,14 @@ aside: false
       link: https://wdgaster703.github.io
       avatar: https://wdgaster703.github.io/img/about/WDGaster.jpg
       descr: 喜欢收集知识涉猎广泛的电气学长。
+    - name: Kowyo's Blog
+      link: https://kowyo.com/
+      avatar: https://avatars.githubusercontent.com/u/110339237?v=4
+      descr: HOA 主要维护者和创始人之一， mini-agent 开发者。
+    - name: YinMo19's Blog
+      link: https://blog.yinmo19.top/
+      avatar: https://blog.yinmo19.top/avatar_hu_371a52f5d2172aa2.png
+      descr: OSA 前会长，逆向领域大神， zeroreader 开发者。
 {% endflink %}
 
 ## 有用资源
