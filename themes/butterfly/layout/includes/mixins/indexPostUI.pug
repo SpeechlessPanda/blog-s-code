@@ -3,6 +3,8 @@ mixin indexPostUI()
   - const masonryLayoutClass = [6, 7].includes(indexLayout) ? 'masonry' : ''
   #recent-posts.recent-posts.nc(class=masonryLayoutClass)
     .recent-post-items
+      if site.data.shuoshuo && site.data.shuoshuo.length
+        include ../recent_shuoshuo.pug
       each article, index in page.posts.data
         .recent-post-item
           - const link = article.link || article.path

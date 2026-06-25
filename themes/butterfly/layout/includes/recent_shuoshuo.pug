@@ -1,10 +1,14 @@
 - const memo = latest_memo()
 if memo
-  .recent-shuoshuo
-    a.recent-shuoshuo__link(href=url_for('/memos/'))
-      .recent-shuoshuo__head
-        i.fas.fa-comment-dots.recent-shuoshuo__icon
-        span.recent-shuoshuo__label 最新碎碎念
-        span.recent-shuoshuo__date= ' · ' + date(memo.date, config.date_format)
-      .recent-shuoshuo__content= memo.excerpt
-      .recent-shuoshuo__more 查看全部碎碎念 →
+  .recent-post-item.recent-post-memo
+    .recent-post-info.no-cover
+      a.article-title(href=url_for('/memos/')) 最新的碎碎念
+      .article-meta-wrap
+        span.post-meta-date
+          i.far.fa-calendar-alt
+          time.post-meta-date-created(datetime=date_xml(memo.date) title=_p('post.created') + ' ' + full_date(memo.date))= date(memo.date, config.date_format)
+        span.article-meta
+          span.article-meta-separator |
+          i.fas.fa-comment-dots
+          a.article-meta__tags(href=url_for('/memos/'))= ' 查看全部碎碎念 →'
+      .content= memo.excerpt
