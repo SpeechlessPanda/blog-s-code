@@ -50,15 +50,16 @@
                 inputPosition: 'top',
                 origin: __u.toString(),
                 backLink: __u.toString(),
-                session: localStorage.getItem('giscus-session') || '',
                 strict: '0'
               })
               el.innerHTML = ''
               const iframe = document.createElement('iframe')
-              iframe.title = 'giscus-comments'
+              iframe.className = 'giscus-frame'
+              iframe.title = 'Comments'
+              iframe.setAttribute('scrolling', 'no')
               iframe.src = 'https://giscus.app/' + (cfg.lang || 'en') + '/widget?' + params.toString()
               iframe.loading = 'lazy'
-              iframe.allow = 'clipboard-write; oauth:*'
+              iframe.allow = 'clipboard-write'
               iframe.style.cssText = 'border:0;width:100%;height:600px;color-scheme:normal'
               el.appendChild(iframe)
             }
