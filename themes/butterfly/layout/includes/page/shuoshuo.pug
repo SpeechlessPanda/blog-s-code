@@ -15,14 +15,6 @@
 
       script.
         (() => {
-          // 处理 Giscus 登录回调(?giscus=session):存 session 并清掉 URL 参数
-          const __giscusCallback = new URL(location.href).searchParams.get('giscus')
-          if (__giscusCallback) {
-            localStorage.setItem('giscus-session', JSON.stringify(__giscusCallback))
-            const __u = new URL(location.href)
-            __u.searchParams.delete('giscus')
-            history.replaceState(null, document.title, __u.toString())
-          }
           const runDestroy = () => {
             // 销毁手动展开的评论区,保留自动展开(有评论)的项
             document.querySelectorAll('#article-container .shuoshuo-comment:not(.no-comment):not([data-auto])').forEach(el => {
@@ -34,7 +26,8 @@
           // 用独立 iframe 直嵌 giscus /widget(绕过 client.js 单例),支持同页多条独立评论区
           window.createShuoshuoGiscusWidget = (el, key) => {
             const build = cfg => {
-              const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+              const currentTheme = document.documentElement.getAttribute('data-theme') || 'light'
+              const isDark = currentTheme === 'dark'
               const __u = new URL(location.href)
               __u.searchParams.delete('giscus')
               const params = new URLSearchParams({
@@ -58,10 +51,12 @@
               iframe.className = 'giscus-frame'
               iframe.title = 'Comments'
               iframe.setAttribute('scrolling', 'no')
+              iframe.setAttribute('data-theme', currentTheme)
+              iframe.setAttribute('data-term', key)
               iframe.src = 'https://giscus.app/' + (cfg.lang || 'en') + '/widget?' + params.toString()
               iframe.loading = 'lazy'
               iframe.allow = 'clipboard-write'
-              iframe.style.cssText = 'border:0;width:100%;height:600px'
+              iframe.style.cssText = 'border:0;width:100%;min-height:180px;height:600px;background:transparent;color-scheme:normal'
               el.appendChild(iframe)
             }
             const cfg = window.shuoshuoGiscusConfig
@@ -106,12 +101,27 @@
           btf.addGlobalFn('themeChange', () => {
             const tc = window.shuoshuoGiscusConfig
             if (!tc) return
-            const dark = document.documentElement.getAttribute('data-theme') === 'dark'
-            const theme = dark ? tc.darkTheme : tc.lightTheme
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light'
+            const isDark = currentTheme === 'dark'
+            const theme = isDark ? tc.darkTheme : tc.lightTheme
             document.querySelectorAll('iframe.giscus-frame').forEach(f => {
+              f.setAttribute('data-theme', currentTheme)
               try { f.contentWindow.postMessage({ giscus: { setConfig: { theme: theme } } }, 'https://giscus.app') } catch (e) {}
             })
           }, 'shuoshuo-giscus-theme')
+
+          // 处理 Giscus 登录回调(?giscus=session):存 session 并清掉 URL 参数,然后刷新已有 iframe 使其带上新 session
+          const __giscusCallback = new URL(location.href).searchParams.get('giscus')
+          if (__giscusCallback) {
+            localStorage.setItem('giscus-session', __giscusCallback)
+            const __u = new URL(location.href)
+            __u.searchParams.delete('giscus')
+            history.replaceState(null, document.title, __u.toString())
+            document.querySelectorAll('iframe.giscus-frame').forEach(f => {
+              const term = f.getAttribute('data-term')
+              if (term) window.createShuoshuoGiscusWidget(f.parentElement, term)
+            })
+          }
         })()
 
 

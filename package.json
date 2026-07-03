@@ -33,5 +33,8 @@
     "hexo-theme-landscape": "^1.0.0",
     "hexo-wordcount": "^6.0.1",
     "moment-timezone": "^0.6.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
   }
 }
