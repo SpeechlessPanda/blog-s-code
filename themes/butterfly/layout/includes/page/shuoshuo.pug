@@ -15,6 +15,14 @@
 
       script.
         (() => {
+          // 处理 Giscus 登录回调(?giscus=session):存 session 并清掉 URL 参数
+          const __giscusCallback = new URL(location.href).searchParams.get('giscus')
+          if (__giscusCallback) {
+            localStorage.setItem('giscus-session', JSON.stringify(__giscusCallback))
+            const __u = new URL(location.href)
+            __u.searchParams.delete('giscus')
+            history.replaceState(null, document.title, __u.toString())
+          }
           const runDestroy = () => {
             // 销毁手动展开的评论区,保留自动展开(有评论)的项
             document.querySelectorAll('#article-container .shuoshuo-comment:not(.no-comment):not([data-auto])').forEach(el => {
@@ -27,6 +35,8 @@
           window.createShuoshuoGiscusWidget = (el, key) => {
             const build = cfg => {
               const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+              const __u = new URL(location.href)
+              __u.searchParams.delete('giscus')
               const params = new URLSearchParams({
                 repo: cfg.repo,
                 'repo-id': cfg.repoId,
@@ -38,7 +48,9 @@
                 'emit-metadata': '0',
                 'input-position': 'top',
                 lang: cfg.lang,
-                origin: location.origin
+                origin: __u.toString(),
+                session: localStorage.getItem('giscus-session') || '',
+                strict: '0'
               })
               el.innerHTML = ''
               const iframe = document.createElement('iframe')
