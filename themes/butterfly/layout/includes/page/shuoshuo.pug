@@ -78,8 +78,8 @@
           window.addEventListener('message', e => {
             if (e.origin !== 'https://giscus.app') return
             const d = e.data
-            if (!d || typeof d !== 'object') return
-            const h = (d.giscus && d.giscus.height) || d.setHeight
+            if (!d || typeof d !== 'object' || !d.giscus) return
+            const h = d.giscus.resizeHeight || d.giscus.height || d.setHeight
             if (!h) return
             document.querySelectorAll('iframe[src*="giscus.app/widget"]').forEach(f => {
               if (f.contentWindow === e.source) f.style.height = h + 'px'
