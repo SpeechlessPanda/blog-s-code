@@ -23,25 +23,45 @@
             })
           }
 
-          // 用 giscus-widget(custom element)支持同页多条碎碎念的独立评论区
+          // 用独立 iframe 直嵌 giscus /widget(绕过 client.js 单例),支持同页多条独立评论区
           window.createShuoshuoGiscusWidget = (el, key) => {
             const cfg = window.shuoshuoGiscusConfig
             if (!cfg) return
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+            const params = new URLSearchParams({
+              repo: cfg.repo,
+              'repo-id': cfg.repoId,
+              'category-id': cfg.categoryId,
+              mapping: 'specific',
+              term: key,
+              theme: isDark ? cfg.darkTheme : cfg.lightTheme,
+              'reactions-enabled': '1',
+              'emit-metadata': '0',
+              'input-position': 'top',
+              lang: cfg.lang,
+              origin: location.origin
+            })
             el.innerHTML = ''
-            const widget = document.createElement('giscus-widget')
-            widget.setAttribute('repo', cfg.repo)
-            widget.setAttribute('repo-id', cfg.repoId)
-            widget.setAttribute('category-id', cfg.categoryId)
-            widget.setAttribute('mapping', 'specific')
-            widget.setAttribute('term', key)
-            widget.setAttribute('theme', isDark ? cfg.darkTheme : cfg.lightTheme)
-            widget.setAttribute('reactions-enabled', '1')
-            widget.setAttribute('input-position', 'top')
-            widget.setAttribute('lang', cfg.lang)
-            widget.setAttribute('loading', 'lazy')
-            el.appendChild(widget)
+            const iframe = document.createElement('iframe')
+            iframe.title = 'giscus-comments'
+            iframe.src = 'https://giscus.app/widget?' + params.toString()
+            iframe.loading = 'lazy'
+            iframe.allow = 'clipboard-write'
+            iframe.style.cssText = 'border:0;width:100%;min-height:200px;color-scheme:normal'
+            el.appendChild(iframe)
           }
+
+          // 监听 Giscus iframe 高度消息,各自适应高度
+          window.addEventListener('message', e => {
+            if (e.origin !== 'https://giscus.app') return
+            const d = e.data
+            if (!d || typeof d !== 'object') return
+            const h = (d.giscus && d.giscus.height) || d.setHeight
+            if (!h) return
+            document.querySelectorAll('iframe[src*="giscus.app/widget"]').forEach(f => {
+              if (f.contentWindow === e.source) f.style.height = h + 'px'
+            })
+          })
 
           window.addCommentToShuoshuo = e => {
             const btn = e.target.closest('.shuoshuo-comment-btn')
