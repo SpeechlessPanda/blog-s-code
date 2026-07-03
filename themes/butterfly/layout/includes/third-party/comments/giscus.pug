@@ -67,9 +67,24 @@ script.
     btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
 
     if (isShuoshuo) {
-      '!{use[0]}' === 'Giscus'
-        ? window.shuoshuoComment = { loadComment: loadGiscus }
-        : window.loadOtherComment = loadGiscus
+      if ('!{use[0]}' === 'Giscus') {
+        // 碎碎念用 giscus-widget(custom element)支持同页多条独立评论区,避免多 client.js 冲突
+        window.shuoshuoGiscusConfig = {
+          repo: '!{repo}',
+          repoId: '!{repo_id}',
+          categoryId: '!{category_id}',
+          lightTheme: getGiscusTheme('light'),
+          darkTheme: getGiscusTheme('dark'),
+          lang: (option && option['data-lang']) || 'zh-CN'
+        }
+        if (!window.__giscusWidgetLoaded) {
+          window.__giscusWidgetLoaded = true
+          const wjs = document.createElement('script')
+          wjs.type = 'module'
+          wjs.src = 'https://giscus.app/widget.js'
+          document.head.appendChild(wjs)
+        }
+      }
       return
     }
 

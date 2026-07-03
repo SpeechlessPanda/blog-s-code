@@ -15,9 +15,6 @@
 
       script.
         (() => {
-          const commentDiv = `!{partial('includes/third-party/comments/index', {}, {cache: true})}`
-          window.shuoshuoCommentDiv = commentDiv
-
           const runDestroy = () => {
             // 销毁手动展开的评论区,保留自动展开(有评论)的项
             document.querySelectorAll('#article-container .shuoshuo-comment:not(.no-comment):not([data-auto])').forEach(el => {
@@ -26,20 +23,37 @@
             })
           }
 
+          // 用 giscus-widget(custom element)支持同页多条碎碎念的独立评论区
+          window.createShuoshuoGiscusWidget = (el, key) => {
+            const cfg = window.shuoshuoGiscusConfig
+            if (!cfg) return
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+            el.innerHTML = ''
+            const widget = document.createElement('giscus-widget')
+            widget.setAttribute('repo', cfg.repo)
+            widget.setAttribute('repo-id', cfg.repoId)
+            widget.setAttribute('category-id', cfg.categoryId)
+            widget.setAttribute('mapping', 'specific')
+            widget.setAttribute('term', key)
+            widget.setAttribute('theme', isDark ? cfg.darkTheme : cfg.lightTheme)
+            widget.setAttribute('reactions-enabled', '1')
+            widget.setAttribute('input-position', 'top')
+            widget.setAttribute('lang', cfg.lang)
+            widget.setAttribute('loading', 'lazy')
+            el.appendChild(widget)
+          }
+
           window.addCommentToShuoshuo = e => {
             const btn = e.target.closest('.shuoshuo-comment-btn')
             if (!btn) return
 
             const ele = btn.closest('.container').nextElementSibling
-            const { shuoshuoComment } = window
             const isInclude = ele.classList.contains('no-comment')
             runDestroy()
             if (isInclude) {
               ele.classList.remove('no-comment')
-              ele.innerHTML = commentDiv
               const key = `${location.pathname.replace(/\/$/, '')}?key=${ele.getAttribute('data-key')}`
-              btf.switchComments(ele, key)
-              shuoshuoComment.loadComment && shuoshuoComment.loadComment(ele, key)
+              window.createShuoshuoGiscusWidget(ele, key)
             }
           }
         })()
@@ -242,7 +256,7 @@
 
         // 有评论的碎碎念自动展开评论区(build 时已查 commentCount 注入 shuoshuo-data)
         const autoExpandComments = () => {
-          if (!window.shuoshuoComment || !window.shuoshuoComment.loadComment || !window.shuoshuoCommentDiv) return
+          if (!window.createShuoshuoGiscusWidget) return
           const containers = document.querySelectorAll('#article-container .shuoshuo-comment.no-comment[data-key]')
           containers.forEach(el => {
             const key = el.getAttribute('data-key')
@@ -250,9 +264,8 @@
             if (item && item.commentCount > 0) {
               el.classList.remove('no-comment')
               el.setAttribute('data-auto', '1')
-              el.innerHTML = window.shuoshuoCommentDiv
-              btf.switchComments(el, `${location.pathname.replace(/\/$/, '')}?key=${key}`)
-              window.shuoshuoComment.loadComment(el, key)
+              const term = `${location.pathname.replace(/\/$/, '')}?key=${key}`
+              window.createShuoshuoGiscusWidget(el, term)
             }
           })
         }
