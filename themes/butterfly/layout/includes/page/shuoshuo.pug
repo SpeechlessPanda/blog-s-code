@@ -39,16 +39,17 @@
               __u.searchParams.delete('giscus')
               const params = new URLSearchParams({
                 repo: cfg.repo,
-                'repo-id': cfg.repoId,
-                'category-id': cfg.categoryId,
+                repoId: cfg.repoId,
+                categoryId: cfg.categoryId,
                 mapping: 'specific',
                 term: key,
                 theme: isDark ? cfg.darkTheme : cfg.lightTheme,
-                'reactions-enabled': '1',
-                'emit-metadata': '0',
-                'input-position': 'top',
+                reactionsEnabled: '1',
+                emitMetadata: '0',
+                inputPosition: 'top',
                 lang: cfg.lang,
                 origin: __u.toString(),
+                backLink: __u.toString(),
                 session: localStorage.getItem('giscus-session') || '',
                 strict: '0'
               })
