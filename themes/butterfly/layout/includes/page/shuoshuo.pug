@@ -16,13 +16,14 @@
       script.
         (() => {
           const commentDiv = `!{partial('includes/third-party/comments/index', {}, {cache: true})}`
+          window.shuoshuoCommentDiv = commentDiv
 
-          const runDestroy = (shuoshuoComment) => {
-            if (!shuoshuoComment) return
-
-            for (const [key, fn] of Object.entries(shuoshuoComment)) {
-              if (key.startsWith('destroy')) fn()
-            }
+          const runDestroy = () => {
+            // 销毁手动展开的评论区,保留自动展开(有评论)的项
+            document.querySelectorAll('#article-container .shuoshuo-comment:not(.no-comment):not([data-auto])').forEach(el => {
+              el.innerHTML = ''
+              el.classList.add('no-comment')
+            })
           }
 
           window.addCommentToShuoshuo = e => {
@@ -32,7 +33,7 @@
             const ele = btn.closest('.container').nextElementSibling
             const { shuoshuoComment } = window
             const isInclude = ele.classList.contains('no-comment')
-            runDestroy(shuoshuoComment)
+            runDestroy()
             if (isInclude) {
               ele.classList.remove('no-comment')
               ele.innerHTML = commentDiv
@@ -236,6 +237,24 @@
           const pageData = data.slice(start, end)
           renderData(pageData)
           renderNavigation()
+          autoExpandComments()
+        }
+
+        // 有评论的碎碎念自动展开评论区(build 时已查 commentCount 注入 shuoshuo-data)
+        const autoExpandComments = () => {
+          if (!window.shuoshuoComment || !window.shuoshuoComment.loadComment || !window.shuoshuoCommentDiv) return
+          const containers = document.querySelectorAll('#article-container .shuoshuo-comment.no-comment[data-key]')
+          containers.forEach(el => {
+            const key = el.getAttribute('data-key')
+            const item = data.find(d => (d.key || ('memo-' + String(d.date || '').replace(/[^0-9a-zA-Z]/g, '-'))) === key)
+            if (item && item.commentCount > 0) {
+              el.classList.remove('no-comment')
+              el.setAttribute('data-auto', '1')
+              el.innerHTML = window.shuoshuoCommentDiv
+              btf.switchComments(el, `${location.pathname.replace(/\/$/, '')}?key=${key}`)
+              window.shuoshuoComment.loadComment(el, key)
+            }
+          })
         }
 
         window.shuoshuoPrevPage = () => {

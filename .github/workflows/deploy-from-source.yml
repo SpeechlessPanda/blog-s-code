@@ -38,6 +38,8 @@ jobs:
           key: og-fonts-${{ hashFiles('_config.yml') }}
 
       - name: Build static site
+        env:
+          GH_DISCUSSION_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
         run: pnpm run build
 
       - name: Sync README to publish directory
