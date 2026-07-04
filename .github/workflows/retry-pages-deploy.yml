@@ -1,0 +1,45 @@
+name: retry-pages-deploy
+
+# 自动重跑失败的 GitHub Pages 部署。
+# 原因:actions/deploy-pages 偶发平台错误 "Deployment failed, try again later."
+# (本仓 SpeechlessPanda.github.io 的 pages-build-deployment 已多次因此失败),
+# 每次都要人工重跑。此 workflow 每 10 分钟巡检:若最近一次 pages-build-deployment
+# 失败且尝试次数 < 3,则自动重跑,超过 3 次放弃以防死循环。
+#
+# 注意:本文件由源仓 blog-s-code 的 scripts/events/sync_comment_notify_workflow.js
+# 在构建时同步到 public/.github/workflows/,再随部署推送到本发布仓,切勿在本仓直接改。
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rerun failed Pages deployment if needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          LATEST=$(gh run list --workflow=pages-build-deployment --repo "$GITHUB_REPOSITORY" --limit 1 --json databaseId,status,conclusion --jq '.[0]')
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+            echo "未找到 pages-build-deployment 运行记录,跳过。"
+            exit 0
+          fi
+          STATUS=$(echo "$LATEST" | jq -r .status)
+          CONCLUSION=$(echo "$LATEST" | jq -r .conclusion)
+          RUN_ID=$(echo "$LATEST" | jq -r .databaseId)
+          echo "最近一次 pages 部署: id=$RUN_ID status=$STATUS conclusion=$CONCLUSION"
+          if [ "$STATUS" != "completed" ]; then echo "仍在运行,跳过。"; exit 0; fi
+          if [ "$CONCLUSION" != "failure" ]; then echo "未失败,跳过。"; exit 0; fi
+          ATTEMPT=$(gh run view "$RUN_ID" --repo "$GITHUB_REPOSITORY" --json runAttempt --jq '.runAttempt')
+          echo "尝试次数: $ATTEMPT"
+          if [ "$ATTEMPT" -ge 3 ]; then echo "已尝试 $ATTEMPT 次,放弃以防死循环(请人工排查)。"; exit 0; fi
+          echo "重跑 $RUN_ID ..."
+          gh run rerun "$RUN_ID" --repo "$GITHUB_REPOSITORY"

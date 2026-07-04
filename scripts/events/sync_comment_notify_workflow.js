@@ -6,7 +6,8 @@ hexo.extend.filter.register('after_generate', () => {
     const targetDir = path.join(hexo.public_dir, '.github', 'workflows')
     const publishRepoWorkflows = new Set([
         'comment-email-notify.yml',
-        'search-engine-ping.yml'
+        'search-engine-ping.yml',
+        'retry-pages-deploy.yml'
     ])
 
     if (!fs.existsSync(sourceDir)) {
