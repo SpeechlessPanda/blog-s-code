@@ -59,6 +59,10 @@ jobs:
           external_repository: SpeechlessPanda/SpeechlessPanda.github.io
           publish_branch: main
           publish_dir: ./public
+          # 默认 exclude_assets=.github 会丢掉 public/.github/workflows;改为空,
+          # 让 sync 脚本同步过来的 comment-email-notify / search-engine-ping 真正进发布仓激活
+          # (它们都用 if: github.repository=='SpeechlessPanda/SpeechlessPanda.github.io' 守卫,只在发布仓跑)。
+          exclude_assets: ""
           enable_jekyll: false
           force_orphan: false
           user_name: github-actions[bot]
