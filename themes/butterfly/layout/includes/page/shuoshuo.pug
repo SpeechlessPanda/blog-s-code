@@ -30,6 +30,17 @@
               const isDark = currentTheme === 'dark'
               const __u = new URL(location.href)
               __u.searchParams.delete('giscus')
+              // 仅发送未过期的 giscus session(JWT)。过期/畸形的 session 一律不发并清掉,
+              // 否则 giscus 会去 oauth/token 换 token 报 400,导致整条评论区渲染失败(空白)。
+              let __session = localStorage.getItem('giscus-session') || ''
+              if (__session) {
+                let __ok = false
+                try {
+                  const __p = JSON.parse(atob(__session.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+                  __ok = !!(__p && __p.exp && __p.exp * 1000 > Date.now())
+                } catch (e) { __ok = false }
+                if (!__ok) { localStorage.removeItem('giscus-session'); __session = '' }
+              }
               const params = new URLSearchParams({
                 repo: cfg.repo,
                 repoId: cfg.repoId,
@@ -43,7 +54,7 @@
                 inputPosition: 'top',
                 origin: __u.toString(),
                 backLink: __u.toString(),
-                session: localStorage.getItem('giscus-session') || '',
+                session: __session,
                 strict: '0'
               })
               el.innerHTML = ''
