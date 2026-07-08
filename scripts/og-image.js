@@ -117,8 +117,10 @@ function buildSvg(post, cfg) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${cfg.width}" height="${cfg.height}" viewBox="0 0 ${cfg.width} ${cfg.height}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6ec6ff"/>
-      <stop offset="48%" stop-color="#90b7ff"/>
+      <stop offset="0%" stop-color="#4facfe"/>
+      <stop offset="25%" stop-color="#6ec6ff"/>
+      <stop offset="55%" stop-color="#a18cd1"/>
+      <stop offset="75%" stop-color="#fbc2eb"/>
       <stop offset="100%" stop-color="#ffd2a8"/>
     </linearGradient>
   </defs>
