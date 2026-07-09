@@ -4,7 +4,14 @@
 // 直接在 after_generate 改 memos/index.html 的 shuoshuo-data JSON,避免 data 重新加载覆盖。
 'use strict'
 
-const GISCUS_QUERY = 'query($owner:String!,$name:String!,$categoryId:ID){repository(owner:$owner,name:$name){discussions(first:100,categoryId:$categoryId,orderBy:{field:UPDATED_AT,direction:DESC}){nodes{title comments{totalCount}}}}}'
+const GISCUS_QUERY = `query($owner:String!,$name:String!,$categoryId:ID,$after:String){
+  repository(owner:$owner,name:$name){
+    discussions(first:100,after:$after,categoryId:$categoryId,orderBy:{field:UPDATED_AT,direction:DESC}){
+      pageInfo{hasNextPage,endCursor}
+      nodes{title comments{totalCount}}
+    }
+  }
+}`
 
 hexo.extend.filter.register('after_generate', async function () {
   const memosPath = 'memos/index.html'
@@ -45,29 +52,37 @@ hexo.extend.filter.register('after_generate', async function () {
       const categoryId = giscus.category_id || null
       let titleToCount = {}
       try {
-        const res = await fetch('https://api.github.com/graphql', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'User-Agent': 'hexo-memo-comment-count',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ query: GISCUS_QUERY, variables: { owner, name, categoryId } })
-        })
-        if (!res.ok) {
-          hexo.log.warn(`[memo-comment-count] GraphQL HTTP ${res.status},评论数默认 0`)
-          setZero()
-        } else {
+        let hasNextPage = true
+        let after = null
+        while (hasNextPage) {
+          const res = await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'User-Agent': 'hexo-memo-comment-count',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ query: GISCUS_QUERY, variables: { owner, name, categoryId, after } })
+          })
+          if (!res.ok) {
+            hexo.log.warn(`[memo-comment-count] GraphQL HTTP ${res.status},评论数默认 0`)
+            setZero()
+            break
+          }
           const json = await res.json()
-          const nodes = (json && json.data && json.data.repository && json.data.repository.discussions && json.data.repository.discussions.nodes) || []
+          const discussions = json && json.data && json.data.repository && json.data.repository.discussions
+          const nodes = (discussions && discussions.nodes) || []
           nodes.forEach(n => { titleToCount[n.title] = n.comments.totalCount })
           hexo.log.info(`[memo-comment-count] 查到 ${nodes.length} 条 discussion`)
-          data.forEach(item => {
-            const dataKey = item.key || ('memo-' + String(item.date || '').replace(/[^0-9a-zA-Z]/g, '-'))
-            const term = `/memos?key=${dataKey}`
-            item.commentCount = titleToCount[term] || 0
-          })
+          hasNextPage = !!(discussions && discussions.pageInfo && discussions.pageInfo.hasNextPage)
+          after = discussions && discussions.pageInfo && discussions.pageInfo.endCursor
+          if (!nodes.length) break
         }
+        data.forEach(item => {
+          const dataKey = item.key || ('memo-' + String(item.date || '').replace(/[^0-9a-zA-Z]/g, '-'))
+          const term = `/memos?key=${dataKey}`
+          item.commentCount = titleToCount[term] || 0
+        })
       } catch (e) {
         hexo.log.warn(`[memo-comment-count] GraphQL 查询失败: ${e.message},评论数默认 0`)
         setZero()
