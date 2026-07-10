@@ -12,3 +12,5 @@ _multiconfig.yml
 
 # og-image fonts (downloaded at build time, not committed)
 fonts/
+
+.superpowers/
