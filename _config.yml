@@ -128,6 +128,18 @@ robotstxt:
     - /
   sitemap: https://speechlesspanda.github.io/sitemap.xml
 
+# Markdown renderer with built-in KaTeX math support
+markdown_it_plus:
+  highlight: true
+  html: true
+  xhtmlOut: true
+  breaks: true
+  langPrefix:
+  linkify: true
+  typographer:
+  quotes: "“”‘’"
+  pre_class: highlight
+
 # Local Search
 search:
   path: search.xml
