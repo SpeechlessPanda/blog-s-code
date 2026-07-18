@@ -50,8 +50,8 @@ aside: false
       avatar: https://blog.yinmo19.top/avatar_hu_371a52f5d2172aa2.png
       descr: OSA 前会长，逆向领域大神， zeroreader 开发者。
     - name: 科技爱好者周刊
-      link: https://github.com/ruanyf/weekly
-      avatar: https://avatars.githubusercontent.com/u/905434?s=48&v=4
+      link: https://www.ruanyifeng.com/blog/index.html
+      avatar: https://www.ruanyifeng.com/blog/images/person2_s.jpg
       descr: 记录每周值得分享的科技内容，周五发布。
 {% endflink %}
 
