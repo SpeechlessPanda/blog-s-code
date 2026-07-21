@@ -53,6 +53,10 @@ aside: false
       link: https://www.ruanyifeng.com/blog/index.html
       avatar: https://www.ruanyifeng.com/blog/images/person2_s.jpg
       descr: 记录每周值得分享的科技内容，周五发布。
+    - name: Chami - CS Student & Photographer
+      link: https://chami537.github.io/index.html
+      avatar: https://chami537.github.io/images/avatar.jpg
+      descr: 喜欢拍天空，写随笔，做小工具（ hita ）的 CS 学生。
 {% endflink %}
 
 ## 有用资源
