@@ -1,0 +1,8 @@
+# hexo-theme-butterfly 主题配置覆盖
+# 与 themes/butterfly/_config.yml 深度合并（hexo 5+ 原生支持 _config.<theme>.yml），
+# 这里只放需要覆盖的少量字段，不动主题文件本身，便于主题升级。
+
+inject:
+  # 页面底部注入的脚本：让文章正文与碎碎念里的链接在新标签页打开
+  bottom:
+    - <script src="/js/fix-link-target.js"></script>
