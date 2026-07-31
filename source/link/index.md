@@ -48,15 +48,19 @@ aside: false
     - name: YinMo19's Blog
       link: https://blog.yinmo19.top/
       avatar: https://blog.yinmo19.top/avatar_hu_371a52f5d2172aa2.png
-      descr: OSA 前会长，逆向领域大神， zeroreader 开发者。
+      descr: OSA 前会长，逆向领域大佬， zeroreader 开发者。
     - name: 科技爱好者周刊
       link: https://www.ruanyifeng.com/blog/index.html
       avatar: https://www.ruanyifeng.com/blog/images/person2_s.jpg
       descr: 记录每周值得分享的科技内容，周五发布。
     - name: Chami - CS Student & Photographer
-      link: https://chami537.github.io/index.html
+      link: https://chami537.github.io
       avatar: https://chami537.github.io/images/avatar.jpg
       descr: 喜欢拍天空，写随笔，做小工具（ hita ）的 CS 学生。
+    - name: Fun10165
+      link: https://fun10165.github.io/
+      avatar: https://fun10165.github.io/avatar.webp
+      descr: hpc 国一，能同时准备多个比赛、期末考和毕设，康娜卡姆依 bot 的开发者。
 {% endflink %}
 
 ## 有用资源
