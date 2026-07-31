@@ -6,6 +6,10 @@ on:
       - main
       - master
   workflow_dispatch:
+  # 由发布仓的 comment-email-notify 在收到新评论时触发,
+  # 让构建重新查询 Giscus discussions,刷新碎碎念/文章的 commentCount(评论区自动展开)。
+  repository_dispatch:
+    types: [rebuild-on-comment]
 
 jobs:
   deploy:
