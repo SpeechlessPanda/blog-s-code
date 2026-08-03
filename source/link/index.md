@@ -91,6 +91,9 @@ aside: false
     - name: CS 自学指南
       link: https://csdiy.wiki/
       descr: 北大学长整理的计算机自学指南，汇总国内外高质量 CS 课程。
+    - name: MOE 频道购机指南
+      link: https://moe.lkyu.cf/
+      descr: 写给大学生的电脑科普&购买一体方案。
 {% endflink %}
 
 ## 本站信息
