@@ -47,7 +47,7 @@ aside: false
       descr: HOA 主要维护者和创始人之一， mini-agent 开发者。
     - name: YinMo19's Blog
       link: https://blog.yinmo19.top/
-      avatar: https://blog.yinmo19.top/avatar_hu_371a52f5d2172aa2.png
+      avatar: https://avatars.githubusercontent.com/u/144041694?v=4
       descr: OSA 前会长，逆向领域大佬， zeroreader 开发者。
     - name: 科技爱好者周刊
       link: https://www.ruanyifeng.com/blog/index.html
@@ -73,6 +73,9 @@ aside: false
     - name: HITSZ 课程攻略共享计划
       link: https://hoa.moe
       descr: HITSZ 学生必须知道的攻略网站。
+    - name: HITSZ 开源技术协会
+      link: https://osa.moe/
+      descr: 打造 HITSZ 学生自己的镜像站和各种有用的项目。
     - name: 学习 C++
       link: https://learncpp.cn/
       descr: LearnCpp.com 中文版，从入门到精通的现代 C++ 免费教程。
