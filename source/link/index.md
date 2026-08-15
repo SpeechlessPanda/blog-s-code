@@ -76,6 +76,9 @@ aside: false
     - name: HITSZ 开源技术协会
       link: https://osa.moe/
       descr: 打造 HITSZ 学生自己的镜像站和各种有用的项目。
+    - name: Rust 程序设计语言
+      link: https://kaisery.github.io/trpl-zh-cn/title-page.html
+      descr: Rust 官方教程的社区中文版。
     - name: 学习 C++
       link: https://learncpp.cn/
       descr: LearnCpp.com 中文版，从入门到精通的现代 C++ 免费教程。
