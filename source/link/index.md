@@ -100,6 +100,9 @@ aside: false
     - name: MOE 频道购机指南
       link: https://moe.lkyu.cf/
       descr: 写给大学生的电脑科普&购买一体方案。
+    - name: Z-Library 图书馆
+      link: https://z.2rdh.com/index.html
+      descr:  世界上最大的电子图书馆。
 {% endflink %}
 
 ## 本站信息
