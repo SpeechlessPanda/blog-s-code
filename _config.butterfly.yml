@@ -6,3 +6,14 @@ inject:
   # 页面底部注入的脚本：让文章正文与碎碎念里的链接在新标签页打开
   bottom:
     - <script src="/js/fix-link-target.js"></script>
+
+aside:
+  display:
+    # /blog/ 文章流（原首页）不显示右侧栏
+    home: false
+    archive: false
+    tag: false
+    category: false
+  # 分类功能已停用，侧栏不再展示分类卡片
+  card_categories:
+    enable: false

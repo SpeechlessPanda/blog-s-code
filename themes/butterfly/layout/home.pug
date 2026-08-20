@@ -1,0 +1,11 @@
+extends includes/layout.pug
+
+block content
+  //- 首页直接渲染 about 页内容，保持单一来源（source/about/index.md）
+  - const aboutPage = site.pages.findOne({ source: 'about/index.md' })
+  #page
+    if top_img === false && page.title
+      .page-title= page.title
+    #article-container.container
+      if aboutPage
+        != aboutPage.content
