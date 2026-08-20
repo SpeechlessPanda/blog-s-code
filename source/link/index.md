@@ -17,7 +17,7 @@ aside: false
       link: https://www.coderlock.site
       avatar: https://www.coderlock.site/doomee.png
       descr: 汀苇乱摇寒夜雨，沙鸥闲弄夕阳天。
-    - name: Wh1isper's Blog
+    - name: Wh1isper
       link: https://blog.wh1isper.top/
       avatar: https://blog.wh1isper.top/img/avatar-cyberpunk.png
       descr: ya-mono harness 的开发者，AI agent 领域大佬。
@@ -29,23 +29,23 @@ aside: false
       link: https://jyi2ya.github.io/
       avatar: https://avatars.githubusercontent.com/u/86813521?v=4
       descr: rvs 机器人的主人，博客里有可爱能互动的 rvs 3D 模型。
-    - name: Saurlax's Blog
+    - name: Saurlax
       link: https://saurlax.com/
       avatar: https://avatars.githubusercontent.com/u/49343742?v=4
       descr: 一位更新博客非常多的大佬，博客里 pinned 了很多好用的工具和框架。
-    - name: Vaaandark's Blog
+    - name: Vaaandark
       link: https://vaaandark.top/
       avatar: https://vaaandark.top/image/vaaandark.png
       descr: 技术博客更新极多，涉猎广泛，干货满满。
-    - name: Gaster's Blog
+    - name: Gaster
       link: https://wdgaster703.github.io
       avatar: https://wdgaster703.github.io/img/about/WDGaster.jpg
       descr: 喜欢收集知识涉猎广泛的电气学长。
-    - name: Kowyo's Blog
+    - name: Kowyo
       link: https://kowyo.com/
       avatar: https://avatars.githubusercontent.com/u/110339237?v=4
       descr: HOA 主要维护者和创始人之一， mini-agent 开发者。
-    - name: YinMo19's Blog
+    - name: YinMo19
       link: https://blog.yinmo19.top/
       avatar: https://avatars.githubusercontent.com/u/144041694?v=4
       descr: OSA 前会长，逆向领域大佬， zeroreader 开发者。
@@ -53,7 +53,7 @@ aside: false
       link: https://www.ruanyifeng.com/blog/index.html
       avatar: https://www.ruanyifeng.com/blog/images/person2_s.jpg
       descr: 记录每周值得分享的科技内容，周五发布。
-    - name: Chami - CS Student & Photographer
+    - name: Chami
       link: https://chami537.github.io
       avatar: https://chami537.github.io/images/avatar.jpg
       descr: 喜欢拍天空，写随笔，做小工具（ hita ）的 CS 学生。
