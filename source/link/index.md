@@ -61,6 +61,10 @@ aside: false
       link: https://fun10165.github.io/
       avatar: https://fun10165.github.io/avatar.webp
       descr: hpc 国一，能同时准备多个比赛、期末考和毕设，康娜卡姆依 bot 的开发者。
+    - name: pppppst
+      link: https://pppppst.github.io
+      avatar: https://pppppst.github.io/img/avatar2.png
+      descr: 本人同在读计科的朋友，目前专注于具身智能领域。
 {% endflink %}
 
 ## 有用资源
