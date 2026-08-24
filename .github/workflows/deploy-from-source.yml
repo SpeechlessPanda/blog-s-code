@@ -21,6 +21,20 @@ jobs:
     steps:
       - name: Checkout source repository
         uses: actions/checkout@v4
+        with:
+          # 需要完整历史，供下一步按 git 提交时间恢复文件 mtime
+          fetch-depth: 0
+
+      # checkout 会把所有文件 mtime 设为 checkout 时间，导致 Hexo(updated_option: mtime)
+      # 把每篇文章的 updated 都当成构建时间。scripts/atom-feed.js 的"旧文更新推送"
+      # 依赖真实的 updated，这里按每个文件最后一次提交时间恢复 mtime。
+      - name: Restore file mtimes from git history
+        shell: bash
+        run: |
+          git ls-files -z | while IFS= read -r -d '' f; do
+            t=$(git log -1 --format=%ct -- "$f")
+            [ -n "$t" ] && touch -d "@$t" "$f"
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

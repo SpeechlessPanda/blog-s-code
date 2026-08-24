@@ -3,6 +3,10 @@
 # 这里只放需要覆盖的少量字段，不动主题文件本身，便于主题升级。
 
 inject:
+  # RSS autodiscovery：官方 feed 插件停用后由 scripts/atom-feed.js 生成 atom.xml，
+  # 插件原本的 autodiscovery 注入也随之失效，在这里手动补回
+  head:
+    - <link rel="alternate" type="application/atom+xml" title="SpeechlessPanda" href="/atom.xml">
   # 页面底部注入的脚本：让文章正文与碎碎念里的链接在新标签页打开
   bottom:
     - <script src="/js/fix-link-target.js"></script>
