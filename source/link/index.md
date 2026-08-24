@@ -60,7 +60,7 @@ aside: false
     - name: Fun10165
       link: https://fun10165.github.io/
       avatar: https://fun10165.github.io/avatar.webp
-      descr: hpc 国一，能同时准备期末考、毕设和多个比赛、。
+      descr: hpc 国一，能同时准备期末考、毕设和多个比赛。
     - name: pppppst
       link: https://pppppst.github.io
       avatar: https://pppppst.github.io/img/avatar2.png
