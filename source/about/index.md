@@ -14,13 +14,13 @@ aside: false
 - **个人成长与随笔**：记录大学生活、学习经验、人生选择与思考。
 - **不定主题内容**：作者想写的任何内容，包括但不限于技术感悟、生活观察等。
 
-SpeechlessPanda 这个名字来源于我某次游戏取名的无心之举。因为我以前就有个别人给的ip就是熊猫，但是单纯熊猫这个名字太单调了，所以随手加了个无语上去。加上去之后，就觉得这个修饰还挺符合我本人的性格，故后面就用了它的英文直译形式作为我的GitHub和博客名。
+SpeechlessPanda 这个名字来源于我某次游戏取名的无心之举。因为我以前就有个别人给的ip就是熊猫，但是单纯熊猫这个名字太单调了，所以随手加了个无语上去。加上去之后，就觉得这个修饰还挺符合我本人的性格，故后面就用了它的英文直译形式作为我的 GitHub 和博客名。
 
 好像没什么能写的了，那就这样结束这部分吧。
 
 联系我：zhoushimingyu@qq.com
 
-为了方便后来和我一样有想搭博客写博客想法的人重走我的路（当然鼓励自行探索），在此留下本博客仓库[README.md](https://github.com/SpeechlessPanda/SpeechlessPanda.github.io/blob/main/README.md)。
+为了方便后来和我一样有想搭博客写博客想法的人重走我的路（当然鼓励自行探索），在此留下本博客仓库 [README.md](https://github.com/SpeechlessPanda/SpeechlessPanda.github.io/blob/main/README.md) 。
 
 ## 我的 GitHub 项目
 
