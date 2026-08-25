@@ -1,4 +1,13 @@
 - author: SpeechlessPanda
+  date: 2026-08-25 15:30
+  content: |
+    《代码的文明》一书终于看完，很有收获。
+
+    “最伟大的‘编程语言’是 DNA ，现代编程语言发展这么多年也未做到如此良好的并发性、容错性和自适应性。”~~所以有志于计算机专业的大家都应该去学生物。~~
+  tags:
+    - 感慨
+
+- author: SpeechlessPanda
   date: 2026-08-25 13:30
   content: |
     我的博客又迎来了重大更新！将原本的关于界面放到首页，让博客能成为一个个人展示的地方（甚至可以做成 cv ）。然后优化了各种界面的侧边栏显示的内容，以及 RSS 链接有关碎碎念和文章修订的推送和更新机制（就是刚更新完的时候会一次性重新推送很多内容，打扰大家了）。这个 butterfly 框架一点一点的已经被我改了不少了（更多详见仓库 [readme](https://github.com/SpeechlessPanda/SpeechlessPanda.github.io/blob/main/README.md) ），感觉可以重新做成一个什么 Panda 框架。但是 AI 时代这种改动价值貌似并不大，基座比较重要，有了基座个性化是一个很廉价的事，因此暂时就不重新推一个框架出来了。有想用我目前同款框架的，我的博客[源代码](https://github.com/SpeechlessPanda/blog-s-code)是开源的，欢迎 clone 之后做出你自己的博客。
