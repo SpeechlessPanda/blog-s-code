@@ -49,9 +49,12 @@ function postSummary (post) {
 function buildPostEntry (post, authorXml) {
   const published = post.date.toDate()
   const updated = post.updated ? post.updated.toDate() : published
-  // 更新距发布超过阈值 → 改变 guid，让订阅者收到"更新"通知；否则 guid 保持稳定（permalink）
+  // 更新距发布超过阈值 → 同时改变 id 与 link，让按 link 识别的阅读器也收到"更新"通知；
+  // 否则 id/link 保持稳定（permalink），避免误触发
   const meaningfulUpdate = (updated - published) > UPDATE_NOTIFY_MS
-  const id = post.permalink + (meaningfulUpdate ? '#' + updated.toISOString() : '')
+  const suffix = meaningfulUpdate ? '#' + updated.toISOString() : ''
+  const id = post.permalink + suffix
+  const link = post.permalink + suffix
   const categories = [
     ...(post.categories ? post.categories.toArray() : []),
     ...(post.tags ? post.tags.toArray() : [])
@@ -60,29 +63,35 @@ function buildPostEntry (post, authorXml) {
 
   return {
     published,
+    updated,
     xml: `<entry>${authorXml}${categories}<content type="html">${cdata(content)}</content>` +
-      `<id>${escapeXml(id)}</id><link href="${escapeXml(post.permalink)}"/>` +
+      `<id>${escapeXml(id)}</id><link href="${escapeXml(link)}"/>` +
       `<published>${published.toISOString()}</published>` +
       `<summary type="html">${cdata(postSummary(post))}</summary>` +
       `<title>${escapeXml(post.title)}</title><updated>${updated.toISOString()}</updated></entry>`
   }
 }
 
-function buildMemoEntry (item, memosUrl, author) {
+function buildMemoEntry (item, memosUrl, author, usedIds) {
   const date = parseMemoDate(item.date)
   if (!date) return null
   const html = hexo.render.renderSync({ text: item.content || '', engine: 'markdown' })
     .replace(/[\x00-\x1F\x7F]/g, '') // eslint-disable-line no-control-regex
-  // guid 用北京时间戳，本地/CI 构建结果一致
+  // id/link 用北京时间戳锚点，本地/CI 构建结果一致，且每条碎碎念的 link 唯一——
+  // 很多阅读器按 link（而非 id）识别条目，共用 /memos/ 会被折叠掉后续更新
   const beijing = new Date(date.getTime() + 8 * 3600 * 1000).toISOString().slice(0, 16)
-  const id = `${memosUrl}#${beijing}`
+  // 同一分钟内有多条碎碎念时按文件内出现顺序加序号去重（文件顺序稳定，id 即稳定）
+  let id = `${memosUrl}#${beijing}`
+  for (let i = 2; usedIds.has(id); i++) id = `${memosUrl}#${beijing}-${i}`
+  usedIds.add(id)
   const tags = (item.tags || []).map(t => `<category term="${escapeXml(t)}"/>`).join('')
   const authorXml = `<author><name>${escapeXml(item.author || author)}</name></author>`
 
   return {
     published: date,
+    updated: date,
     xml: `<entry>${authorXml}${tags}<content type="html">${cdata(html)}</content>` +
-      `<id>${escapeXml(id)}</id><link href="${escapeXml(memosUrl)}"/>` +
+      `<id>${escapeXml(id)}</id><link href="${escapeXml(id)}"/>` +
       `<published>${date.toISOString()}</published>` +
       `<summary type="html">${cdata(stripHtml(html).substring(0, EXCERPT_LIMIT))}</summary>` +
       `<title>碎碎念</title><updated>${date.toISOString()}</updated></entry>`
@@ -103,8 +112,9 @@ hexo.extend.generator.register('atom', function (locals) {
   // 碎碎念条目（全部）
   const memos = locals.data && locals.data.shuoshuo
   if (memos && memos.length) {
+    const usedMemoIds = new Set()
     for (const item of memos) {
-      const entry = buildMemoEntry(item, memosUrl, config.author)
+      const entry = buildMemoEntry(item, memosUrl, config.author, usedMemoIds)
       if (entry) entries.push(entry)
     }
   }
@@ -112,7 +122,13 @@ hexo.extend.generator.register('atom', function (locals) {
   // 文章与碎碎念按发布日期倒序混排
   entries.sort((a, b) => b.published - a.published)
 
-  const feedUpdated = entries.length ? entries[0].published : new Date()
+  // feed 级 updated 取所有条目的最新 published/updated（碎碎念补录、旧文更新都反映）
+  const feedUpdated = entries.length
+    ? entries.reduce((max, e) => {
+      const t = e.updated > e.published ? e.updated : e.published
+      return t > max ? t : max
+    }, new Date(0))
+    : new Date()
   const xml = '<?xml version="1.0" encoding="utf-8"?>\n' +
     '<feed xmlns="http://www.w3.org/2005/Atom">' +
     authorXml +
