@@ -43,14 +43,15 @@ const ids = extractAll(/<id>([^<]*)<\/id>/)
 assertUnique('条目 <link>', links)
 assertUnique('条目 <id>', ids)
 
-// 碎碎念条目必须带时间戳锚点（不能让所有碎碎念共用 /memos/）
+// 碎碎念条目必须带时间戳 query 参数（不能共用 /memos/，也不能用 #fragment——
+// RSSFlow 等阅读器归一化 guid 时会丢弃 fragment）
 const memoLinks = links.filter(l => l.includes('/memos'))
-const badMemoLinks = memoLinks.filter(l => !/#\d{4}-\d{2}-\d{2}T/.test(l))
+const badMemoLinks = memoLinks.filter(l => !/\?m=\d{4}-\d{2}-\d{2}T/.test(l))
 if (badMemoLinks.length) {
   failed = true
-  console.error(`[verify-feed] ✗ ${badMemoLinks.length} 个碎碎念条目缺少时间戳锚点`)
+  console.error(`[verify-feed] ✗ ${badMemoLinks.length} 个碎碎念条目缺少时间戳 query 参数`)
 } else if (memoLinks.length) {
-  console.log(`[verify-feed] ✓ ${memoLinks.length} 个碎碎念条目均带时间戳锚点`)
+  console.log(`[verify-feed] ✓ ${memoLinks.length} 个碎碎念条目均带时间戳 query 参数`)
 }
 
 process.exit(failed ? 1 : 0)

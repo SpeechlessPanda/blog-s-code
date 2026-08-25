@@ -49,10 +49,12 @@ function postSummary (post) {
 function buildPostEntry (post, authorXml) {
   const published = post.date.toDate()
   const updated = post.updated ? post.updated.toDate() : published
-  // 更新距发布超过阈值 → 同时改变 id 与 link，让按 link 识别的阅读器也收到"更新"通知；
-  // 否则 id/link 保持稳定（permalink），避免误触发
+  // 更新距发布超过阈值 → 同时改变 id 与 link，让订阅者收到"更新"通知；
+  // 否则 id/link 保持稳定（permalink），避免误触发。
+  // 注意：区分信息必须放在 query（?u=），不能放 fragment（#）——部分阅读器
+  // （如 RSSFlow）归一化 guid 时会丢弃 fragment，导致更新 bump 失效。
   const meaningfulUpdate = (updated - published) > UPDATE_NOTIFY_MS
-  const suffix = meaningfulUpdate ? '#' + updated.toISOString() : ''
+  const suffix = meaningfulUpdate ? '?u=' + updated.toISOString().slice(0, 19).replace(/:/g, '-') : ''
   const id = post.permalink + suffix
   const link = post.permalink + suffix
   const categories = [
@@ -77,12 +79,14 @@ function buildMemoEntry (item, memosUrl, author, usedIds) {
   if (!date) return null
   const html = hexo.render.renderSync({ text: item.content || '', engine: 'markdown' })
     .replace(/[\x00-\x1F\x7F]/g, '') // eslint-disable-line no-control-regex
-  // id/link 用北京时间戳锚点，本地/CI 构建结果一致，且每条碎碎念的 link 唯一——
-  // 很多阅读器按 link（而非 id）识别条目，共用 /memos/ 会被折叠掉后续更新
-  const beijing = new Date(date.getTime() + 8 * 3600 * 1000).toISOString().slice(0, 16)
+  // id/link 带北京时间戳参数，保证每条碎碎念唯一。用 query（?m=）而非 fragment（#）：
+  // 1. 部分阅读器（RSSFlow 等）归一化 guid 时丢弃 fragment，# 会导致所有碎碎念折叠成一条
+  // 2. GitHub Pages 忽略 query，/memos/?m=... 仍解析到碎碎念页，点击可正常打开
+  // 3. 与构建机器时区无关，本地/CI 产物一致
+  const beijing = new Date(date.getTime() + 8 * 3600 * 1000).toISOString().slice(0, 16).replace(':', '-')
   // 同一分钟内有多条碎碎念时按文件内出现顺序加序号去重（文件顺序稳定，id 即稳定）
-  let id = `${memosUrl}#${beijing}`
-  for (let i = 2; usedIds.has(id); i++) id = `${memosUrl}#${beijing}-${i}`
+  let id = `${memosUrl}?m=${beijing}`
+  for (let i = 2; usedIds.has(id); i++) id = `${memosUrl}?m=${beijing}-${i}`
   usedIds.add(id)
   const tags = (item.tags || []).map(t => `<category term="${escapeXml(t)}"/>`).join('')
   const authorXml = `<author><name>${escapeXml(item.author || author)}</name></author>`
