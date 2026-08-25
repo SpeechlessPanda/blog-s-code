@@ -43,15 +43,15 @@ const ids = extractAll(/<id>([^<]*)<\/id>/)
 assertUnique('条目 <link>', links)
 assertUnique('条目 <id>', ids)
 
-// 碎碎念条目必须带时间戳 query 参数（不能共用 /memos/，也不能用 #fragment——
-// RSSFlow 等阅读器归一化 guid 时会丢弃 fragment）
+// 碎碎念条目必须使用路径式唯一地址 /memos/<时间戳>/（不能共用 /memos/，也不能用
+// #fragment 或 ?query——RSSFlow 丢 fragment，部分阅读器丢 query，路径是唯一普适成分）
 const memoLinks = links.filter(l => l.includes('/memos'))
-const badMemoLinks = memoLinks.filter(l => !/\?m=\d{4}-\d{2}-\d{2}T/.test(l))
+const badMemoLinks = memoLinks.filter(l => !/\/memos\/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}[^/]*\/$/.test(l))
 if (badMemoLinks.length) {
   failed = true
-  console.error(`[verify-feed] ✗ ${badMemoLinks.length} 个碎碎念条目缺少时间戳 query 参数`)
+  console.error(`[verify-feed] ✗ ${badMemoLinks.length} 个碎碎念条目缺少路径式时间戳地址`)
 } else if (memoLinks.length) {
-  console.log(`[verify-feed] ✓ ${memoLinks.length} 个碎碎念条目均带时间戳 query 参数`)
+  console.log(`[verify-feed] ✓ ${memoLinks.length} 个碎碎念条目均为路径式唯一地址`)
 }
 
 process.exit(failed ? 1 : 0)
