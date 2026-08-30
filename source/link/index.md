@@ -80,6 +80,9 @@ aside: false
     - name: HITSZ 开源技术协会
       link: https://osa.moe/
       descr: 打造 HITSZ 学生自己的镜像站和各种有用的项目。
+    - name: 校园网联合镜像站
+      link: https://mirrors.cernet.edu.cn/
+      descr: 提供对部分高校的校园网镜像站的索引和跳转服务。
     - name: Rust 程序设计语言
       link: https://kaisery.github.io/trpl-zh-cn/title-page.html
       descr: Rust 官方教程的社区中文版。
