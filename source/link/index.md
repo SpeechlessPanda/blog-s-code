@@ -108,7 +108,7 @@ aside: false
       link: https://moe.lkyu.cf/
       descr: 写给大学生的电脑科普&购买一体方案。
     - name: Z-Library 图书馆
-      link: https://z.2rdh.com/index.html
+      link: https://znew.pages.dev/
       descr:  世界上最大的电子图书馆。
 {% endflink %}
 

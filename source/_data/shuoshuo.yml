@@ -1,4 +1,13 @@
 - author: SpeechlessPanda
+  date: 2026-08-31 16:30
+  content: |
+    假期 is over.这个假期学完了 [learncpp](https://learncpp.cn/) 、做完了 [leetcode hot 100](https://leetcode.cn/studyplan/top-100-liked/) 和快要打完某个比赛，同时看了很多很多的博客和文章，也算没有完全虚度。今天一天还拿了三个 leetcode 勋章，哎，人还是会被这种没什么用的虚物激励到。
+
+    句摘：当一个指标成为目标，它就不再是一个好指标—— Goodhart's Law 。
+  tags:
+    - 假期
+
+- author: SpeechlessPanda
   date: 2026-08-25 23:00
   content: |
     “罗马帝国灭亡的其中一个主要原因是他们没有0 —— 这样他们就没法给自己的C程序指明成功退出的路。 -- Robert Firth ”技术论坛上总是金句爆出。
