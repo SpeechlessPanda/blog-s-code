@@ -64,7 +64,11 @@ aside: false
     - name: pppppst
       link: https://pppppst.github.io
       avatar: https://pppppst.github.io/img/avatar2.png
-      descr: 本人同在读计科的朋友，目前专注于具身智能领域。
+      descr: 在中大读计科的朋友，目前专注于具身智能领域。
+    - name: CollinKe05
+      link: https://collinke05.github.io/
+      avatar: https://collinke05.github.io/img/avatar.jpg
+      descr: 在华南理工读人工智能的朋友，有较多的比赛和项目经历。
 {% endflink %}
 
 ## 有用资源

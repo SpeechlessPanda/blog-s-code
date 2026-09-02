@@ -300,7 +300,7 @@ aside:
       link: https://github.com/SpeechlessPanda
   card_announcement:
     enable: true
-    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了本博客之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~记得，保持思考，保持努力！愿你和我一起做思考和行动路上的同行者。
+    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了本博客之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~大家还可以多多关注友链里的内容，不仅有各种大佬，还有很多有用的资源。
   card_recent_post:
     enable: true
     # If set 0 will show all
