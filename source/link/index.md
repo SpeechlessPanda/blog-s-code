@@ -87,6 +87,9 @@ aside: false
     - name: 校园网联合镜像站
       link: https://mirrors.cernet.edu.cn/
       descr: 提供对部分高校的校园网镜像站的索引和跳转服务。
+    - name: 提问指南
+      link: https://howtoask-revise-1.ustclug.pages.dev/wiki/doc/howtoask/
+      descr: 有关如何提问题和回答问题的指南（新人强推）。
     - name: Rust 程序设计语言
       link: https://kaisery.github.io/trpl-zh-cn/title-page.html
       descr: Rust 官方教程的社区中文版。
