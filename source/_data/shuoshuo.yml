@@ -1,4 +1,17 @@
 - author: SpeechlessPanda
+  date: 2026-09-09 15:30
+  content: |
+    分享文章： [AI Made Writing Code Easier. It Made Being an Engineer Harder.](https://www.ivanturkovic.com/2026/02/25/ai-made-writing-code-easier-engineering-harder/) 
+
+    看完或许可以略微提振一些行业信心。里面提到了一个我之前不知道的事：`“实际开展工作的人承受着高强度的压力，而设定工作预期的人却没有同样的感受。”`听上去又像一次阶级分化。
+
+    最后， btw ，博客又进行了一些小更新：修复了碎碎念翻页时不会回到页面上方的问题。有用我的框架源码的读者可以自行同步一下，或者叫你的 agent 修一下。
+  tags:
+    - 感慨
+    - 博客更新
+    - 分享
+
+- author: SpeechlessPanda
   date: 2026-09-05 23:30
   content: |
     完赛，明天聚餐！
