@@ -10,6 +10,9 @@ hexo.extend.filter.register('after_generate', () => {
         return
     }
 
+    // after_generate 触发时 public/ 可能尚未创建(Hexo 8 先设内存路由再写盘),自行确保目录存在
+    fs.mkdirSync(hexo.public_dir, { recursive: true })
+
     try {
         fs.copyFileSync(sourceFile, targetFile)
         hexo.log.info('[readme-sync] Synced README.md to public/README.md')
