@@ -109,7 +109,7 @@ deploy:
 
 # RSS
 # 官方插件 hexo-generator-feed 已停用：它只遍历 posts，看不到 _data 里的碎碎念。
-# atom.xml 由 scripts/atom-feed.js 生成（文章+碎碎念混排、旧文更新推送）。
+# atom.xml 由主题 Panda 的 feed 生成器写出（文章+碎碎念混排、旧文更新推送）。
 feed:
   enable: false
   type: atom

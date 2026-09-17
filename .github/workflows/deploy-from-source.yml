@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
 
       # checkout 会把所有文件 mtime 设为 checkout 时间，导致 Hexo(updated_option: mtime)
-      # 把每篇文章的 updated 都当成构建时间。scripts/atom-feed.js 的"旧文更新推送"
+      # 把每篇文章的 updated 都当成构建时间。主题 feed 生成器的"旧文更新推送"
       # 依赖真实的 updated，这里按每个文件最后一次提交时间恢复 mtime。
       - name: Restore file mtimes from git history
         shell: bash
