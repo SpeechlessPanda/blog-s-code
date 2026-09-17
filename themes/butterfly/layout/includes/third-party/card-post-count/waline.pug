@@ -8,7 +8,7 @@ script.
 
         const res = await fetch(`!{serverURL}/api/comment?type=count&url=${keyArray}`, { method: 'GET' })
         const result = await res.json()
-        
+
         result.data.forEach((count, index) => {
           eleGroup[index].textContent = count
         })

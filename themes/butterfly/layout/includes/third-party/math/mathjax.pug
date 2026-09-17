@@ -2,7 +2,22 @@
 - const { tags, enableMenu } = theme.math.mathjax
 script.
   (() => {
+    const changeScriptToMath = article => {
+      article.querySelectorAll('script[type^="math/tex"]').forEach(el => {
+        const display = /mode=display/.test(el.type)
+        const node = document.createElement(display ? 'div' : 'span')
+        node.textContent = display
+          ? `$$${el.textContent}$$`
+          : `$${el.textContent}$`
+        el.parentNode.replaceChild(node, el)
+      })
+    }
+
     const loadMathjax = () => {
+      const article = document.getElementById('article-container')
+      if (!article || article.querySelector('.hbe-container')) return
+      changeScriptToMath(article)
+
       if (!window.MathJax) {
         window.MathJax = {
           loader: {
@@ -11,7 +26,8 @@ script.
               //- '[tex]/bbm',
               //- '[tex]/bboldx',
               //- '[tex]/dsfont',
-              '[tex]/mhchem'
+              '[tex]/mhchem',
+              'ui/lazy'
             ],
             paths: {
               'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
@@ -39,25 +55,13 @@ script.
             scale: 1.1
           },
           options: {
+            lazyMargin: '200px',
             enableMenu: !{enableMenu},
             menuOptions: {
               settings: {
                 enrich: false  // Turn off Braille and voice narration text automatic generation
               }
             },
-            renderActions: {
-              findScript: [10, doc => {
-                for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
-                  const display = !!node.type.match(/; *mode=display/)
-                  const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
-                  const text = document.createTextNode('')
-                  node.parentNode.replaceChild(text, node)
-                  math.start = {node: text, delim: '', n: 0}
-                  math.end = {node: text, delim: '', n: 0}
-                  doc.math.push(math)
-                }
-              }, '']
-            }
           }
         }
 
@@ -67,9 +71,8 @@ script.
         script.async = true
         document.head.appendChild(script)
       } else {
-        MathJax.startup.document.state(0)
-        MathJax.texReset()
-        MathJax.typesetPromise()
+        MathJax.typesetClear()
+        MathJax.typesetPromise([ article ])
       }
     }
 

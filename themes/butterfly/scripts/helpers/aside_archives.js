@@ -69,18 +69,14 @@ hexo.extend.helper.register('aside_archives', function (options = {}) {
 
   // Use template literal for better readability
   const archiveHeader = `
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>${_p('aside.card_archives')}</span>
-      ${
-        data.length > limitedData.length
-          ? `<a class="card-more-btn" href="${urlFor(archiveDir)}/"
+    <div class="item-headline"><i class="fas fa-archive"></i><span>${_p('aside.card_archives')}</span>${
+      data.length > limitedData.length
+        ? `<a class="card-more-btn" href="${urlFor(archiveDir)}/"
             title="${_p('aside.more_button')}">
             <i class="fas fa-angle-right"></i>
           </a>`
-          : ''
-      }
-    </div>
+        : ''
+    }</div>
   `
 
   // Use map for generating list items, join for performance

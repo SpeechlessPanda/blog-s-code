@@ -12,8 +12,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       hexo:
-        specifier: ^8.0.0
-        version: 8.1.1(chokidar@3.6.0)
+        specifier: 8.1.2
+        version: 8.1.2(chokidar@3.6.0)
       hexo-deployer-git:
         specifier: ^4.0.0
         version: 4.0.0(chokidar@3.6.0)
@@ -923,8 +923,8 @@ packages:
     engines: {node: '>=6.9.0'}
     hasBin: true
 
-  hexo@8.1.1:
-    resolution: {integrity: sha512-UnzT4ImjKzMMuVRsvudxrl7MkdZwKe4S9xJN5pQPK9c+K0G+fLFb9kB6CqZZwj2E5ne+QK0ls4XMKqTUbNR3RQ==}
+  hexo@8.1.2:
+    resolution: {integrity: sha512-gmpNwL1KnbK12q551ZhGxqvSw8M88ZSjFKOhx6ybUYz1phjPdwGewMgBgwGmjcVcIYFq6tWQAv1MRil/sBrPHQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -2868,7 +2868,7 @@ snapshots:
       - chokidar
       - supports-color
 
-  hexo@8.1.1(chokidar@3.6.0):
+  hexo@8.1.2(chokidar@3.6.0):
     dependencies:
       abbrev: 3.0.1
       bluebird: 3.7.2

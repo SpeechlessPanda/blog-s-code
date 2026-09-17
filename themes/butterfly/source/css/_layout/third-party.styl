@@ -28,6 +28,107 @@
   .wl-comment-actions > button:not(last-child)
     padding-right: 4px
 
+if hexo-config('artalk.vote')
+  .artalk-vote
+    display: flex
+    justify-content: center
+    align-items: center
+    margin: 4px 0 20px
+    gap: 10px
+
+    .artalk-page-vote-up,
+    .artalk-page-vote-down
+      position: relative
+      display: inline-flex
+      align-items: center
+      overflow: hidden
+      padding: 5px 16px
+      border: 1px solid alpha($theme-color, .15)
+      gap: 6px
+      addBorderRadius(8)
+      background: var(--card-bg)
+      color: var(--font-color)
+      font-weight: 500
+      font-size: .95em
+      cursor: pointer
+      transition: all .2s ease
+      user-select: none
+
+      i,
+      .artalk-page-vote-up-count,
+      .artalk-page-vote-down-count
+        position: relative
+        z-index: 1
+
+      i
+        font-size: 1em
+        line-height: 1
+
+      .artalk-page-vote-up-count,
+      .artalk-page-vote-down-count
+        min-width: 1em
+        text-align: center
+        font-weight: 600
+        font-size: .9em
+        font-variant-numeric: tabular-nums
+
+      &::after
+        position: absolute
+        top: 50%
+        left: 50%
+        z-index: 0
+        width: 8px
+        height: 8px
+        border-radius: 50%
+        content: ''
+        opacity: 0
+        pointer-events: none
+
+      &:hover
+        border-color: $theme-color
+
+      &:active
+        transform: scale(.95)
+
+        &::after
+          animation: artalkVoteRipple .6s ease-out forwards
+
+    .artalk-page-vote-up
+      &:hover,
+      &.active
+        border-color: $theme-color
+        background: alpha($theme-color, .1)
+        color: $theme-color
+
+      &::after
+        background: alpha($theme-color, .5)
+
+    .artalk-page-vote-down
+      &:hover,
+      &.active
+        border-color: $light-red
+        background: alpha($light-red, .1)
+        color: $light-red
+
+      &::after
+        background: alpha($light-red, .5)
+
+    +maxWidth600()
+      gap: 8px
+
+      .artalk-page-vote-up,
+      .artalk-page-vote-down
+        padding: 4px 12px
+
+  @keyframes artalkVoteRipple
+    0%
+      opacity: .8
+      transform: translate(-50%, -50%) scale(0)
+
+    100%
+      opacity: 0
+      transform: translate(-50%, -50%) scale(20)
+
 if hexo-config('valine.bg')
   #vcomment
     textarea
@@ -193,26 +294,6 @@ if hexo-config('math.use')
     right: 0
     bottom: 0
 
-.aplayer
-  color: $font-black
-
-.container
-  .aplayer
-    margin: 0 0 20px
-
-    if hexo-config('beautify.enable')
-      ol,
-      ul
-        margin: 0
-        padding: 0
-
-        li
-          margin: 0
-          padding: 0 15px
-
-          &:before
-            content: none
-
 .snackbar-container.snackbar-css
   addBorderRadius(5)
   opacity: .85 !important
@@ -226,5 +307,6 @@ if hexo-config('math.use')
     opacity: 1
 
 +maxWidth768()
-  .fancybox__toolbar__column.is-middle
-    display: none
+  .fancybox__toolbar__column.is-middle,
+  .f-carousel__toolbar__column.is-middle
+    visibility: hidden

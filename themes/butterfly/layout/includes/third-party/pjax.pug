@@ -1,4 +1,4 @@
-- var pjaxExclude = 'a:not([target="_blank"])'
+- var pjaxExclude = 'a:not([target="_blank"]):not([data-fancybox])'
 if theme.pjax.exclude
   each val in theme.pjax.exclude
     - pjaxExclude += `:not([href="${val}"])`
@@ -53,8 +53,9 @@ script.
     document.addEventListener('pjax:complete', () => {
       btf.removeGlobalFnEvent('pjaxCompleteOnce')
       document.querySelectorAll('script[data-pjax]').forEach(item => {
+        if (!item.parentNode) return
         const newScript = document.createElement('script')
-        const content = item.text || item.textContent || item.innerHTML || ""
+        const content = item.text || item.textContent || ''
         Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
         newScript.appendChild(document.createTextNode(content))
         item.parentNode.replaceChild(newScript, item)
@@ -64,10 +65,13 @@ script.
     })
 
     document.addEventListener('pjax:error', e => {
-      if (e.request.status === 404) {
+      const responseURL = e.request && e.request.responseURL
+      if (e.request && e.request.status === 404) {
         !{theme.error_404 && theme.error_404.enable}
           ? pjax.loadUrl('!{url_for("/404.html")}')
-          : window.location.href = e.request.responseURL
+          : responseURL && (window.location.href = responseURL)
+      } else if (responseURL) {
+        window.location.href = responseURL
       }
     })
   })

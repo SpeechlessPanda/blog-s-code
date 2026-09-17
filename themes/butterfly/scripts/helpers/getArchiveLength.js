@@ -17,12 +17,11 @@ hexo.extend.helper.register('getArchiveLength', function () {
       const m = date.month() + 1
       const d = date.date()
 
-      if (yearly) {
-        const keyYear = `${y}`
-        map.set(keyYear, (map.get(keyYear) || 0) + 1)
-      }
+      // Always track year so year archive pages can be counted
+      const keyYear = `${y}`
+      map.set(keyYear, (map.get(keyYear) || 0) + 1)
 
-      if (monthly) {
+      if (monthly || daily) {
         const keyMonth = `${y}-${m}`
         map.set(keyMonth, (map.get(keyMonth) || 0) + 1)
       }
@@ -37,8 +36,8 @@ hexo.extend.helper.register('getArchiveLength', function () {
 
   // Determine the appropriate key to fetch based on current page context
   let key
-  if (yearly && year) key = `${year}`
-  if (monthly && month) key = `${year}-${month}`
+  if (yearly || monthly || daily) key = `${year}`
+  if ((monthly || daily) && month) key = `${year}-${month}`
   if (daily && day) key = `${year}-${month}-${day}`
 
   // Return the count for the current period or default to the total posts

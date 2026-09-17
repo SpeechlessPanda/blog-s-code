@@ -173,6 +173,8 @@
       (() => {
         const limitConfig = !{ JSON.stringify(page.limit || {}) }
 
+        const escapeHtml = str => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+
         const sortDataByDate = data => data.sort((a, b) => new Date(b.date) - new Date(a.date))
 
         const filterDataByLimit = (data, limit) => {
@@ -183,49 +185,47 @@
             return data.filter(item => new Date(item.date) >= limitDate)
           }
           return data
-        };
+        }
+
+        const dateFormatter = new Intl.DateTimeFormat('en-GB', {
+          timeZone: !{JSON.stringify(config.timezone || '')} || Intl.DateTimeFormat().resolvedOptions().timeZone,
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        })
 
         const formatToTimeZone = (date) => {
           const fullDate = date.length === 10 ? `${date} 00:00:00` : date
-          const visitorTimeZone = '#{config.timezone}' || Intl.DateTimeFormat().resolvedOptions().timeZone
-          const options = {
-            timeZone: visitorTimeZone,
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          }
-          const [day, month, year, hour, minute, second] = new Intl.DateTimeFormat('en-GB', options)
-            .format(new Date(fullDate))
-            .match(/\d+/g)
+          const [day, month, year, hour, minute, second] = dateFormatter.format(new Date(fullDate)).match(/\d+/g)
           return `${year}-${month}-${day} ${hour}:${minute}:${second}`
         }
 
         const addLazyload = str => {
-          const config = {
+          const lazyConfig = {
             enable: !{Boolean(enable)},
             native: !{Boolean(native)},
-            field: '!{field}',
-            placeholder: '!{url_for(placeholder)}',
+            field: !{JSON.stringify(field || '')},
+            placeholder: !{JSON.stringify(url_for(placeholder))},
           }
 
-          if (!config.enable || config.field !== 'site') return str
+          if (!lazyConfig.enable || lazyConfig.field !== 'site' || str.indexOf('<img') === -1) return str
           const parser = new DOMParser()
           const doc = parser.parseFromString(str, 'text/html')
           const images = doc.querySelectorAll('img')
 
           images.forEach(img => {
-            if (config.native) {
+            if (lazyConfig.native) {
               img.setAttribute('loading', 'lazy')
             } else {
               const src = img.getAttribute('src')
               img.setAttribute('data-lazy-src', src)
 
-              if (config.placeholder) {
-                img.setAttribute('src', config.placeholder)
+              if (lazyConfig.placeholder) {
+                img.setAttribute('src', lazyConfig.placeholder)
               } else {
                 img.removeAttribute('src')
               }
@@ -241,26 +241,26 @@
         let inputEventsAttached = false // Flag to mark if input event listeners have been added
 
         const renderData = (dataSlice) => {
-          const content = dataSlice.map(item => {
+          const content = dataSlice.map((item, index) => {
             const formattedDate = formatToTimeZone(item.date)
-            const tags = item.tags && item.tags.map(tag => `<span class="shuoshuo-tag">${tag}</span>`).join('') || ''
+            const tags = item.tags && item.tags.map(tag => `<span class="shuoshuo-tag">${escapeHtml(tag)}</span>`).join('') || ''
             const itemKey = item.key || ('memo-' + String(item.date || index).replace(/[^0-9a-zA-Z]/g, '-'))
-            const commentButton = !{commentsJsLoad}
+            const commentButton = !{commentsJsLoad || false}
               ? `<div class="shuoshuo-comment-btn" onclick="addCommentToShuoshuo(event)">
                   <i class="fa-solid fa-comments"></i>
                 </div>`
               : ''
-            const commentContainer = `<div class="shuoshuo-comment no-comment" data-key="${itemKey}"></div>`
+            const commentContainer = `<div class="shuoshuo-comment no-comment" data-key="${escapeHtml(itemKey)}"></div>`
 
             return `
               <div class="shuoshuo-item">
                 <div class="container">
                   <div class="shuoshuo-item-header">
                     <div class="shuoshuo-avatar">
-                      <img class="no-lightbox" src="${item.avatar || '!{url_for(theme.avatar.img)}'}">
+                      <img class="no-lightbox" src="${item.avatar ? escapeHtml(item.avatar) : !{JSON.stringify(url_for(theme.avatar.img))}}">
                     </div>
                     <div class="shuoshuo-info">
-                      <div class="shuoshuo-author">${item.author || '!{config.author}'}</div>
+                      <div class="shuoshuo-author">${item.author ? escapeHtml(item.author) : !{JSON.stringify(config.author || '')}}</div>
                       <time class="shuoshuo-date" title="${formattedDate}">
                         ${btf.diffDate(formattedDate, true)}
                       </time>
@@ -281,6 +281,7 @@
 
           window.lazyLoadInstance && window.lazyLoadInstance.update()
           btf.loadLightbox(document.querySelectorAll('#article-container img:not(.no-lightbox)'))
+          document.dispatchEvent(new Event('shuoshuo:rendered'))
         }
 
         const renderNavigation = () => {
@@ -488,10 +489,13 @@
         }
 
         const loadShuoshuo = async () => {
+          const container = document.getElementById('article-container')
           try {
             let originData = []
             if (!{Boolean(page.shuoshuo_url)}) {
+              container.innerHTML = '<div class="shuoshuo-loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>'
               const response = await fetch('!{url_for(page.shuoshuo_url)}')
+              if (!response.ok) throw new Error(`HTTP ${response.status}`)
               originData = await response.json()
             } else {
               const dataElement = document.getElementById('shuoshuo-data')
@@ -499,15 +503,34 @@
             }
 
             data = filterDataByLimit(sortDataByDate(originData), limitConfig)
-
             totalPages = Math.ceil(data.length / itemsPerPage)
+
+            if (data.length === 0) {
+              container.innerHTML = '<div class="shuoshuo-empty"></div>'
+              return
+            }
 
             renderPage(currentPage)
             initShuoshuoHeaderScroll()
           } catch (error) {
             console.error(error)
+            container.innerHTML = '<div class="shuoshuo-error"><i class="fa-solid fa-circle-exclamation"></i></div>'
           }
-        };
+        }
 
-        window.pjax ? loadShuoshuo() : window.addEventListener('load', loadShuoshuo)
+        const pjaxCleanup = () => {
+          const container = document.getElementById('article-container')
+          if (container) {
+            const nav = container.nextElementSibling
+            if (nav && nav.classList.contains('shuoshuo-navigation')) nav.remove()
+          }
+          document.removeEventListener('pjax:send', pjaxCleanup)
+        }
+
+        if (window.pjax) {
+          document.addEventListener('pjax:send', pjaxCleanup)
+          loadShuoshuo()
+        } else {
+          window.addEventListener('load', loadShuoshuo)
+        }
       })()

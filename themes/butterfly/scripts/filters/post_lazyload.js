@@ -21,7 +21,7 @@ const lazyload = htmlContent => {
   // Handle src attributes with double quotes, single quotes, or no quotes (unified approach)
   // Matches: src="..." or src='...' or src=... (e.g., after minification by hexo-minify)
   return htmlContent.replace(/(<img(?![^>]*?\bdata-lazy-src=)(?:\s[^>]*?)?\ssrc=)(?:"([^"]*)"|'([^']*)'|([^\s>]+))(?![^<]*<\/script>)/gi, (match, prefix, srcDoubleQuote, srcSingleQuote, srcNoQuote) => {
-    const src = srcDoubleQuote || srcSingleQuote || srcNoQuote
+    const src = srcDoubleQuote ?? srcSingleQuote ?? srcNoQuote
     return `${prefix}"${bg}" data-lazy-src="${src}"`
   })
 }

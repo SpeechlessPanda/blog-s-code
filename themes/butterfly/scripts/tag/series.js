@@ -10,21 +10,40 @@
 'use strict'
 
 const urlFor = require('hexo-util').url_for.bind(hexo)
-const groups = {}
 
+// Iterate all posts once and group by series name.
+// Result is stored on hexo._seriesGroups, shared by both tag and helper.
+function buildSeriesGroups () {
+  const groups = {}
+  const posts = hexo.model('Post').toArray()
+  for (let i = 0, len = posts.length; i < len; i++) {
+    const p = posts[i]
+    if (p.series) {
+      if (!groups[p.series]) groups[p.series] = []
+      groups[p.series].push({
+        title: p.title,
+        path: p.path,
+        date: p.date.valueOf()
+      })
+    }
+  }
+  return groups
+}
+
+// Build once before the first render (hexo generate / hexo server initial load).
+// before_generate runs after tag rendering, so we need this as a fallback.
 hexo.extend.filter.register('before_post_render', data => {
   if (!hexo.theme.config.series.enable) return data
-
-  const { layout, series } = data
-  if (layout === 'post' && series) {
-    if (!groups[series]) groups[series] = []
-    groups[series].push({
-      title: data.title,
-      path: data.path,
-      date: data.date.unix()
-    })
+  if (!hexo._seriesGroups) {
+    hexo._seriesGroups = buildSeriesGroups()
   }
   return data
+})
+
+// Rebuild after each generate cycle in hexo server to reflect latest post data.
+hexo.extend.filter.register('before_generate', () => {
+  if (!hexo.theme.config.series.enable) return
+  hexo._seriesGroups = buildSeriesGroups()
 })
 
 function series (args) {
@@ -34,24 +53,30 @@ function series (args) {
     return ''
   }
 
-  const seriesArr = args.length ? groups[args[0]] : groups[this.series]
+  const groupName = args.length ? args[0] : this.series
 
-  if (!seriesArr) {
-    hexo.log.warn(`There is no series named "${args[0]}"`)
+  if (!groupName) {
+    hexo.log.warn('No series specified')
     return ''
   }
 
-  const isAsc = (series.order || 1) === 1 // 1: asc, -1: desc
-  const isSortByTitle = series.orderBy === 'title'
+  const groups = hexo._seriesGroups || {}
+  const source = groups[groupName]
 
-  const compareFn = (a, b) => {
-    const itemA = isSortByTitle ? a.title.toUpperCase() : a.date
-    const itemB = isSortByTitle ? b.title.toUpperCase() : b.date
-
-    return itemA < itemB ? (isAsc ? -1 : 1) : itemA > itemB ? (isAsc ? 1 : -1) : 0
+  if (!source || !source.length) {
+    hexo.log.warn(`There is no series named "${groupName}"`)
+    return ''
   }
 
-  seriesArr.sort(compareFn)
+  const isAsc = (series.order || 1) === 1
+  const isSortByTitle = series.orderBy === 'title'
+
+  // .slice() to copy before sorting, so we don't mutate the shared data
+  const seriesArr = source.slice().sort((a, b) => {
+    const itemA = isSortByTitle ? a.title.toUpperCase() : a.date
+    const itemB = isSortByTitle ? b.title.toUpperCase() : b.date
+    return itemA < itemB ? (isAsc ? -1 : 1) : itemA > itemB ? (isAsc ? 1 : -1) : 0
+  })
 
   const listItems = seriesArr.map(ele =>
     `<li><a href="${urlFor(ele.path)}" title="${ele.title}">${ele.title}</a></li>`

@@ -5,20 +5,10 @@
 
 'use strict'
 
+const { escapeHTML } = require('hexo-util')
+
 const score = (args, content) => {
-  // Escape HTML tags and some special characters, including curly braces
-  const escapeHtmlTags = s => {
-    const lookup = {
-      '&': '&amp;',
-      '"': '&quot;',
-      "'": '&apos;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '{': '&#123;',
-      '}': '&#125;'
-    }
-    return s.replace(/[&"'<>{}]/g, c => lookup[c])
-  }
+  const escapeHtmlTags = s => escapeHTML(s).replace(/[{}]/g, c => c === '{' ? '&#123;' : '&#125;')
 
   const trimmed = content.trim()
   // Split content using six dashes as a delimiter

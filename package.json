@@ -10,11 +10,11 @@
     "publish": "hexo clean && hexo g && hexo d"
   },
   "hexo": {
-    "version": "8.1.1"
+    "version": "8.1.2"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
-    "hexo": "^8.0.0",
+    "hexo": "8.1.2",
     "hexo-deployer-git": "^4.0.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-baidu-sitemap": "^0.1.9",

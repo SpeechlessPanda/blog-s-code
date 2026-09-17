@@ -2,8 +2,11 @@ script.
   (() => {
     const abcjsInit = () => {
       const abcjsFn = () => {
+        const $article = document.getElementById("article-container")
+        if (!$article || $article.querySelector(".hbe-container")) return
+
         setTimeout(() => {
-          const sheets = document.querySelectorAll(".abc-music-sheet")
+          const sheets = $article.querySelectorAll(".abc-music-sheet")
           for (let i = 0; i < sheets.length; i++) {
             const ele = sheets[i]
             if (ele.children.length > 0) continue
@@ -29,7 +32,7 @@ script.
         }, 100)
       }
 
-      if (typeof ABCJS === "object") {
+      if (typeof ABCJS === "object" && ABCJS !== null) {
         abcjsFn()
       } else {
         btf.getScript("!{url_for(theme.asset.abcjs_basic_js)}").then(abcjsFn)

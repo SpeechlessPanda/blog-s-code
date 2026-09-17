@@ -124,7 +124,6 @@ npm install hexo-renderer-pug hexo-renderer-stylus --save
 - [x] **Theme Customization** - Custom site color schemes
 - [x] **Chart Support** - Mermaid flowcharts/Chart.js data charts
 - [x] **Music Notation** - ABCJS music notation support
-- [x] **Music Player** - APlayer/Meting music playback
 - [x] **Article Series** - Series article organization
 - [x] **Instantpage** - Page preloading acceleration
 - [x] **Snackbar** - Elegant notification messages

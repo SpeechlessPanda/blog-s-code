@@ -27,6 +27,7 @@ const parseGalleryArgs = args => {
 const parseImageContent = content => {
   const images = []
   let match
+  IMAGE_REGEX.lastIndex = 0
 
   while ((match = IMAGE_REGEX.exec(content)) !== null) {
     images.push({

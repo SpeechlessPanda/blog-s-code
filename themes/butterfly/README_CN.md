@@ -124,7 +124,6 @@ npm install hexo-renderer-pug hexo-renderer-stylus --save
 - [x] **主題定製** - 自訂網站配色方案
 - [x] **圖表支援** - Mermaid 流程圖/Chart.js 數據圖表
 - [x] **音樂符號** - ABCJS 音樂記譜法支援
-- [x] **音樂播放器** - APlayer/Meting 音樂播放功能
 - [x] **系列文章** - 系列文章組織功能
 - [x] **Instantpage** - 頁面預載入加速
 - [x] **Snackbar** - 優雅的提示訊息

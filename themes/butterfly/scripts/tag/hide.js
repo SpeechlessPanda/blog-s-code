@@ -16,7 +16,7 @@
 
 'use strict'
 
-const parseArgs = args => args.join(' ').split(',')
+const parseArgs = args => args.join(' ').split(',').map(s => s.trim())
 
 const generateStyle = (bg, color) => {
   let style = 'style="'

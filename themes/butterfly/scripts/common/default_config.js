@@ -378,6 +378,7 @@ module.exports = {
     server: null,
     site: null,
     visitor: false,
+    vote: false,
     option: null
   },
   chat: {
@@ -393,6 +394,9 @@ module.exports = {
   },
   crisp: {
     website_id: null
+  },
+  knocket: {
+    identifier: null
   },
   google_tag_manager: {
     tag_id: null,
@@ -551,10 +555,6 @@ module.exports = {
   pjax: {
     enable: false,
     exclude: null
-  },
-  aplayerInject: {
-    enable: false,
-    per_page: true
   },
   snackbar: {
     enable: false,

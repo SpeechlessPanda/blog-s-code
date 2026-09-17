@@ -5,11 +5,15 @@
 if (syntax_highlighter === 'prismjs' || enable) && !preprocess
   script.
     (() => {
+      const $article = document.getElementById('article-container')
+      if (!$article || $article.querySelector('.hbe-container')) return
+
       window.Prism = window.Prism || {}
       window.Prism.manual = true
 
       const highlightAll = () => {
-        window.Prism.highlightAll()
+        // window.Prism.highlightAll()
+        window.Prism.highlightAllUnder($article, true)
       }
 
       window.addEventListener('load', highlightAll)
