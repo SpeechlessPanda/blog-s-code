@@ -97,7 +97,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: butterfly
+theme: panda
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -150,15 +150,4 @@ search:
   content: true
   format: html
 
-# OG Image (auto-generated social preview cards)
-og_image:
-  enable: true
-  width: 1200
-  height: 630
-  output_dir: og-images
-  font_dir: fonts
-  font_regular: LXGWWenKai-Regular.ttf
-  font_bold: LXGWWenKai-Bold.ttf
-  font_regular_url: https://github.com/lxgw/LxgwWenKai/releases/download/v1.330/LXGWWenKai-Regular.ttf
-  font_bold_url: https://github.com/lxgw/LxgwWenKai/releases/download/v1.330/LXGWWenKai-Bold.ttf
-  site_name: SpeechlessPanda
+# OG Image 配置已迁移到 _config.panda.yml(主题级,默认值即本站配置)

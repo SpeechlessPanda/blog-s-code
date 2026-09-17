@@ -1,0 +1,184 @@
+# 站点个性化配置(覆盖 themes/butterfly/_config.yml)
+# Hexo 5+ 原生支持:运行时与本文件深合并,本文件优先。主题文件保持官方默认,可整体替换升级。
+
+# 导航栏
+nav:
+  fixed: true # 固定导航栏
+
+# 菜单
+menu:
+  首页: / || fas fa-home
+  博客: /blog/ || fas fa-feather-alt
+  归档: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  友链: /link/ || fas fa-link
+  碎碎念: /memos/ || fas fa-comment-dots
+
+# 代码块
+code_blocks:
+  theme: darker
+  macStyle: true
+  height_limit: 320
+  word_wrap: true
+
+# 社交链接(头像下方)
+social:
+  fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
+  fas fa-envelope: mailto:zhoushimingyu@qq.com || Email || '#4a7dbe'
+  fas fa-rss: /atom.xml || RSS || '#ff6600'
+
+# 头像
+avatar:
+  img: /img/avatar.png
+  effect: true # 旋转动画（inject 中覆盖 .avatar-img 的动画时长）
+
+# 副标题(打字机轮播)
+subtitle:
+  enable: true
+  sub:
+    - 保持思考，保持努力，这是本博客唯一不变的正确，也应该是你对本博客的原则。
+    - 世界上有难的内容，但大多是新的内容，只要去学，就不难。
+    - 做自己，接受自己，成为自己。
+    - 人生的容错很高，三次右转就变成了左转。
+    - 不要失去从头再来的勇气。
+
+# 打赏
+reward:
+  enable: true
+  text: 请我喝杯咖啡~
+  QR_code:
+    - img: /img/wechat.png
+      link:
+      text: 微信
+    - img: /img/alipay.png
+      link:
+      text: 支付宝
+
+# 侧栏
+aside:
+  display:
+    home: false
+    archive: false
+    tag: false
+    category: false
+  card_author:
+    description: 主要分享我的个人成长心得，偶尔可能会分享一些技术文章，欢迎关注~（右上角有碎碎念可以看）
+    button:
+      link: https://github.com/SpeechlessPanda
+  card_announcement:
+    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了本博客之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~大家还可以多多关注友链里的内容，不仅有各种大佬，还有很多有用的资源。
+  card_categories:
+    enable: false
+
+# 深色模式
+darkmode:
+  autoChangeMode: 1 # 跟随系统深色模式；不支持时按主题设定时间切换
+
+# 阅读进度百分比
+rightside_scroll_percent: true
+
+# 字数统计
+wordcount:
+  enable: true
+
+# 数学公式
+math:
+  use: katex
+
+# 搜索
+search:
+  use: local_search
+
+# 评论
+comments:
+  use: Giscus
+  count: true
+  card_post_count: true
+
+giscus:
+  repo: SpeechlessPanda/SpeechlessPanda.github.io
+  repo_id: R_kgDORZHPlQ
+  category_id: DIC_kwDORZHPlc4C3cyf
+  js: https://giscus.app/client.js
+  option:
+    data-mapping: pathname
+    data-strict: '0'
+    data-reactions-enabled: '1'
+    data-emit-metadata: '0'
+    data-input-position: top
+    data-lang: zh-CN
+
+# 加载动画
+preloader:
+  enable: true
+
+# 美化(标题前缀图标等)
+beautify:
+  enable: true
+  title_prefix_icon: '\f863'
+  title_prefix_icon_color: '#6ec6ff'
+
+# 字体
+font:
+  global_font_size: 1.1em
+  font_family: "'LXGW WenKai','Source Han Serif SC','Noto Serif SC','PingFang SC','Microsoft YaHei',serif"
+  code_font_family: "'LXGW WenKai','Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
+
+blog_title_font:
+  font_family: "'LXGW WenKai','Source Han Sans SC','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif"
+
+# 图片灯箱
+lightbox: fancybox
+
+# Pjax(碎碎念页除外,其 Giscus 多 iframe 与 PJAX 不兼容)
+pjax:
+  enable: true
+  exclude:
+    - /memos/
+    - /memos/index.html
+
+# 预加载
+instantpage: true
+
+# 图片懒加载
+lazyload:
+  enable: true
+
+# Open Graph
+Open_Graph_meta:
+  option:
+    twitter_card: summary_large_image
+
+# 注入
+inject:
+  head:
+    - |
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
+      <style>
+        /* 头像旋转放慢到 8s */
+        .avatar-img { animation: avatar_turn_around 8s linear infinite !important; }
+        /* 文章正文字号略放大 */
+        #post #article-container { font-size: 1.15em; }
+      </style>
+    - <link rel="alternate" type="application/atom+xml" title="SpeechlessPanda" href="/atom.xml">
+  bottom:
+
+# Panda 扩展
+# 碎碎念增强(默认值已满足本站:path /memos/、data_key shuoshuo、最新卡片、独立页、搜索注入、评论计数)
+memos:
+  enable: true
+
+# Atom feed(主题自写生成器,文章+碎碎念混排)
+feed:
+  enable: true
+
+# OG 分享图(默认值已满足:1200x630、LXGW WenKai 字体自动下载到 fonts/)
+og_image:
+  enable: true
+
+# 渐变外观(主题默认即本站配色;保留个人注入的小改动在上面 inject 里)
+gradient:
+  enable: true
+
+# 正文/碎碎念链接新标签页打开(主题自动注入脚本)
+link_target_blank: true
