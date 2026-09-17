@@ -26,9 +26,6 @@ importers:
       hexo-generator-category:
         specifier: ^2.0.0
         version: 2.0.0
-      hexo-generator-feed:
-        specifier: ^4.0.0
-        version: 4.0.0
       hexo-generator-index:
         specifier: ^4.0.0
         version: 4.0.0
@@ -65,10 +62,6 @@ importers:
       moment-timezone:
         specifier: ^0.6.0
         version: 0.6.0
-    devDependencies:
-      playwright:
-        specifier: ^1.61.1
-        version: 1.61.1
 
 packages:
 
@@ -657,16 +650,6 @@ packages:
   fast-text-table@1.0.1:
     resolution: {integrity: sha512-KUwE3MizTzXwhrvTTEpWbug1ngV1zfjwzdxSkeWYGUoVGaaQoid+jxgg4zm4LB+OrtnD+X2xJFq7DCO3pc3fdQ==}
 
-  fast-xml-builder@1.0.0:
-    resolution: {integrity: sha512-fpZuDogrAgnyt9oDDz+5DBz0zgPdPZz6D4IR7iESxRXElrlGTRkHJ9eEt+SACRJwT0FNFrt71DFQIUFBJfX/uQ==}
-
-  fast-xml-parser@5.4.1:
-    resolution: {integrity: sha512-BQ30U1mKkvXQXXkAGcuyUA/GA26oEB7NzOtsxCDtyu62sjGw5QraKFhx2Em3WQNjPw9PG6MQ9yuIIgkSDfGu5A==}
-    hasBin: true
-
-  feedsmith@2.9.0:
-    resolution: {integrity: sha512-TYucytOx4bTrD4ON0iuJG9y0Me7fiT0EZ+7MIE0xptvd8TL6nY0Z1jVPa9W39WMJUtPqV2r27TQxL/z5DCCmdA==}
-
   file-uri-to-path@1.0.0:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
 
@@ -705,11 +688,6 @@ packages:
     engines: {node: '>= 4.0'}
     os: [darwin]
     deprecated: Upgrade to fsevents v2 to mitigate potential security issues
-
-  fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -838,10 +816,6 @@ packages:
   hexo-generator-category@2.0.0:
     resolution: {integrity: sha512-9OduRBf3WeRDa4BR0kAfRjOVHur7v3fm0NKAwbjUiqULigAdNZVZPO3cHKW2MlBbl/lI5PuWdhQ9zZ99CCCAgQ==}
     engines: {node: '>=14'}
-
-  hexo-generator-feed@4.0.0:
-    resolution: {integrity: sha512-wG0SDBwJ60B+bcMQhArjSpw/bsuP1/4o9Ar+FnxTMRq5/SEZZlj7q/r7HI60olRf0eurqEm4Dm8yHfAMKQhkoA==}
-    engines: {node: '>=20.19.0'}
 
   hexo-generator-index@4.0.0:
     resolution: {integrity: sha512-KeM7mOCKWINGFAk1E+CkjMMgqFIv8oaRbGxR7ipkQAp44o4aopkVftma4sdIplOq9WQEWfVYDUK5gEv9J3nzUg==}
@@ -1434,16 +1408,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  playwright-core@1.61.1:
-    resolution: {integrity: sha512-h7Qlt6m4REp25qvIdvbDtVmD4LqVXfpRxhORv9L0jzETM05p4fuPJ3dKyuSXQxDSbXnmS79HAgi9589lGSpLkg==}
-    engines: {node: '>=18'}
-    hasBin: true
-
-  playwright@1.61.1:
-    resolution: {integrity: sha512-DWnY5o3YbLWK4GovuAVwpqL+1VwGNdUGrRr++8j8PtQQzvAVZUIMjKQ90fY689sEJZJBbZVw1rXaOKSTitkzPQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-
   posix-character-classes@0.1.1:
     resolution: {integrity: sha512-xTgYBc3fuo7Yt7JbiuFxSYGToMoz8fLoE6TC9Wx1P/u+LfeThMOAqmuyECnlBaaJb+u1m9hHiXUEtwW4OzfUJg==}
     engines: {node: '>=0.10.0'}
@@ -1680,9 +1644,6 @@ packages:
 
   striptags@2.2.1:
     resolution: {integrity: sha512-vZTvmFP0IYu/zn8MXV6PrLb6VKbd9WGSEnlm4D5RNXS/+zYYlHrSfJgoBw1w56D6RJCr515er3BittRGQqihLA==}
-
-  strnum@2.2.0:
-    resolution: {integrity: sha512-Y7Bj8XyJxnPAORMZj/xltsfo55uOiyHcU2tnAVzHUnSJR/KsEX+9RoDeXEnsXtl/CX4fAcrt64gZ13aGaWPeBg==}
 
   stylus@0.62.0:
     resolution: {integrity: sha512-v3YCf31atbwJQIMtPNX8hcQ+okD4NQaTuKGUWfII8eaqn+3otrbttGL1zSMZAAtiPsBztQnujVBugg/cXFUpyg==}
@@ -2454,18 +2415,6 @@ snapshots:
 
   fast-text-table@1.0.1: {}
 
-  fast-xml-builder@1.0.0: {}
-
-  fast-xml-parser@5.4.1:
-    dependencies:
-      fast-xml-builder: 1.0.0
-      strnum: 2.2.0
-
-  feedsmith@2.9.0:
-    dependencies:
-      entities: 7.0.1
-      fast-xml-parser: 5.4.1
-
   file-uri-to-path@1.0.0:
     optional: true
 
@@ -2510,9 +2459,6 @@ snapshots:
     dependencies:
       bindings: 1.5.0
       nan: 2.25.0
-    optional: true
-
-  fsevents@2.3.2:
     optional: true
 
   fsevents@2.3.3:
@@ -2699,11 +2645,6 @@ snapshots:
   hexo-generator-category@2.0.0:
     dependencies:
       hexo-pagination: 3.0.0
-
-  hexo-generator-feed@4.0.0:
-    dependencies:
-      feedsmith: 2.9.0
-      hexo-util: 4.0.0
 
   hexo-generator-index@4.0.0:
     dependencies:
@@ -3387,14 +3328,6 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-  playwright-core@1.61.1: {}
-
-  playwright@1.61.1:
-    dependencies:
-      playwright-core: 1.61.1
-    optionalDependencies:
-      fsevents: 2.3.2
-
   posix-character-classes@0.1.1: {}
 
   pretty-hrtime@1.0.3: {}
@@ -3676,8 +3609,6 @@ snapshots:
       min-indent: 1.0.1
 
   striptags@2.2.1: {}
-
-  strnum@2.2.0: {}
 
   stylus@0.62.0:
     dependencies:

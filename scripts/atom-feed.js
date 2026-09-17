@@ -21,35 +21,14 @@ const FEED_PATH = 'atom.xml'
 const POST_LIMIT = 20
 const EXCERPT_LIMIT = 140
 const UPDATE_NOTIFY_MS = 24 * 60 * 60 * 1000 // 更新距发布超过此阈值才向订阅者推送
-const MEMO_TZ_OFFSET = '+08:00' // 碎碎念里的日期按北京时间书写，显式指定避免受构建机器时区影响
-
-function escapeXml (s) {
-  return String(s == null ? '' : s).replace(/[<>&'"]/g, c => (
-    { '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]
-  ))
-}
-
-// CDATA 中不能出现 "]]>"，拆分转义
-function cdata (s) {
-  return '<![CDATA[' + String(s == null ? '' : s).replace(/\]\]>/g, ']]]]><![CDATA[>') + ']]>'
-}
-
-function stripHtml (html) {
-  return String(html || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
-}
-
-// 碎碎念日期 "2026-08-23 23:30"（可带秒）按北京时间解析
-function parseMemoDate (str) {
-  const t = String(str).trim().replace(' ', 'T')
-  const withSec = /T\d{2}:\d{2}:\d{2}/.test(t) ? t : t + ':00'
-  const d = new Date(withSec + MEMO_TZ_OFFSET)
-  return isNaN(d.getTime()) ? null : d
-}
-
-// Date -> 路径安全的时间戳 "2026-08-25T15-30"（统一用北京时间，与构建机器时区无关）
-function pathStamp (date) {
-  return new Date(date.getTime() + 8 * 3600 * 1000).toISOString().slice(0, 16).replace(':', '-')
-}
+const {
+  escapeXml,
+  cdata,
+  stripHtml,
+  parseMemoDate,
+  pathStamp,
+  memoSlugs
+} = require('./lib/memo-utils')
 
 // Date -> 紧凑时间戳 "20260804-131600"（用于文章更新 stub 路径）
 function compactStamp (date) {
@@ -121,20 +100,15 @@ function buildPostEntry (post, authorXml) {
   }
 }
 
-function buildMemoEntry (item, memosUrl, author, usedIds) {
+function buildMemoEntry (item, slug, memosUrl, author) {
   const date = parseMemoDate(item.date)
-  if (!date) return null
+  if (!date || !slug) return null
   const html = hexo.render.renderSync({ text: item.content || '', engine: 'markdown' })
     .replace(/[\x00-\x1F\x7F]/g, '') // eslint-disable-line no-control-regex
-  // 同一分钟内有多条碎碎念时按文件内出现顺序加序号去重（文件顺序稳定，id 即稳定）
-  const stamp = pathStamp(date)
-  let slug = stamp
-  for (let i = 2; usedIds.has(slug); i++) slug = `${stamp}-${i}`
-  usedIds.add(slug)
   const url = `${memosUrl}${slug}/`
   const tags = (item.tags || []).map(t => `<category term="${escapeXml(t)}"/>`).join('')
   const authorXml = `<author><name>${escapeXml(item.author || author)}</name></author>`
-  const dateStr = stamp.slice(0, 10) + ' ' + stamp.slice(11).replace('-', ':')
+  const dateStr = slug.slice(0, 10) + ' ' + slug.slice(11).replace('-', ':')
 
   return {
     published: date,
@@ -168,14 +142,14 @@ hexo.extend.generator.register('atom', function (locals) {
   // 碎碎念条目（全部）
   const memos = locals.data && locals.data.shuoshuo
   if (memos && memos.length) {
-    const usedMemoIds = new Set()
-    for (const item of memos) {
-      const entry = buildMemoEntry(item, memosUrl, config.author, usedMemoIds)
+    const slugs = memoSlugs(memos)
+    memos.forEach((item, i) => {
+      const entry = buildMemoEntry(item, slugs[i], memosUrl, config.author)
       if (entry) {
         entries.push(entry)
         routes.push(entry.pageRoute)
       }
-    }
+    })
   }
 
   // 文章与碎碎念按发布日期倒序混排

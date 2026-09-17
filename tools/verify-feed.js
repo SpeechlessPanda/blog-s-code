@@ -1,9 +1,9 @@
-// scripts/verify-feed.js
-// 非测试框架的轻量断言脚本：构建后运行 `node scripts/verify-feed.js`
+// tools/verify-feed.js
+// 非测试框架的轻量断言脚本：构建后运行 `node tools/verify-feed.js`
 // 断言 atom.xml 满足 RSS 阅读器可识别的身份标识要求：
 //   1. 每个条目的 <link> 必须唯一（link-keyed 阅读器用它识别条目）
 //   2. 每个条目的 <id> 必须唯一
-//   3. 碎碎念条目 link 必须指向带锚点的唯一地址
+//   3. 碎碎念条目 link 必须指向路径式唯一地址 /memos/<时间戳>/
 // 失败时以非零码退出并列出重复项。
 'use strict'
 

@@ -59,6 +59,10 @@ jobs:
         env:
           GH_DISCUSSION_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
         run: pnpm run build
+      - name: Verify atom feed identity
+        # atom.xml 条目身份标识校验（link/id 唯一性、碎碎念路径式地址），失败即中断部署
+        run: node tools/verify-feed.js
+
 
       - name: Sync README to publish directory
         shell: bash

@@ -4,6 +4,7 @@
 // 直接在 after_generate 改 memos/index.html 的 shuoshuo-data JSON,避免 data 重新加载覆盖。
 'use strict'
 
+const { memoDataKey } = require('./lib/memo-utils')
 const GISCUS_QUERY = `query($owner:String!,$name:String!,$categoryId:ID,$after:String){
   repository(owner:$owner,name:$name){
     discussions(first:100,after:$after,categoryId:$categoryId,orderBy:{field:UPDATED_AT,direction:DESC}){
@@ -79,8 +80,7 @@ hexo.extend.filter.register('after_generate', async function () {
           if (!nodes.length) break
         }
         data.forEach(item => {
-          const dataKey = item.key || ('memo-' + String(item.date || '').replace(/[^0-9a-zA-Z]/g, '-'))
-          const term = `/memos?key=${dataKey}`
+          const term = `/memos?key=${memoDataKey(item)}`
           item.commentCount = titleToCount[term] || 0
         })
       } catch (e) {

@@ -49,7 +49,7 @@ code_blocks:
 #   icon: link || the description || color
 social:
   fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
-  fas fa-envelope: mailto:859635282@qq.com || Email || '#4a7dbe'
+  fas fa-envelope: mailto:zhoushimingyu@qq.com || Email || '#4a7dbe'
   fas fa-rss: /atom.xml || RSS || '#ff6600'
 
 # --------------------------------------
