@@ -15,15 +15,13 @@ nav:
   display_title: true
   display_post_title: true
   # Whether to fix navigation bar
-  fixed: true
+  fixed: false
 
 menu:
-  首页: / || fas fa-home
-  博客: /blog/ || fas fa-feather-alt
-  归档: /archives/ || fas fa-archive
-  标签: /tags/ || fas fa-tags
-  友链: /link/ || fas fa-link
-  碎碎念: /memos/ || fas fa-comment-dots
+  # Home: / || fas fa-home
+  # List||fas fa-list:
+  #   Music: /music/ || fas fa-music
+  #   Movie: /movies/ || fas fa-video
 
 # --------------------------------------
 # Code Blocks Settings
@@ -31,11 +29,11 @@ menu:
 
 code_blocks:
   # Code block theme: darker / pale night / light / ocean / false
-  theme: darker
-  macStyle: true
+  theme: light
+  macStyle: false
   # Code block height limit (unit: px)
-  height_limit: 320
-  word_wrap: true
+  height_limit: false
+  word_wrap: false
 
   # Toolbar
   copy: true
@@ -48,9 +46,8 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
-  fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
-  fas fa-envelope: mailto:zhoushimingyu@qq.com || Email || '#4a7dbe'
-  fas fa-rss: /atom.xml || RSS || '#ff6600'
+  # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
+  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
 
 # --------------------------------------
 # Image Settings
@@ -59,8 +56,8 @@ social:
 favicon: /img/favicon.png
 
 avatar:
-  img: /img/avatar.png
-  effect: true
+  img: /img/butterfly-icon.png
+  effect: false
 
 # Disable all banner images
 disable_top_img: false
@@ -115,7 +112,7 @@ error_img:
 # A simple 404 page
 error_404:
   enable: false
-  subtitle: "Page Not Found"
+  subtitle: 'Page Not Found'
   background: /img/error-page.png
 
 post_meta:
@@ -152,7 +149,7 @@ index_top_img_height:
 
 # The subtitle on homepage
 subtitle:
-  enable: true
+  enable: false
   # Typewriter Effect
   effect: true
   # Customize typed.js
@@ -168,11 +165,6 @@ subtitle:
   source: false
   # If you close the typewriter effect, the subtitle will only show the first line of sub
   sub:
-    - 保持思考，保持努力，这是本博客唯一不变的正确，也应该是你对本博客的原则。
-    - 世界上有难的内容，但大多是新的内容，只要去学，就不难。
-    - 做自己，接受自己，成为自己。
-    - 人生的容错很高，三次右转就变成了左转。
-    - 不要失去从头再来的勇气。
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -216,15 +208,15 @@ post_copyright:
 
 # Sponsor/reward
 reward:
-  enable: true
-  text: 请我喝杯咖啡~
+  enable: false
+  text:
   QR_code:
-    - img: /img/wechat.png
-      link:
-      text: 微信
-    - img: /img/alipay.png
-      link:
-      text: 支付宝
+    # - img: /img/wechat.jpg
+    #   link:
+    #   text: wechat
+    # - img: /img/alipay.jpg
+    #   link:
+    #   text: alipay
 
 # Post edit
 # Easily browse and edit blog source code online.
@@ -292,15 +284,15 @@ aside:
     category: true
   card_author:
     enable: true
-    description: 主要分享我的个人成长心得，偶尔可能会分享一些技术文章，欢迎关注~（右上角有碎碎念可以看）
+    description:
     button:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/SpeechlessPanda
+      link: https://github.com/xxxxxx
   card_announcement:
     enable: true
-    content: 我是一名计算机学生，这里是我向外输出内容的地方，如果你看了本博客之后有想和我交流的内容，欢迎在文章下方留言或者通过邮箱联系我~大家还可以多多关注友链里的内容，不仅有各种大佬，还有很多有用的资源。
+    content: This is my Blog
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -349,7 +341,7 @@ aside:
     # The title shows the series name
     series_title: false
     # Order by title or date
-    orderBy: "date"
+    orderBy: 'date'
     # Sort of order. 1, asc for ascending; -1, desc for descending
     order: -1
   card_webinfo:
@@ -379,9 +371,9 @@ translate:
   # Time delay
   translateDelay: 0
   # The text of the button when the language is Simplified Chinese
-  msgToTraditionalChinese: "繁"
+  msgToTraditionalChinese: '繁'
   # The text of the button when the language is Traditional Chinese
-  msgToSimplifiedChinese: "簡"
+  msgToSimplifiedChinese: '簡'
 
 # Read Mode
 readmode: true
@@ -395,13 +387,13 @@ darkmode:
   # autoChangeMode: 1  Following System Settings, if the system doesn't support dark mode, it will switch dark mode between 6 pm to 6 am
   # autoChangeMode: 2  Switch dark mode between 6 pm to 6 am
   # autoChangeMode: false
-  autoChangeMode: 1
+  autoChangeMode: false
   # Set the light mode time. The value is between 0 and 24. If not set, the default value is 6 and 18
   start:
   end:
 
 # Show scroll percent in scroll-to-top button
-rightside_scroll_percent: true
+rightside_scroll_percent: false
 
 # Don't modify the following settings unless you know how they work
 # Choose: readmode,translate,darkmode,hideAside,toc,chat,comment
@@ -437,7 +429,7 @@ copy:
 
 # Need to install the hexo-wordcount plugin
 wordcount:
-  enable: true
+  enable: false
   # Display the word count of the article in post meta
   post_wordcount: true
   # Display the time to read the article in post meta
@@ -461,7 +453,7 @@ busuanzi:
 math:
   # Choose: mathjax, katex
   # Leave it empty if you don't need math
-  use: katex
+  use:
   per_page: true
   hide_scrollbar: false
 
@@ -482,7 +474,7 @@ math:
 search:
   # Choose: algolia_search / local_search / docsearch
   # leave it empty if you don't need search
-  use: local_search
+  use:
   placeholder:
 
   # Algolia Search
@@ -541,16 +533,16 @@ comments:
   # Leave it empty if you don't need comments
   # Choose: Disqus/Disqusjs/Livere/Gitalk/Valine/Waline/Utterances/Facebook Comments/Twikoo/Giscus/Remark42/Artalk
   # Format of two comments system : Disqus,Waline
-  use: Giscus
+  use:
   # Display the comment name next to the button
   text: true
   # Lazyload: The comment system will be load when comment element enters the browser's viewport.
   # If you set it to true, the comment count will be invalid
   lazyload: false
   # Display comment count in post's top_img
-  count: true
+  count: false
   # Display comment count in Home Page
-  card_post_count: true
+  card_post_count: false
 
 # Disqus
 # https://disqus.com/
@@ -638,19 +630,13 @@ twikoo:
 # Giscus
 # https://giscus.app/
 giscus:
-  repo: SpeechlessPanda/SpeechlessPanda.github.io
-  repo_id: R_kgDORZHPlQ
-  category_id: DIC_kwDORZHPlc4C3cyf
+  repo:
+  repo_id:
+  category_id:
   light_theme: light
   dark_theme: dark
-  js: https://giscus.app/client.js
+  js:
   option:
-    data-mapping: pathname
-    data-strict: "0"
-    data-reactions-enabled: "1"
-    data-emit-metadata: "0"
-    data-input-position: top
-    data-lang: zh-CN
 
 # Remark42
 # https://remark42.com/docs/configuration/frontend/
@@ -703,7 +689,6 @@ knocket:
 # --------------------------------------
 
 # https://tongji.baidu.com/web/welcome/login
-
 baidu_analytics:
 
 # https://analytics.google.com/analytics/web/
@@ -714,6 +699,21 @@ cloudflare_analytics:
 
 # https://clarity.microsoft.com/
 microsoft_clarity:
+
+# https://umami.is/
+umami_analytics:
+  enable: false
+  # For self-hosted setups, configure the hostname of the Umami instance
+  serverURL:
+  script_name: script.js
+  website_id:
+  option:
+  UV_PV:
+    site_uv: false
+    site_pv: false
+    page_pv: false
+    # Umami Cloud (API key) / self-hosted Umami (token)
+    token:
 
 # https://www.googletagmanager.com/
 google_tag_manager:
@@ -797,7 +797,7 @@ mask:
 
 # Loading Animation
 preloader:
-  enable: true
+  enable: false
   # source
   # 1. fullpage-loading
   # 2. pace (progress bar)
@@ -813,23 +813,26 @@ display_mode: light
 
 # Configuration for beautifying the content of the article
 beautify:
-  enable: true
+  enable: false
+  # Specify the field to beautify (site or post)
   field: post
-  title_prefix_icon: '\f863'
-  title_prefix_icon_color: '#6ec6ff'
+  # Specify the icon to be used as a prefix for the title, such as '\f0c1'
+  title_prefix_icon:
+  # Specify the color of the title prefix icon, such as '#F47466'
+  title_prefix_icon_color:
 
 # Global font settings
 # Don't modify the following settings unless you know how they work
 font:
-  global_font_size: 1.1em
+  global_font_size:
   code_font_size:
-  font_family: "'LXGW WenKai','Source Han Serif SC','Noto Serif SC','PingFang SC','Microsoft YaHei',serif"
-  code_font_family: "'LXGW WenKai','Sarasa Mono SC','JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace"
+  font_family:
+  code_font_family:
 
 # Font settings for the site title and site subtitle
 blog_title_font:
   font_link:
-  font_family: "'LXGW WenKai','Source Han Sans SC','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif"
+  font_family:
 
 # The setting of divider icon
 hr_icon:
@@ -871,7 +874,7 @@ canvas_fluttering_ribbon:
 canvas_nest:
   enable: false
   # Color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
-  color: "0,0,255"
+  color: '0,0,255'
   # The opacity of line (0~1)
   opacity: 0.7
   # The z-index property of the background
@@ -910,7 +913,7 @@ clickShowText:
 # https://github.com/francoischalifour/medium-zoom
 # https://fancyapps.com/fancybox/
 # Leave it empty if you don't need lightbox
-lightbox: fancybox
+lightbox:
 
 # --------------------------------------
 # Tag Plugins settings
@@ -920,7 +923,7 @@ lightbox: fancybox
 series:
   enable: false
   # Order by title or date
-  orderBy: "title"
+  orderBy: 'title'
   # Sort of order. 1, asc for ascending; -1, desc for descending
   order: 1
   number: true
@@ -954,16 +957,16 @@ chartjs:
   # The default settings are only used when the MD syntax is not specified.
   # General font color for the chart
   fontColor:
-    light: "rgba(0, 0, 0, 0.8)"
-    dark: "rgba(255, 255, 255, 0.8)"
+    light: 'rgba(0, 0, 0, 0.8)'
+    dark: 'rgba(255, 255, 255, 0.8)'
   # General border color for the chart
   borderColor:
-    light: "rgba(0, 0, 0, 0.1)"
-    dark: "rgba(255, 255, 255, 0.2)"
+    light: 'rgba(0, 0, 0, 0.1)'
+    dark: 'rgba(255, 255, 255, 0.2)'
   # Background color for scale labels on radar and polar area charts
   scale_ticks_backdropColor:
-    light: "transparent"
-    dark: "transparent"
+    light: 'transparent'
+    dark: 'transparent'
 
 # Note - Bootstrap Callout
 note:
@@ -985,12 +988,10 @@ note:
 
 # https://github.com/MoOx/pjax
 pjax:
-  enable: true
+  enable: false
   # Exclude the specified pages from pjax, such as '/music/'
   exclude:
-    - /memos/
-    - /memos/index.html
-
+    # - /xxxxxx/
 
 # Snackbar - Toast Notification
 # https://github.com/polonel/SnackBar
@@ -999,17 +1000,17 @@ snackbar:
   enable: false
   position: bottom-left
   # The background color of Toast Notification in light mode and dark mode
-  bg_light: "#49b1f5"
-  bg_dark: "#1f1f1f"
+  bg_light: '#49b1f5'
+  bg_dark: '#1f1f1f'
 
 # Instant.page
 # https://instant.page/
-instantpage: true
+instantpage: false
 
 # Lazyload
 # https://github.com/verlok/vanilla-lazyload
 lazyload:
-  enable: true
+  enable: false
   # Use browser's native lazyload instead of vanilla-lazyload
   native: false
   # Specify the field to use lazyload (site or post)
@@ -1033,7 +1034,7 @@ pwa:
 Open_Graph_meta:
   enable: true
   option:
-    twitter_card: summary_large_image
+    # twitter_card:
     # twitter_image:
     # twitter_id:
     # twitter_site:
@@ -1056,246 +1057,7 @@ css_prefix: true
 # Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
 inject:
   head:
-    - |
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" media="print" onload="this.media='all'">
-      <style>
-        #page-header.full_page {
-          background-image: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-          background-size: cover;
-          background-position: center;
-        }
-
-        #page-header.post-bg {
-          background-image: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-          background-size: cover;
-          background-position: center;
-        }
-
-        #page-header.not-home-page {
-          background-image: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-          background-size: cover;
-          background-position: center;
-        }
-
-        #page-header.not-top-img {
-          background: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-        }
-
-        #page-header.full_page:before {
-          background: linear-gradient(180deg, rgba(26, 73, 118, 0.08) 0%, rgba(60, 66, 122, 0.16) 100%) !important;
-        }
-
-        #page-header.post-bg:before {
-          background: linear-gradient(180deg, rgba(26, 73, 118, 0.08) 0%, rgba(60, 66, 122, 0.16) 100%) !important;
-        }
-
-        #page-header.not-home-page:before,
-        #page-header.not-top-img:before {
-          background: linear-gradient(180deg, rgba(26, 73, 118, 0.08) 0%, rgba(60, 66, 122, 0.16) 100%) !important;
-        }
-
-        #web_bg {
-          background: linear-gradient(180deg, #f3f9ff 0%, #edf2ff 55%, #fff8f3 100%);
-        }
-
-        #page-header.full_page #site-title,
-        #page-header.full_page #site-subtitle,
-        #page-header.full_page #subtitle,
-        #page-header.post-bg #post-info .post-title,
-        #page-header.post-bg #post-meta,
-        #page-header.post-bg #post-meta a,
-        #page-header.nav-fixed #nav a,
-        #page-header #nav .site-page,
-        #page-header #nav .menus_item_child li a {
-          color: #ffffff !important;
-          text-shadow: 0 2px 12px rgba(28, 58, 92, 0.38);
-        }
-
-        #page-header.not-top-img #nav .site-page,
-        #page-header.not-top-img #nav #toggle-menu,
-        #page-header.not-top-img #nav #search-button,
-        #page-header.not-top-img #nav #nav-right div,
-        #page-header.not-top-img #nav .menus_item_child li a {
-          color: #ffffff !important;
-        }
-
-        #page-header.nav-fixed #nav {
-          background: linear-gradient(135deg, rgba(79, 172, 254, 0.96) 0%, rgba(161, 140, 209, 0.96) 55%, rgba(255, 210, 168, 0.96) 100%) !important;
-          box-shadow: 0 8px 20px rgba(38, 79, 126, 0.2) !important;
-          backdrop-filter: saturate(130%) blur(6px);
-          -webkit-backdrop-filter: saturate(130%) blur(6px);
-        }
-
-        #page-header.nav-fixed #nav a,
-        #page-header.nav-fixed #nav .site-page,
-        #page-header.nav-fixed #nav .site-name,
-        #page-header.nav-fixed #nav #toggle-menu,
-        #page-header.nav-fixed #nav #search-button,
-        #page-header.nav-fixed #nav #nav-right div,
-        #page-header.nav-fixed #nav .menus_item_child li a {
-          color: #ffffff !important;
-          text-shadow: 0 2px 12px rgba(28, 58, 92, 0.38);
-        }
-
-        #page-header.not-top-img.nav-fixed #nav {
-          background: linear-gradient(135deg, rgba(79, 172, 254, 0.96) 0%, rgba(161, 140, 209, 0.96) 55%, rgba(255, 210, 168, 0.96) 100%) !important;
-          box-shadow: 0 8px 20px rgba(38, 79, 126, 0.2) !important;
-          backdrop-filter: saturate(130%) blur(6px);
-          -webkit-backdrop-filter: saturate(130%) blur(6px);
-        }
-
-        [data-theme='dark'] #page-header.full_page {
-          background-image: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.post-bg {
-          background-image: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.not-home-page {
-          background-image: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.not-top-img {
-          background: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.full_page:before {
-          background: linear-gradient(180deg, rgba(6, 12, 24, 0.2) 0%, rgba(6, 12, 24, 0.38) 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.post-bg:before {
-          background: linear-gradient(180deg, rgba(6, 12, 24, 0.2) 0%, rgba(6, 12, 24, 0.38) 100%) !important;
-        }
-
-        [data-theme='dark'] #page-header.not-home-page:before,
-        [data-theme='dark'] #page-header.not-top-img:before {
-          background: linear-gradient(180deg, rgba(6, 12, 24, 0.2) 0%, rgba(6, 12, 24, 0.38) 100%) !important;
-        }
-
-        [data-theme='dark'] #web_bg {
-          background: linear-gradient(180deg, #0a0a1a 0%, #11132e 55%, #1a1529 100%);
-        }
-
-        [data-theme='dark'] #page-header.full_page #site-title,
-        [data-theme='dark'] #page-header.full_page #site-subtitle,
-        [data-theme='dark'] #page-header.full_page #subtitle,
-        [data-theme='dark'] #page-header.post-bg #post-info .post-title,
-        [data-theme='dark'] #page-header.post-bg #post-meta,
-        [data-theme='dark'] #page-header.post-bg #post-meta a,
-        [data-theme='dark'] #page-header.nav-fixed #nav a,
-        [data-theme='dark'] #page-header #nav .site-page,
-        [data-theme='dark'] #page-header #nav .menus_item_child li a {
-          color: #eaf4ff !important;
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
-        }
-
-        [data-theme='dark'] #page-header.not-top-img #nav .site-page,
-        [data-theme='dark'] #page-header.not-top-img #nav #toggle-menu,
-        [data-theme='dark'] #page-header.not-top-img #nav #search-button,
-        [data-theme='dark'] #page-header.not-top-img #nav #nav-right div,
-        [data-theme='dark'] #page-header.not-top-img #nav .menus_item_child li a {
-          color: #eaf4ff !important;
-        }
-
-        [data-theme='dark'] #page-header.nav-fixed #nav {
-          background: linear-gradient(135deg, rgba(2, 0, 36, 0.96) 0%, rgba(26, 36, 64, 0.96) 50%, rgba(157, 78, 221, 0.96) 100%) !important;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35) !important;
-          backdrop-filter: saturate(120%) blur(6px);
-          -webkit-backdrop-filter: saturate(120%) blur(6px);
-        }
-
-        [data-theme='dark'] #page-header.nav-fixed #nav a,
-        [data-theme='dark'] #page-header.nav-fixed #nav .site-page,
-        [data-theme='dark'] #page-header.nav-fixed #nav .site-name,
-        [data-theme='dark'] #page-header.nav-fixed #nav #toggle-menu,
-        [data-theme='dark'] #page-header.nav-fixed #nav #search-button,
-        [data-theme='dark'] #page-header.nav-fixed #nav #nav-right div,
-        [data-theme='dark'] #page-header.nav-fixed #nav .menus_item_child li a {
-          color: #eaf4ff !important;
-          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
-        }
-
-        [data-theme='dark'] #page-header.not-top-img.nav-fixed #nav {
-          background: linear-gradient(135deg, rgba(2, 0, 36, 0.96) 0%, rgba(26, 36, 64, 0.96) 50%, rgba(157, 78, 221, 0.96) 100%) !important;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35) !important;
-          backdrop-filter: saturate(120%) blur(6px);
-          -webkit-backdrop-filter: saturate(120%) blur(6px);
-        }
-
-        .read-mode #page-header.post-bg {
-          background-image: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-          background-size: cover !important;
-          background-position: center !important;
-        }
-
-        .read-mode #page-header.post-bg:before {
-          opacity: 1 !important;
-          background: linear-gradient(180deg, rgba(26, 73, 118, 0.08) 0%, rgba(60, 66, 122, 0.16) 100%) !important;
-        }
-
-        [data-theme='dark'] .read-mode #page-header.post-bg {
-          background-image: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] .read-mode #page-header.post-bg:before {
-          opacity: 1 !important;
-          background: linear-gradient(180deg, rgba(6, 12, 24, 0.2) 0%, rgba(6, 12, 24, 0.38) 100%) !important;
-        }
-
-        #footer {
-          background: linear-gradient(135deg, #4facfe 0%, #6ec6ff 25%, #a18cd1 55%, #fbc2eb 75%, #ffd2a8 100%) !important;
-        }
-
-        #footer::before {
-          background: rgba(255, 255, 255, 0.1) !important;
-        }
-
-        #footer-wrap,
-        #footer-wrap a {
-          color: #eaf6ff !important;
-        }
-
-        [data-theme='dark'] #footer {
-          background: linear-gradient(135deg, #020024 0%, #090979 25%, #1a2440 50%, #5b425d 75%, #9d4edd 100%) !important;
-        }
-
-        [data-theme='dark'] #footer::before {
-          background: rgba(0, 0, 0, 0.24) !important;
-        }
-
-        [data-theme='dark'] #footer-wrap,
-        [data-theme='dark'] #footer-wrap a {
-          color: #d8e9f7 !important;
-        }
-
-        .avatar-img {
-          animation: avatar_turn_around 8s linear infinite !important;
-        }
-
-        /* Only enlarge article body text on post pages */
-        #post #article-container {
-          font-size: 1.15em;
-        }
-
-        /* Fix X/Twitter share icon visibility */
-        .social-share .icon-x {
-          color: #ffffff !important;
-          border-color: rgba(255, 255, 255, 0.85) !important;
-        }
-        .social-share .icon-x:hover {
-          background: #000000 !important;
-          color: #ffffff !important;
-        }
-        [data-theme='dark'] .social-share .icon-x {
-          color: #ffffff !important;
-          border-color: rgba(255, 255, 255, 0.7) !important;
-        }
-        [data-theme='dark'] .social-share .icon-x:hover {
-          background: rgba(255, 255, 255, 0.9) !important;
-          color: #000000 !important;
-        }
-      </style>
+    # - <link rel="stylesheet" href="/xxx.css">
   bottom:
     # - <script src="xxxx"></script>
 
