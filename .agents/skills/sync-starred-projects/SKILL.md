@@ -25,6 +25,7 @@ digraph sync {
   similar [label="6. 检查相似项目"];
   compare [label="7. 新增/更新对比表"];
   mark [label="8. 标记新增项目"];
+  changelog [label="9. 文首本次新增清单"];
   done [label="完成"];
 
   update -> detect -> info -> verify -> check -> categorize;
@@ -35,7 +36,8 @@ digraph sync {
   similar -> compare [label="发现相似"];
   similar -> mark [label="无相似"];
   compare -> mark;
-  mark -> done;
+  mark -> changelog;
+  changelog -> done;
 }
 ```
 
@@ -149,9 +151,31 @@ star 格式与 `collect.mjs` 的 `formatted` 一致：`>=1000` → 一位小数 
 
 本轮没有新增则清完后整篇无 🆕，正常。
 
+## 9. 文首本次新增清单
+
+引言（blockquote）之后、`<!-- more -->` 之前，维护一段本轮新增项目名：
+
+```markdown
+本次新增：{项目名1}、{项目名2}、{项目名3}。
+```
+
+- 名字与 bullet 里 `[项目名]` 一致，顿号分隔，句号收尾
+- 覆盖上一轮这段，不累积历史
+- 本轮零新增 → 删掉整段，不要留空「本次新增：」
+- 必须在 `<!-- more -->` 之前，让首页摘要和 Atom `<summary>` 能带到
+
+## 发表时间与 RSS
+
+**禁止改 front-matter 的 `date`。** 本站 `permalink: :year/:month/:day/:title/`，改发表日会把 URL 从 `/2026/06/06/项目收藏/` 改成新日期路径，旧链接、Giscus（`data-mapping: pathname`）、既有 RSS `<id>` 全部失效。
+
+Atom 由 Panda `themes/panda/scripts/panda/feed.js` 写出，不靠改 `date` 推送：`updated_option: mtime`，保存文件即更新 `post.updated`；距发表超过 `feed.update_notify_hours`（默认 24h）会换新条目 id `{permalink}u/{timestamp}/` 并生成跳转 stub，阅读器当新条目推。
+
+完成标准：`date:` 仍是原文发表时间；本轮有新增则文首有且仅有本轮项目名清单。
+
 ## 硬规则
 
 - 核对修正（须汇报）：star 实测、易主链接、验证后的介绍改写、分类移动。
 - `SpeechlessPanda/*` 不入收藏。
 - 已删除列表里的不恢复。
 - 脚本 JSON 是 star/差集的唯一数字来源；禁止沿用博客旧值或凭印象估算。
+- 禁止改 `date:`。
