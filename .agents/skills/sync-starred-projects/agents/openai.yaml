@@ -1,0 +1,7 @@
+interface:
+  display_name: "Sync Starred Projects"
+  short_description: "Sync GitHub stars into the collection post"
+  default_prompt: "Use $sync-starred-projects to refresh star counts, detect new stars, and update source/_posts/项目收藏.md."
+
+policy:
+  allow_implicit_invocation: true
