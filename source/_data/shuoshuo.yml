@@ -1,4 +1,13 @@
 - author: SpeechlessPanda
+  date: 2026-09-18 17:30
+  content: |
+    [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda/tree/main) 主题正式发布！这次提取成主题不仅保留了我之前的修改，还修复了之前遗留的一些问题，更增加了“系列”这个重磅功能。我的博客已迁移到新主题之上，后续有想用相同主题的友友不要再 clone 我的博客源码了，直接用 Panda 就行，后续更新和同步也方便。最重要的是，记得点点 star 呀！
+
+    btw ，“系列功能”在本博客已使用，之前的几篇博客已加入到系列中。
+  tags:
+    - 博客更新
+
+- author: SpeechlessPanda
   date: 2026-09-14 17:30
   content: |
     紧张刺激的数模终于在昨天结束了，希望有个好结果。这几天觉都没怎么睡好，今天本来还想上早上的第二节课来着，结果一睁眼已经迟到了，还带着头疼的 debuff 。

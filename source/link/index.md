@@ -117,6 +117,9 @@ aside: false
     - name: Z-Library 图书馆
       link: https://znew.pages.dev/
       descr:  世界上最大的电子图书馆。
+    - name: ai-model-world
+      link: https://www.bilibili.com/toy/ai-model-world
+      descr:  一个展示和对比各种大模型数据和相关信息的网站。
 {% endflink %}
 
 ## 本站信息
