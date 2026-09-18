@@ -6,16 +6,24 @@ All notable changes to [hexo-theme-panda](https://github.com/SpeechlessPanda/hex
 
 ### Added
 
-- `{% hideToggle %}`: expanded blocks show a bottom 「收起」 bar that collapses the section and scrolls back to its header — long sections no longer need scrolling back to the top. Subtle centered style matching the tab-to-top affordance. i18n: zh-CN/zh-HK 收起, zh-TW 收合, en Collapse, ja 閉じる, ko 접기.
+- `{% hideToggle %}`: expanded blocks show a bottom collapse bar that closes the section and scrolls back to its header — long sections no longer need scrolling to the top. Centered ghost style (grey text, hover uses the theme color), not a second grey title bar. i18n: zh-CN/zh-HK 收起, zh-TW 收合, en Collapse, ja 閉じる, ko 접기.
+
+### Fixed
+
+- Theme asset URLs include `?v=<package version>`. Shipping the hideToggle JS/CSS without bumping the version left returning visitors on cached 1.1.0 `main.js` / `index.css` (button with no handler, no styles). 1.1.1 is the cache-bust.
 
 ### Release audit
 
 | Check | Result |
 |-------|--------|
-| Scope | Patch: one tag plugin + one JS handler + styles + 7 language files. Version bump doubles as the `?v=` cache-bust so returning visitors actually receive the new JS/CSS (1.1.0 URLs would have been served from cache). |
-| Tests | Manual browser run on the 项目收藏 page: all 13 toggles closed by default, bottom bar visible only when open, click collapses and scrolls to the header under the 70px fixed nav. |
-| Docs | This changelog. README tag-plugin docs unchanged (inherited from Butterfly). |
-| Deferred | npm publish of 1.1.1 (theme is vendored in the blog repo; publish on next formal release). |
+| Dependency / security | No new dependencies. Collapse handler is a click on existing article markup; no network surface. |
+| Tests | `node --test test/*.test.js` (hideToggle HTML / i18n fallback / hideInline+hideBlock unchanged, plus existing series / page-type). Generate smoke: `test/_smoke_hide_toggle.js` (`{% hideToggle %}` emits `.toggle-collapse` + zh-CN 「收起」, asset URLs `?v=1.1.1`). |
+| Packaging | Same `files` as 1.1.0. Version bump is load-bearing: local CDN `?v=` reads `package.json`. |
+| Runtime smoke | Temp site generate of a post with hideToggle: details.toggle + bottom button + i18n label. Live demo already shipped the same markup via the vendored blog copy. |
+| Performance | One extra `<button>` per hideToggle; click handler is the existing article-level listener (no extra querySelectorAll gate). |
+| Docs | README EN/CN feature table + usage note, NOTICE, this changelog. |
+| Content / assets | No new fonts or CDN. Apache-2.0 NOTICE updated. |
+| Deferred | None. |
 
 ## [1.1.0] - 2026-09-18
 

@@ -1,4 +1,4 @@
-// Modified from hexo-theme-butterfly 5.7.0 (Apache-2.0) by SpeechlessPanda, 2026: rebranded to Panda
+// Modified from hexo-theme-butterfly 5.7.0 (Apache-2.0) by SpeechlessPanda, 2026: rebranded to Panda; hideToggle expanded blocks get a bottom collapse bar
 'use strict'
 
 const parseArgs = args => args.join(' ').split(',').map(s => s.trim())
