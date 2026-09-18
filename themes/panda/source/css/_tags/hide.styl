@@ -42,12 +42,15 @@
   & > .toggle-content
     margin: 30px 24px
 
-  & > .toggle-button,
-  & > .toggle-collapse
+  & > .toggle-button
     padding: 6px 15px
     background: $tag-hide-toggle-bg
     color: #1F2D3D
+    list-style: none
     cursor: pointer
+
+    &::-webkit-details-marker
+      display: none
 
     &::before
       @extend .fontawesomeIcon
@@ -57,26 +60,26 @@
       transform: rotate(-90deg)
       transform-origin: center center
 
-  & > .toggle-button
-    list-style: none
-
-    &::-webkit-details-marker
-      display: none
-
   & > .toggle-collapse
     display: block
     width: 100%
+    padding: 8px 15px
     border: 0
-    border-top: 1px solid darken($tag-hide-toggle-bg, 8%)
+    border-top: 1px solid var(--light-grey)
+    background: transparent
+    color: $tab-to-top-color
     font: inherit
-    text-align: left
+    text-align: center
+    cursor: pointer
     appearance: none
 
     &::before
-      transform: rotate(180deg)
+      @extend .fontawesomeIcon
+      margin-right: 6px
+      content: '\f0d8'
 
     &:hover
-      background: darken($tag-hide-toggle-bg, 4%)
+      color: $tab-to-top-hover-color
 
   &[open] summary::before
     transform: rotate(0)

@@ -2,6 +2,21 @@
 
 All notable changes to [hexo-theme-panda](https://github.com/SpeechlessPanda/hexo-theme-panda) are documented here.
 
+## [1.1.1] - 2026-09-18
+
+### Added
+
+- `{% hideToggle %}`: expanded blocks show a bottom 「收起」 bar that collapses the section and scrolls back to its header — long sections no longer need scrolling back to the top. Subtle centered style matching the tab-to-top affordance. i18n: zh-CN/zh-HK 收起, zh-TW 收合, en Collapse, ja 閉じる, ko 접기.
+
+### Release audit
+
+| Check | Result |
+|-------|--------|
+| Scope | Patch: one tag plugin + one JS handler + styles + 7 language files. Version bump doubles as the `?v=` cache-bust so returning visitors actually receive the new JS/CSS (1.1.0 URLs would have been served from cache). |
+| Tests | Manual browser run on the 项目收藏 page: all 13 toggles closed by default, bottom bar visible only when open, click collapses and scrolls to the header under the 70px fixed nav. |
+| Docs | This changelog. README tag-plugin docs unchanged (inherited from Butterfly). |
+| Deferred | npm publish of 1.1.1 (theme is vendored in the blog repo; publish on next formal release). |
+
 ## [1.1.0] - 2026-09-18
 
 ### Added
@@ -35,5 +50,6 @@ All notable changes to [hexo-theme-panda](https://github.com/SpeechlessPanda/hex
 
 Initial public release. Fork of hexo-theme-butterfly 5.7.0 with memos, Atom feed, OG images, home-as-about, and gradient visuals.
 
+[1.1.1]: https://github.com/SpeechlessPanda/hexo-theme-panda/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/SpeechlessPanda/hexo-theme-panda/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/SpeechlessPanda/hexo-theme-panda/releases/tag/1.0.0
