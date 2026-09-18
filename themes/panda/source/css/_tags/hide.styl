@@ -42,15 +42,12 @@
   & > .toggle-content
     margin: 30px 24px
 
-  & > .toggle-button
+  & > .toggle-button,
+  & > .toggle-collapse
     padding: 6px 15px
     background: $tag-hide-toggle-bg
     color: #1F2D3D
-    list-style: none
     cursor: pointer
-
-    &::-webkit-details-marker
-      display: none
 
     &::before
       @extend .fontawesomeIcon
@@ -59,6 +56,27 @@
       transition: transform .3s ease
       transform: rotate(-90deg)
       transform-origin: center center
+
+  & > .toggle-button
+    list-style: none
+
+    &::-webkit-details-marker
+      display: none
+
+  & > .toggle-collapse
+    display: block
+    width: 100%
+    border: 0
+    border-top: 1px solid darken($tag-hide-toggle-bg, 8%)
+    font: inherit
+    text-align: left
+    appearance: none
+
+    &::before
+      transform: rotate(180deg)
+
+    &:hover
+      background: darken($tag-hide-toggle-bg, 4%)
 
   &[open] summary::before
     transform: rotate(0)
