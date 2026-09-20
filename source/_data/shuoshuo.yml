@@ -1,9 +1,18 @@
 - author: SpeechlessPanda
   date: 2026-09-18 17:30
   content: |
+    今日份文章分享：[Prompt、Skill、MCP 都会消失：人们只为结果付费](https://mp.weixin.qq.com/s/owQcWuhFxdkOID1PtjtJWQ)。
+    
+    “Civilization advances by extending the number of important operations which we can perform without thinking about them.”文明的进步，在于不断增加那些我们不用思考就能完成的重要事情。
+  tags:
+    - 分享
+
+- author: SpeechlessPanda
+  date: 2026-09-18 17:30
+  content: |
     [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda/tree/main) 主题正式发布！这次提取成主题不仅保留了我之前的修改，还修复了之前遗留的一些问题，更增加了“系列”这个重磅功能。我的博客已迁移到新主题之上，后续有想用相同主题的友友不要再 clone 我的博客源码了，直接用 Panda 就行，后续更新和同步也方便。最重要的是，记得点点 star 呀！
 
-    btw ，“系列功能”在本博客已使用，之前的几篇博客已加入到系列中。
+    btw ，“系列”功能在本博客已使用，之前的几篇博客已加入到系列中。
   tags:
     - 博客更新
 
