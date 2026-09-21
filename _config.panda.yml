@@ -1,5 +1,5 @@
-# 站点个性化配置(覆盖 themes/panda/_config.yml)
-# Hexo 5+ 原生支持:运行时与本文件深合并,本文件优先。主题文件保持默认,可整体替换升级。
+# 站点个性化配置(覆盖 node_modules/hexo-theme-panda/_config.yml)
+# Hexo 5+ 原生支持:运行时与本文件深合并,本文件优先。主题包保持默认,升级主题只需改 package.json 里的版本号。
 
 # 导航栏
 nav:

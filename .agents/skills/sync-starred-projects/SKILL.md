@@ -168,7 +168,7 @@ star 格式与 `collect.mjs` 的 `formatted` 一致：`>=1000` → 一位小数 
 
 **禁止改 front-matter 的 `date`。** 本站 `permalink: :year/:month/:day/:title/`，改发表日会把 URL 从 `/2026/06/06/项目收藏/` 改成新日期路径，旧链接、Giscus（`data-mapping: pathname`）、既有 RSS `<id>` 全部失效。
 
-Atom 由 Panda `themes/panda/scripts/panda/feed.js` 写出，不靠改 `date` 推送：`updated_option: mtime`，保存文件即更新 `post.updated`；距发表超过 `feed.update_notify_hours`（默认 24h）会换新条目 id `{permalink}u/{timestamp}/` 并生成跳转 stub，阅读器当新条目推。
+Atom 由 Panda `node_modules/hexo-theme-panda/scripts/panda/feed.js` 写出，不靠改 `date` 推送：`updated_option: mtime`，保存文件即更新 `post.updated`；距发表超过 `feed.update_notify_hours`（默认 24h）会换新条目 id `{permalink}u/{timestamp}/` 并生成跳转 stub，阅读器当新条目推。
 
 完成标准：`date:` 仍是原文发表时间；本轮有新增则文首有且仅有本轮项目名清单。
 
