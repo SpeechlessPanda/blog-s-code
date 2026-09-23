@@ -57,8 +57,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       hexo-theme-panda:
-        specifier: github:SpeechlessPanda/hexo-theme-panda#1.1.5
-        version: https://codeload.github.com/SpeechlessPanda/hexo-theme-panda/tar.gz/97af755403fc56775971e041a0da544d0d03424b
+        specifier: ^1.1.5
+        version: 1.1.5
       hexo-util:
         specifier: ^4.0.0
         version: 4.0.0
@@ -880,9 +880,8 @@ packages:
     resolution: {integrity: sha512-u4s0ty9Aew6jV+a9oMrXBwhrRpUQ0U8PWM/88a5aHgDru58VY81mVrxOFxs788NAsWQ8OvsJtF5m7mnXoRnSIA==}
     engines: {node: '>=12.13.0'}
 
-  hexo-theme-panda@https://codeload.github.com/SpeechlessPanda/hexo-theme-panda/tar.gz/97af755403fc56775971e041a0da544d0d03424b:
-    resolution: {tarball: https://codeload.github.com/SpeechlessPanda/hexo-theme-panda/tar.gz/97af755403fc56775971e041a0da544d0d03424b}
-    version: 1.1.5
+  hexo-theme-panda@1.1.5:
+    resolution: {integrity: sha512-nM6g/KgoLtEy1Q0W81AbRqIKoDWFfDSgbJBa440QYKvglmA8YlPf3iEWjvNnkXhI7nVrcvEqvK3exyySGGA0Gg==}
     engines: {hexo: '>=5.3.0', node: '>=18'}
 
   hexo-util@0.6.3:
@@ -2748,7 +2747,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-panda@https://codeload.github.com/SpeechlessPanda/hexo-theme-panda/tar.gz/97af755403fc56775971e041a0da544d0d03424b:
+  hexo-theme-panda@1.1.5:
     dependencies:
       hexo-renderer-pug: 3.0.0
       hexo-renderer-stylus: 3.0.1
