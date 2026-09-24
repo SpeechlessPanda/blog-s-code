@@ -18,7 +18,7 @@ SpeechlessPanda 这个名字来源于我某次游戏取名的无心之举。因�
 
 联系我：zhoushimingyu@qq.com
 
-为了方便后来和我一样有想搭博客写博客想法的人重走我的路（当然鼓励自行探索），在此留下本博客仓库 [README.md](https://github.com/SpeechlessPanda/SpeechlessPanda.github.io/blob/main/README.md) 和本人根据我博客开源的最新 hexo 主题：[Panda](https://github.com/SpeechlessPanda/hexo-theme-panda)。
+为了方便后来和我一样有想搭博客写博客想法的人重走我的路（当然鼓励自行探索），在此留下本博客仓库 [README.md](https://github.com/SpeechlessPanda/SpeechlessPanda.github.io/blob/main/README.md) 和本人根据我博客开源的最新 hexo 主题： [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda) 。
 
 ## 项目经历
 
