@@ -116,11 +116,13 @@ aside: false
       descr: 写给大学生的电脑科普&购买一体方案。
     - name: Z-Library 图书馆
       link: https://znew.pages.dev/
-      descr:  世界上最大的电子图书馆。
+      descr: 世界上最大的电子图书馆。
     - name: ai-model-world
       link: https://www.bilibili.com/toy/ai-model-world
-      descr:  一个展示和对比各种大模型数据和相关信息的网站。
-{% endflink %}
+      descr: 一个展示和对比各种大模型数据和相关信息的网站。
+    - name: guatizi
+      link: https://guatizi.com/
+      descr: 去外网工具的集合网址。
 
 ## 本站信息
 
