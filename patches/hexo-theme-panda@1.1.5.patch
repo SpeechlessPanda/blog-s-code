@@ -1,5 +1,5 @@
 diff --git a/scripts/panda/feed.js b/scripts/panda/feed.js
-index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..cf81ce8088062e1479bb64c9758e698459d59323 100644
+index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..69ac9eb4b36877ce9edd44a6243aa03903ae4076 100644
 --- a/scripts/panda/feed.js
 +++ b/scripts/panda/feed.js
 @@ -8,8 +8,8 @@
@@ -13,33 +13,19 @@ index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..cf81ce8088062e1479bb64c9758e6984
  'use strict'
  
  const { escapeXml, cdata, stripHtml, parseMemoDate, memoSlugs } = require('./lib/memo-utils')
-@@ -19,9 +19,22 @@ function feedConfig () {
+@@ -19,10 +19,7 @@ function feedConfig () {
    return (hexo.theme.config && hexo.theme.config.feed) || {}
  }
  
 -// Date -> compact stamp "20260804-131600" (post update stub paths)
 -function compactStamp (date) {
 -  return date.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '').replace('T', '-')
-+const crypto = require('crypto')
-+
-+// Only front-matter `updated` counts as an update signal. Hexo's default
-+// updated_option: mtime fills post.updated from the file mtime, which is
-+// checkout time on CI (GitHub Actions, Netlify, ...) — rebuilding after ANY
-+// change (e.g. adding a memo) would re-push every old post with a fresh id.
-+function explicitUpdated (post) {
-+  const fm = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---/.exec(String(post.raw || ''))
-+  return fm ? /^updated\s*:/m.test(fm[1]) : false
-+}
-+
-+// Stub identity derives from the file bytes (front-matter included), never
-+// from time: same content -> same id on any machine; any edit (body, tags,
-+// or bumping `updated:`) -> fresh id -> readers re-push exactly once.
-+function contentStamp (post) {
-+  return crypto.createHash('sha1').update(String(post.raw || '')).digest('hex').slice(0, 10)
- }
+-}
++const { explicitUpdated, contentStamp } = require('./lib/post-updated')
  
  function postSummary (post, excerptLimit) {
-@@ -53,8 +66,8 @@ function buildPostEntry (post, authorXml, cfg, __) {
+   if (post.description) return post.description
+@@ -53,8 +50,8 @@ function buildPostEntry (post, authorXml, cfg, __) {
    const notifyMs = (cfg.update_notify_hours == null ? 24 : cfg.update_notify_hours) * 3600 * 1000
    // Update long after publish -> fresh id/link via stub page (readers can't collapse it);
    // otherwise keep the stable permalink identity to avoid false notifications
@@ -50,7 +36,7 @@ index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..cf81ce8088062e1479bb64c9758e6984
    const id = updateUrl || post.permalink
    const categories = [
      ...(post.categories ? post.categories.toArray() : []),
-@@ -65,7 +78,7 @@ function buildPostEntry (post, authorXml, cfg, __) {
+@@ -65,7 +62,7 @@ function buildPostEntry (post, authorXml, cfg, __) {
    return {
      published,
      updated,
@@ -59,7 +45,7 @@ index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..cf81ce8088062e1479bb64c9758e6984
      xml: `<entry>${authorXml}${categories}<content type="html">${cdata(content)}</content>` +
        `<id>${escapeXml(id)}</id><link href="${escapeXml(id)}"/>` +
        `<published>${published.toISOString()}</published>` +
-@@ -126,6 +139,7 @@ hexo.extend.generator.register('panda-atom-feed', function (locals) {
+@@ -126,6 +123,7 @@ hexo.extend.generator.register('panda-atom-feed', function (locals) {
        memos.forEach((item, i) => {
          const entry = buildMemoEntry(item, slugs[i], memosUrl, config.author, cfg, memosTitle)
          if (entry) entries.push(entry)
@@ -86,6 +72,63 @@ index 164630b4a4adceaa47d9b0555180faee82db4093..d13d58596857cf7df4a9fed3531c2a88
    return m.isValid() ? m.toDate() : null
  }
  
+diff --git a/scripts/panda/lib/post-updated.js b/scripts/panda/lib/post-updated.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..729549536699992974fdee460238fd90fad92686
+--- /dev/null
++++ b/scripts/panda/lib/post-updated.js
+@@ -0,0 +1,51 @@
++// Panda theme — post update-notification identity (pure module: no `hexo` at
++// module scope; theme scripts are loaded via vm and required submodules have no
++// lexical `hexo`).
++//
++// Re-push semantics: a post is re-pushed in the feed only when its front-matter
++// carries an explicit, truthy `updated:` date (mtime is checkout time on CI and
++// must never drive identity). The stub id is a hash of the raw file bytes:
++// same content -> same id on any machine; any edit -> exactly one fresh id.
++'use strict'
++
++const crypto = require('crypto')
++
++const FM_RE = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---/
++const UPDATED_LINE_RE = /^updated\s*:\s*(.*?)\s*$/m
++const DATE_LINE_RE = /^date\s*:.*$/m
++
++// Front-matter `updated` counts only when it is a real value. `updated: false`
++// (the scaffold default), `updated:`, `updated: null` and `updated: ~` all mean
++// "never revised" — and Hexo itself treats them as absent (mtime fallback), so
++// honoring them here would re-open the mtime leak.
++function explicitUpdated (post) {
++  const fm = FM_RE.exec(String(post.raw || ''))
++  if (!fm) return false
++  const line = UPDATED_LINE_RE.exec(fm[1])
++  if (!line) return false
++  const value = line[1].replace(/\s+#.*$/, '')
++  return value !== '' && !/^(false|null|~)$/.test(value)
++}
++
++// Stub identity derives from the file bytes (front-matter included): editing
++// body/tags or bumping `updated:` all change the hash -> readers re-push once.
++function contentStamp (post) {
++  return crypto.createHash('sha1').update(String(post.raw || '')).digest('hex').slice(0, 10)
++}
++
++// Ensure new posts carry `updated: false` so the re-push switch is visible.
++// Inserted right after the `date:` line; posts without a date (e.g. series
++// index.md, which is not a feed entry) are left alone. Returns null when no
++// change is needed (already has the key, or no front-matter/date).
++function ensureUpdatedField (content) {
++  const s = String(content || '')
++  const fm = FM_RE.exec(s)
++  if (!fm) return null
++  if (UPDATED_LINE_RE.test(fm[1])) return null
++  if (!DATE_LINE_RE.test(fm[1])) return null
++  const head = s.slice(0, fm[0].length)
++  const tail = s.slice(fm[0].length)
++  return head.replace(DATE_LINE_RE, m => `${m}\nupdated: false`) + tail
++}
++
++module.exports = { explicitUpdated, contentStamp, ensureUpdatedField }
 diff --git a/scripts/panda/memos.js b/scripts/panda/memos.js
 index 0b524bc47cde7a41d790bbf850de59e2709ad5fb..f0edbfa5f9c2c97e850f819ad9c5359ca34d2146 100644
 --- a/scripts/panda/memos.js
@@ -133,3 +176,30 @@ index 0b524bc47cde7a41d790bbf850de59e2709ad5fb..f0edbfa5f9c2c97e850f819ad9c5359c
  
  // latest_memo(): data for the "latest memo" card on the post stream
  hexo.extend.helper.register('latest_memo', function () {
+diff --git a/scripts/panda/updated-scaffold.js b/scripts/panda/updated-scaffold.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea58d5d8ebca3867dad182b0cf26fd607a4b056a
+--- /dev/null
++++ b/scripts/panda/updated-scaffold.js
+@@ -0,0 +1,21 @@
++// Panda theme — new posts carry `updated: false` by default.
++// The feed re-pushes a post only when front-matter `updated:` holds a real date
++// (see lib/post-updated.js); scaffolding the key with `false` makes the switch
++// discoverable: revise a post, flip it to a date, subscribers get one "updated"
++// notification. Works regardless of the site's own scaffolds/post.md, which
++// always wins over theme-side scaffold defaults.
++'use strict'
++
++const fs = require('fs')
++const path = require('path')
++const { ensureUpdatedField } = require('./lib/post-updated')
++
++hexo.on('new', post => {
++  if (!post || !post.path) return
++  const rel = path.relative(path.join(hexo.source_dir, '_posts'), post.path)
++  if (!rel || rel.startsWith('..')) return // only posts, not pages/drafts-outside
++  const next = ensureUpdatedField(post.content)
++  if (next == null) return
++  fs.writeFileSync(post.path, next)
++  post.content = next
++})
