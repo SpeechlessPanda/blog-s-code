@@ -1,0 +1,135 @@
+diff --git a/scripts/panda/feed.js b/scripts/panda/feed.js
+index 3b1838ed085e1ed0e1e92795e7f80b5f719ca76e..cf81ce8088062e1479bb64c9758e698459d59323 100644
+--- a/scripts/panda/feed.js
++++ b/scripts/panda/feed.js
+@@ -8,8 +8,8 @@
+ // all distinguishing info goes into the URL **path** — never query or fragment,
+ // which some readers normalize away. Those URLs must really resolve:
+ //   - each memo gets a standalone page (scripts/panda/memos.js)
+-//   - each meaningful post update gets a stub page <post>/u/<timestamp>/
+-//     (meta refresh back to the post)
++//   - each meaningful post update (explicit front-matter `updated:`) gets a
++//     stub page <post>/u/<content-hash>/ (meta refresh back to the post)
+ 'use strict'
+ 
+ const { escapeXml, cdata, stripHtml, parseMemoDate, memoSlugs } = require('./lib/memo-utils')
+@@ -19,9 +19,22 @@ function feedConfig () {
+   return (hexo.theme.config && hexo.theme.config.feed) || {}
+ }
+ 
+-// Date -> compact stamp "20260804-131600" (post update stub paths)
+-function compactStamp (date) {
+-  return date.toISOString().slice(0, 19).replace(/-/g, '').replace(/:/g, '').replace('T', '-')
++const crypto = require('crypto')
++
++// Only front-matter `updated` counts as an update signal. Hexo's default
++// updated_option: mtime fills post.updated from the file mtime, which is
++// checkout time on CI (GitHub Actions, Netlify, ...) — rebuilding after ANY
++// change (e.g. adding a memo) would re-push every old post with a fresh id.
++function explicitUpdated (post) {
++  const fm = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---/.exec(String(post.raw || ''))
++  return fm ? /^updated\s*:/m.test(fm[1]) : false
++}
++
++// Stub identity derives from the file bytes (front-matter included), never
++// from time: same content -> same id on any machine; any edit (body, tags,
++// or bumping `updated:`) -> fresh id -> readers re-push exactly once.
++function contentStamp (post) {
++  return crypto.createHash('sha1').update(String(post.raw || '')).digest('hex').slice(0, 10)
+ }
+ 
+ function postSummary (post, excerptLimit) {
+@@ -53,8 +66,8 @@ function buildPostEntry (post, authorXml, cfg, __) {
+   const notifyMs = (cfg.update_notify_hours == null ? 24 : cfg.update_notify_hours) * 3600 * 1000
+   // Update long after publish -> fresh id/link via stub page (readers can't collapse it);
+   // otherwise keep the stable permalink identity to avoid false notifications
+-  const meaningfulUpdate = (updated - published) > notifyMs
+-  const updateUrl = meaningfulUpdate ? `${post.permalink}u/${compactStamp(updated)}/` : null
++  const meaningfulUpdate = explicitUpdated(post) && (updated - published) > notifyMs
++  const updateUrl = meaningfulUpdate ? `${post.permalink}u/${contentStamp(post)}/` : null
+   const id = updateUrl || post.permalink
+   const categories = [
+     ...(post.categories ? post.categories.toArray() : []),
+@@ -65,7 +78,7 @@ function buildPostEntry (post, authorXml, cfg, __) {
+   return {
+     published,
+     updated,
+-    stubRoute: updateUrl ? { path: `${post.path}u/${compactStamp(updated)}/index.html`, data: updateStubHtml(post, __) } : null,
++    stubRoute: updateUrl ? { path: `${post.path}u/${contentStamp(post)}/index.html`, data: updateStubHtml(post, __) } : null,
+     xml: `<entry>${authorXml}${categories}<content type="html">${cdata(content)}</content>` +
+       `<id>${escapeXml(id)}</id><link href="${escapeXml(id)}"/>` +
+       `<published>${published.toISOString()}</published>` +
+@@ -126,6 +139,7 @@ hexo.extend.generator.register('panda-atom-feed', function (locals) {
+       memos.forEach((item, i) => {
+         const entry = buildMemoEntry(item, slugs[i], memosUrl, config.author, cfg, memosTitle)
+         if (entry) entries.push(entry)
++        else hexo.log.warn(`[panda-feed] skipping memo with unparseable date: ${JSON.stringify(item.date)} (expected "YYYY-MM-DD HH:mm")`)
+       })
+     }
+   }
+diff --git a/scripts/panda/lib/memo-utils.js b/scripts/panda/lib/memo-utils.js
+index 164630b4a4adceaa47d9b0555180faee82db4093..d13d58596857cf7df4a9fed3531c2a882ca5ddc1 100644
+--- a/scripts/panda/lib/memo-utils.js
++++ b/scripts/panda/lib/memo-utils.js
+@@ -63,11 +63,12 @@ function stripHtml (html) {
+   return String(html || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+ }
+ 
+-// Parse "2026-08-23 23:30" (seconds optional) in the site timezone
++// Parse "2026-08-23 23:30" (seconds optional, "T" separator and date-only also
++// accepted) in the site timezone
+ function parseMemoDate (hexo, str) {
+   const t = String(str == null ? '' : str).trim()
+   if (!t) return null
+-  const m = moment.tz(t, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm'], siteTimezone(hexo))
++  const m = moment.tz(t, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm', 'YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DDTHH:mm', 'YYYY-MM-DD'], siteTimezone(hexo))
+   return m.isValid() ? m.toDate() : null
+ }
+ 
+diff --git a/scripts/panda/memos.js b/scripts/panda/memos.js
+index 0b524bc47cde7a41d790bbf850de59e2709ad5fb..f0edbfa5f9c2c97e850f819ad9c5359ca34d2146 100644
+--- a/scripts/panda/memos.js
++++ b/scripts/panda/memos.js
+@@ -4,7 +4,41 @@
+ // strings come from theme config + i18n instead of hardcoding.
+ 'use strict'
+ 
+-const { escapeXml, memosConfig, memosEnabled, getMemos, memosPath, siteLang, memoSlugs } = require('./lib/memo-utils')
++const { escapeXml, memosConfig, memosEnabled, memosDataKey, getMemos, memosPath, siteLang, memoSlugs } = require('./lib/memo-utils')
++
++// Ships one sample memo so a fresh site shows the feature working (timeline,
++// latest card, standalone page, feed). Injected into site data before generate
++// only while the site's own data file is missing/empty — the first real memo
++// the user writes replaces it everywhere.
++const SAMPLE_MEMO = {
++  date: '2026-01-01 00:00',
++  content: "Hello, it's my blog! 👋\n\nThis sample memo ships with the theme. Write your own in `source/_data/shuoshuo.yml` — one entry per memo with `date`, `content` and optional `tags` — and this placeholder disappears.",
++  tags: ['demo']
++}
++
++// The locals `data` getter rebuilds a fresh object from the Data model on every
++// generate (hexo/dist/hexo/index.js), so injecting into locals is useless — the
++// model is the only seam every consumer (timeline pug, latest card, standalone
++// pages, feed, search) actually reads. Insert at generateBefore, remove at
++// generateAfter so the sample never persists into the site's db.json.
++let sampleInjected = false
++
++hexo.on('generateBefore', () => {
++  sampleInjected = false
++  if (!memosEnabled(hexo)) return
++  const Data = hexo.model('Data')
++  const key = memosDataKey(hexo)
++  const doc = Data.findById(key)
++  if (doc && Array.isArray(doc.data) && doc.data.length) return
++  Data.save({ _id: key, data: [SAMPLE_MEMO] })
++  sampleInjected = true
++})
++
++hexo.on('generateAfter', () => {
++  if (!sampleInjected) return
++  hexo.model('Data').removeById(memosDataKey(hexo))
++  sampleInjected = false
++})
+ 
+ // latest_memo(): data for the "latest memo" card on the post stream
+ hexo.extend.helper.register('latest_memo', function () {
