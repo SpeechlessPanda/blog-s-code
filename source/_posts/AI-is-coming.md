@@ -1,6 +1,8 @@
 ---
 title: AI is coming!
 date: 2026-08-29 16:57:12
+updated: false
+sticky: false
 tags:
 - 思考
 - 短篇

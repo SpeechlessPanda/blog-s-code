@@ -1,6 +1,8 @@
 ---
 title: AI 时代下回看以前的工作模式
 date: 2026-07-21 15:20:43
+updated: false
+sticky: false
 tags:
 - 思考
 - 短篇

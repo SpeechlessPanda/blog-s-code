@@ -1,6 +1,8 @@
 ---
 title: cpp bestpractice
 date: 2026-08-25 11:42:22
+updated: false
+sticky: false
 tags:
 - 技术
 ---

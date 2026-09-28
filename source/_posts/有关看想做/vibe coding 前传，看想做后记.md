@@ -1,6 +1,8 @@
 ---
 title: vibe coding 前传，看想做后记
 date: 2026-04-04 12:12:54
+updated: false
+sticky: false
 tags:
 - 思考
 - 短篇

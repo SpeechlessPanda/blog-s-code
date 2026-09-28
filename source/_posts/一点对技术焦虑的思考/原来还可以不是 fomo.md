@@ -1,6 +1,8 @@
 ---
 title: 原来还可以不是 fomo
 date: 2026-05-30 21:30:55
+updated: false
+sticky: false
 tags:
 - 短篇
 - 思考

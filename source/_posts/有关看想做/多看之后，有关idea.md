@@ -1,6 +1,8 @@
 ---
 title: 多看之后，有关idea
 date: 2026-03-19 13:35:56
+updated: false
+sticky: false
 tags:
 - 思考
 - 短篇

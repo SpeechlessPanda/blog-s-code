@@ -1,6 +1,8 @@
 ---
 title: 对 BFE 构建思路的重思考
 date: 2026-04-12 16:14:09
+updated: false
+sticky: false
 tags:
 - 思考
 - 项目

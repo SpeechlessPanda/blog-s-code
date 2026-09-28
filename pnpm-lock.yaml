@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  hexo-theme-panda@1.1.5:
-    hash: 3914e187c0f73caa008cf02e2597f778901cd793dfea2a5275f760901e520068
-    path: patches/hexo-theme-panda@1.1.5.patch
-
 importers:
 
   .:
@@ -62,8 +57,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       hexo-theme-panda:
-        specifier: ^1.1.5
-        version: 1.1.5(patch_hash=3914e187c0f73caa008cf02e2597f778901cd793dfea2a5275f760901e520068)
+        specifier: ^1.1.6
+        version: 1.1.6
       hexo-util:
         specifier: ^4.0.0
         version: 4.0.0
@@ -885,8 +880,8 @@ packages:
     resolution: {integrity: sha512-u4s0ty9Aew6jV+a9oMrXBwhrRpUQ0U8PWM/88a5aHgDru58VY81mVrxOFxs788NAsWQ8OvsJtF5m7mnXoRnSIA==}
     engines: {node: '>=12.13.0'}
 
-  hexo-theme-panda@1.1.5:
-    resolution: {integrity: sha512-nM6g/KgoLtEy1Q0W81AbRqIKoDWFfDSgbJBa440QYKvglmA8YlPf3iEWjvNnkXhI7nVrcvEqvK3exyySGGA0Gg==}
+  hexo-theme-panda@1.1.6:
+    resolution: {integrity: sha512-M3ASy1H1uwdiYFe6VXmNWQNZ1yZn4BXFyXy3SMWoPa4VG0Zn4BwsHrElAhIrnA4MzL+YYxF5CHgC7JPWd1ACjA==}
     engines: {hexo: '>=5.3.0', node: '>=18'}
 
   hexo-util@0.6.3:
@@ -1278,6 +1273,9 @@ packages:
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+
+  moment@2.31.0:
+    resolution: {integrity: sha512-0acOTfMiWOheYS4eoWb80yYMb/JLvVv9SHbs2PehaDzfUG0Bw855SKyk0IKTnPGa5+U2bmi3W68l1+sGLX/pvw==}
 
   morgan@1.10.1:
     resolution: {integrity: sha512-223dMRJtI/l25dJKWpgij2cMtywuG/WiUKXdvwfbhGKBhy1puASqXwFzmWZ7+K73vUPoR7SS2Qz2cI/g9MKw0A==}
@@ -2752,7 +2750,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-panda@1.1.5(patch_hash=3914e187c0f73caa008cf02e2597f778901cd793dfea2a5275f760901e520068):
+  hexo-theme-panda@1.1.6:
     dependencies:
       hexo-renderer-pug: 3.0.0
       hexo-renderer-stylus: 3.0.1
@@ -3207,9 +3205,11 @@ snapshots:
 
   moment-timezone@0.6.4:
     dependencies:
-      moment: 2.30.1
+      moment: 2.31.0
 
   moment@2.30.1: {}
+
+  moment@2.31.0: {}
 
   morgan@1.10.1:
     dependencies:

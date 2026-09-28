@@ -1,6 +1,8 @@
 ---
 title: 初谈从 rust 到 cpp
 date: 2026-04-16 13:39:37
+updated: false
+sticky: false
 tags:
 - 技术
 - 短篇
