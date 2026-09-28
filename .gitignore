@@ -14,3 +14,5 @@ _multiconfig.yml
 fonts/
 
 .superpowers/
+# unpublished draft (do not commit until published)
+/source/_drafts/一出好戏——国奖幻梦，梦碎？梦醒时分.md
