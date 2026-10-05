@@ -120,6 +120,9 @@ aside: false
     - name: ai-model-world
       link: https://www.bilibili.com/toy/ai-model-world
       descr: 一个展示和对比各种大模型数据和相关信息的网站。
+    - name: AIHOT
+      link: https://aihot.news/
+      descr: AI 行业各种信息聚合网站。
     - name: guatizi
       link: https://guatizi.com/
       descr: 去外网工具的集合网址。
