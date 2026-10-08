@@ -1,5 +1,12 @@
 - author: SpeechlessPanda
-  date: 2026-10-08 22:50
+  date: 2026-10-08 15:50
+  content: |
+    分享一个系列文章，大概和人怎么在 vibe coding 中学到东西和不可替代性在哪等有关：[ AI 辅助开发下，如何保持项目一致性](https://blog.wh1isper.top/2026/02/02/AI-Assisted-Development-Consistency/)、[ AI Coding is a framework, and... ](https://blog.wh1isper.top/2026/03/13/ai-coding-is-a-framework/)和[ AI 编程中，人的理解从哪里来](https://blog.wh1isper.top/2026/10/07/ai-coding-understanding-through-practice/)。同样推荐写这个系列的这个佬，对 harness 和 agent 有很深的见解，博客文章也有很多相关的内容。
+  tags:
+    - 分享
+
+- author: SpeechlessPanda
+  date: 2026-10-08 13:50
   content: |
     句摘：`这个AI时代的一个关键挑战是，确保那些旨在今天产出更好工作的工具，不会阻碍初级专业人士成为我们明天所需的专家。`
   tags:
