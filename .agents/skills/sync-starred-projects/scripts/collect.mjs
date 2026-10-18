@@ -57,7 +57,10 @@ function ghEnv() {
   };
 }
 
-async function ghApi(path) {
+const RETRIES = 4;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function ghApiOnce(path) {
   const proc = Bun.spawn(["gh", "api", path], {
     cwd: ROOT,
     env: ghEnv(),
@@ -71,6 +74,22 @@ async function ghApi(path) {
     throw new Error(`gh api ${path} failed (${code}): ${stderr.trim() || stdout.trim()}`);
   }
   return JSON.parse(stdout);
+}
+
+// TLS handshake timeout / EOF 是 GitHub API 偶发问题，不是条目不存在。
+// 不重试会让 blog[] 出现 null star，上游会把它当"数字没变"漏更新。
+async function ghApi(path) {
+  let lastErr;
+  for (let attempt = 1; attempt <= RETRIES; attempt++) {
+    try {
+      return await ghApiOnce(path);
+    } catch (err) {
+      lastErr = err;
+      if (attempt === RETRIES) break;
+      await sleep(attempt * 900);
+    }
+  }
+  throw lastErr;
 }
 
 async function mapPool(items, limit, fn) {
@@ -173,6 +192,7 @@ const newStars = await mapPool(newStarNames, CONCURRENCY, async (full) => {
 
 const payload = {
   date: new Date().toISOString().slice(0, 10),
+  ok: blog.every((r) => !r.error),
   blogCount: blog.length,
   starredCount: starred.length,
   starChanged: blog.filter((r) => r.starChanged).length,

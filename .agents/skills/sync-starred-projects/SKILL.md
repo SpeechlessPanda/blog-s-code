@@ -51,7 +51,9 @@ HTTPS_PROXY= HTTP_PROXY= bun .agents/skills/sync-starred-projects/scripts/collec
 
 PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-starred-projects/scripts/collect.mjs`
 
-完成标准：stdout 一份 JSON（`blog` / `newStars` / `skippedDeleted` / `skippedOwn`）。`blog[]` 覆盖博客里每一个 `github.com/owner/repo`，每条含 `apiStars`、`formatted`、`canonical`。缺条就是没跑完。
+完成标准：stdout 一份 JSON（`ok` / `blog` / `newStars` / `skippedDeleted` / `skippedOwn`）。`blog[]` 覆盖博客里每一个 `github.com/owner/repo`，每条含 `apiStars`、`formatted`、`canonical`。缺条就是没跑完。
+
+`ok` 必须为 `true`。脚本对 `gh api` 做了 4 次退避重试，仍有 `errors[]` 说明是持续网络问题——重跑，不要带着 `apiStars: null` 往下走（那会被当成"star 没变"漏更新）。
 
 `gh` 失败先清代理再试（本机失效代理常连 `127.0.0.1:7897`）：`HTTPS_PROXY= HTTP_PROXY= gh api ...`
 
@@ -77,6 +79,7 @@ PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-s
 
 - 用户直接给了项目 URL → 跳过检测，用该项目（仍要跑脚本刷新已有 star）。
 - `newStars[]` 即候选。`skippedOwn`（`SpeechlessPanda/*`）和 `skippedDeleted` 不入博客。
+- **同一项目只收一条**：源码仓 + 发布仓（如 `x/blog-src` 与 `x/x.github.io`）只收源码仓；纯构建产物、站点镜像不入收藏，汇报时说明跳过原因。
 
 ## 2. 获取项目信息
 

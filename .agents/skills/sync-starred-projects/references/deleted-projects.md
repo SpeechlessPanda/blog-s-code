@@ -13,3 +13,5 @@
 - PKUFlyingPig/cs-self-learning
 - Totoro-jam/battle-tested-patterns
 - KaiserY/trpl-zh-cn
+- pppppst/pst-blog
+- pppppst/pppppst.github.io
