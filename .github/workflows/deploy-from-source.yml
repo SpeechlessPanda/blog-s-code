@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout source repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # 需要完整历史，供下一步按 git 提交时间恢复文件 mtime
           fetch-depth: 0
@@ -37,12 +37,14 @@ jobs:
           done
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          # v20 已进入弃用期；22 是当前 LTS，Hexo 8 / @resvg/resvg-js 均兼容。
+          # 注意这里指定的是「构建用的 Node」，与 action 自身 runtime 无关。
+          node-version: 22
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10
 
@@ -50,7 +52,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Cache OG image fonts
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: fonts
           key: og-fonts-${{ hashFiles('_config.yml') }}
@@ -75,7 +77,11 @@ jobs:
           fi
 
       - name: Deploy to GitHub Pages repository
-        uses: peaceiris/actions-gh-pages@v4
+        # 锁定到 v4.1.0（浮动 v4 tag 实际也指向它，但显式写出版本可避免
+        # 未来 tag 漂移）。v4.1.0 已是 node24 runtime；更早的 v4.0.0 是 node20，
+        # 会触发 GitHub 弃用警告。该action 依赖 git config 中的 personal_token
+        # 推送，与 checkout v6+ 的凭证隔离($RUNNER_TEMP)配合需保持 git 可用。
+        uses: peaceiris/actions-gh-pages@v4.1.0
         with:
           personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
           external_repository: SpeechlessPanda/SpeechlessPanda.github.io
