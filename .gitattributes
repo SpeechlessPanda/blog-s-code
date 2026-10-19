@@ -1,0 +1,17 @@
+# 统一行尾符，避免 Windows(autocrlf=true)检出为 CRLF、CI 检出为 LF
+# 导致 .github/workflows 在源仓与发布仓之间产生字节级差异噪音。
+#
+# 背景：scripts/events/sync_comment_notify_workflow.js 把 .github/workflows/*.yml
+# 原样复制到 public/ 再部署到发布仓。若工作区是 CRLF、仓库是 LF，两边字节数恒定
+# 不同（例如 search-engine-ping.yml 50 行 → 差 50 字节），sync 后 diff 全行报警，
+# 真实的内容差异会被噪音淹没。这里强制 workflow 目录在仓库内一律 LF。
+
+* text=auto eol=lf
+
+# workflow 显式锁定：GitHub Actions 与 sync 脚本均按 LF 处理
+.github/workflows/*.yml   text eol=lf
+.github/workflows/*.yaml text eol=lf
+
+# 本地脚本同样锁定 LF，避免 shell 脚本在 CI 出现 ^M 错误
+scripts/**/*.js           text eol=lf
+tools/**/*.js             text eol=lf
