@@ -39,9 +39,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          # v20 已进入弃用期；22 是当前 LTS，Hexo 8 / @resvg/resvg-js 均兼容。
+          # Node 26：2026-10-28 起为 Active LTS（此前为 Current）。
+          # 选它而非 24 的理由：24 已于 2026-10-20 转入 Maintenance（只修关键缺陷），
+          # 26 是新 LTS 线且 EOL 到 2029-04；22 为旧维护线。
           # 注意这里指定的是「构建用的 Node」，与 action 自身 runtime 无关。
-          node-version: 22
+          node-version: 26
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
