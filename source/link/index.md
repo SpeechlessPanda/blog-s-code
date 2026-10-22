@@ -108,6 +108,9 @@ aside: false
     - name: 你缺失的那门计算机课
       link: https://www.criwits.top/missing/
       descr: 适合电脑小白入门的电脑使用课程，面向信息时代的指南。
+    - name: 30 TOOL
+      link: https://www.30aitool.com/
+      descr: 一个资源收录网站，有很多有用 AI 无关的计算机好用工具，可以配套相应教程使用。
     - name: CS 自学指南
       link: https://csdiy.wiki/
       descr: 计算机自学指南，汇总国内外高质量 CS 课程。
@@ -117,6 +120,9 @@ aside: false
     - name: Z-Library 图书馆
       link: https://znew.pages.dev/
       descr: 世界上最大的电子图书馆。
+    - name: OpenCVE
+      link: https://app.opencve.io/cve/
+      descr: 一个 CVE 收录网站。
     - name: ai-model-world
       link: https://www.bilibili.com/toy/ai-model-world
       descr: 一个展示和对比各种大模型数据和相关信息的网站。
