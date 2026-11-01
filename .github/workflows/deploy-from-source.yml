@@ -11,6 +11,18 @@ on:
   repository_dispatch:
     types: [rebuild-on-comment]
 
+# 串行化,防止并发部署把发布仓的 Pages 锁撞坏。
+# 2026-11-01 的事故:40 秒内连发 4 次 rebuild-on-comment,5 个 Pages 构建互抢,
+# 前 4 个被 cancelled,剩下一个留下 phantom in-progress 锁,之后所有部署被 400 拒绝、
+# 站点静默停在旧版本。
+# cancel-in-progress: false —— 绝不打断正在跑的部署(gh-pages 推到一半被砍会留半成品)。
+# 同一组只保留「1 个运行中 + 1 个排队中」,后来者顶掉排队中的那个,
+# 所以评论风暴会自然收敛成「跑完当前 + 补跑最后一次」,而最后一次构建的就是最新 HEAD,
+# 中间那些被顶掉的重建内容上并不丢失。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   deploy:
     if: github.repository != 'SpeechlessPanda/SpeechlessPanda.github.io'
