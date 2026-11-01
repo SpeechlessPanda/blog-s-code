@@ -24,7 +24,7 @@ aside: false
     - name: Clouder0
       link: https://clouder0.com/zh-hans/
       avatar: https://avatars.githubusercontent.com/u/41664195?v=4
-      descr: 从卷学分绩转就业两边双开花的大佬，对 agent 和开发有自己独到的见解。
+      descr: 保研转就业两边双开花的大佬，对 agent 和开发有自己独到的见解。
     - name: Vaala Cat
       link: https://vaala.cat/
       avatar: https://vaala.cat/favicon.ico
