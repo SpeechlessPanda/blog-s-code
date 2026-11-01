@@ -97,3 +97,91 @@ jobs:
           force_orphan: false
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
+
+      # 部署 ≠ 上线。上面这步只负责把产物 push 到发布仓,真正生效要看发布仓里
+      # GitHub 托管的 "pages build and deployment"(动态 workflow,文件不在 .github/workflows 里)。
+      # 它会因上一次部署残留的 in-progress 锁而在创建部署时被 400 拒绝,
+      # 此时源仓 workflow 依旧显示 success、站点却静默停在旧版本(2026-11-01 新增友链踩过)。
+      # 本步骤轮询发布仓的构建结果,把静默失败变成响亮失败。
+      - name: Verify Pages deployment
+        timeout-minutes: 10
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          PUBLISH_REPO: SpeechlessPanda/SpeechlessPanda.github.io
+          PUBLISH_BRANCH: main
+        run: |
+          set -uo pipefail
+
+          # 优先用 PAT 读;PAT 若缺 Pages 读权限则退回匿名只读(发布仓是公开的)。
+          api_get() {
+            local p="$1" out
+            out=$(gh api "repos/$PUBLISH_REPO/$p" 2>/dev/null) || out=""
+            if [ -z "$out" ]; then
+              out=$(curl -sS -m 15 -H 'Accept: application/vnd.github+json' \
+                "https://api.github.com/repos/$PUBLISH_REPO/$p" 2>/dev/null) || out=""
+            fi
+            printf '%s' "$out"
+          }
+
+          TARGET=$(api_get "commits/$PUBLISH_BRANCH" | jq -r '.sha // ""' 2>/dev/null)
+          if [ -z "$TARGET" ]; then
+            echo "::error::[pages-verify] 读不到发布仓 $PUBLISH_REPO 的 $PUBLISH_BRANCH HEAD"
+            exit 1
+          fi
+          echo "[pages-verify] 目标提交 ${TARGET:0:8},开始轮询发布仓 Pages 构建…"
+
+          # 实测正常构建 p50≈23s / p90≈42s,给到 300s 已是近 7 倍余量;
+          # 真卡死(如 in-progress 锁)则永远不会完成,必须靠这个上限兜住。
+          DEADLINE=$((SECONDS + 300))
+          BLIND=0
+          STATUS=""
+          while [ "$SECONDS" -lt "$DEADLINE" ]; do
+            JSON=$(api_get "pages/builds/latest")
+            STATUS=$(printf '%s' "$JSON" | jq -r '.status // ""' 2>/dev/null)
+            SHA=$(printf '%s' "$JSON" | jq -r '.commit // ""' 2>/dev/null)
+            ERRMSG=$(printf '%s' "$JSON" | jq -r '.error.message // ""' 2>/dev/null)
+
+            if [ -z "$STATUS" ]; then
+              BLIND=$((BLIND + 1))
+              echo "[pages-verify] 第 $BLIND 次读不到构建状态,稍后重试…"
+              # 连续读不到多半是权限/限流问题,不能因此把正常部署判死。
+              if [ "$BLIND" -ge 8 ]; then
+                echo "::warning::[pages-verify] 连续 8 次读不到 Pages 构建状态,跳过校验。请确认 PAGES_DEPLOY_TOKEN 能读取发布仓 Pages 信息。"
+                exit 0
+              fi
+              sleep 15
+              continue
+            fi
+            BLIND=0
+
+            if [ "$SHA" != "$TARGET" ]; then
+              echo "[pages-verify] 等待新构建进入队列(最新仍是 ${SHA:0:8} / $STATUS)…"
+              sleep 15
+              continue
+            fi
+
+            case "$STATUS" in
+              built)
+                echo "[pages-verify] ✅ Pages 构建完成:${SHA:0:8}"
+                exit 0
+                ;;
+              errored)
+                echo "::error::[pages-verify] Pages 构建失败:${SHA:0:8} — ${ERRMSG:-未知原因}"
+                RUNINFO=$(api_get "actions/workflows/pages-build-deployment/runs?per_page=1" \
+                  | jq -r '.workflow_runs[0] | "[pages-verify] 失败运行:\(.html_url)(\(.conclusion))"' 2>/dev/null)
+                [ -n "$RUNINFO" ] && echo "$RUNINFO"
+                echo "[pages-verify] 常见原因:上一次部署残留 in-progress 锁,新部署创建时被 400 拒绝。"
+                echo "[pages-verify] 处理:gh run rerun <运行 ID> --repo $PUBLISH_REPO --failed"
+                exit 1
+                ;;
+              *)
+                echo "[pages-verify] 构建中($STATUS)…"
+                sleep 15
+                ;;
+            esac
+          done
+
+          echo "::error::[pages-verify] 等待 5 分钟仍未完成,Pages 构建疑似卡死(最后状态:${STATUS:-unknown})。"
+          echo "[pages-verify] 站点仍是旧版本,请检查发布仓 pages build and deployment 的运行记录。"
+          exit 1
