@@ -109,6 +109,9 @@ aside: false
     - name: AIInfraGuide
       link: https://caomaolufei.github.io/AIInfraGuide/
       descr: 从 CUDA 编程到分布式训练与推理优化的 AI Infra 全栈知识库。
+    - name: MiracleFarms
+      link: https://miraclefarms.github.io/
+      descr: 公开记录 AI Infrastructure 的演进、实验与判断。
     - name: 你缺失的那门计算机课
       link: https://www.criwits.top/missing/
       descr: 适合电脑小白入门的电脑使用课程，面向信息时代的指南。
