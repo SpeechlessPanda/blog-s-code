@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   hexo-theme-panda@1.1.9:
-    hash: 7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52
+    hash: 94b17b5f2d9d620bb5094a4b2fc8741f179435250015536a6d43ffad6bc5662c
     path: patches/hexo-theme-panda@1.1.9.patch
 
 importers:
@@ -63,7 +63,7 @@ importers:
         version: 3.0.0
       hexo-theme-panda:
         specifier: ^1.1.9
-        version: 1.1.9(patch_hash=7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52)
+        version: 1.1.9(patch_hash=94b17b5f2d9d620bb5094a4b2fc8741f179435250015536a6d43ffad6bc5662c)
       hexo-util:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2755,7 +2755,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-panda@1.1.9(patch_hash=7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52):
+  hexo-theme-panda@1.1.9(patch_hash=94b17b5f2d9d620bb5094a4b2fc8741f179435250015536a6d43ffad6bc5662c):
     dependencies:
       hexo-renderer-pug: 3.0.0
       hexo-renderer-stylus: 3.0.1
