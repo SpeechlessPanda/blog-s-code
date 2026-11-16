@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  hexo-theme-panda@1.1.9:
+    hash: 7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52
+    path: patches/hexo-theme-panda@1.1.9.patch
+
 importers:
 
   .:
@@ -58,7 +63,7 @@ importers:
         version: 3.0.0
       hexo-theme-panda:
         specifier: ^1.1.9
-        version: 1.1.9
+        version: 1.1.9(patch_hash=7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52)
       hexo-util:
         specifier: ^4.0.0
         version: 4.0.0
@@ -2750,7 +2755,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hexo-theme-panda@1.1.9:
+  hexo-theme-panda@1.1.9(patch_hash=7870654038bbbcdf8cf2947e9a44153e3e84e1a2d4d3124fe102f9620c780a52):
     dependencies:
       hexo-renderer-pug: 3.0.0
       hexo-renderer-stylus: 3.0.1

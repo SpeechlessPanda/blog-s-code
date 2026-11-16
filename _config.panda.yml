@@ -159,12 +159,8 @@ inject:
         .avatar-img { animation: avatar_turn_around 8s linear infinite !important; }
         /* 文章正文字号略放大 */
         #post #article-container { font-size: 1.15em; }
-        /* 项目收藏的页内锚点：留出导航栏高度 */
-        #post #article-container [id^="proj-"] { scroll-margin-top: 71px; }
       </style>
     - <link rel="alternate" type="application/atom+xml" title="SpeechlessPanda" href="/atom.xml">
-  bottom:
-    - <script src="/js/post-anchor.js?v=5" defer></script>
 
 # Panda 扩展
 # 碎碎念增强(默认值已满足本站:path /memos/、data_key shuoshuo、最新卡片、独立页、搜索注入、评论计数)

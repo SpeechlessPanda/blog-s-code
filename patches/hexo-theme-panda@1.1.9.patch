@@ -1,0 +1,719 @@
+diff --git a/_config.yml b/_config.yml
+--- a/_config.yml
++++ b/_config.yml
+@@ -419,10 +419,14 @@ rightside_config_animation: true
+ # --------------------------------------
+ 
+ anchor:
++  # Add a stable id and a clickable `#` permalink to every heading
++  enable: true
++  # Clicking the `#` copies the absolute permalink
++  copy_link: true
++  # Clicking anywhere on a heading copies its permalink and jumps to it
++  click_to_scroll: false
+   # When you scroll, the URL will update according to header id.
+   auto_update: false
+-  # Click the headline to scroll and update the anchor
+-  click_to_scroll: false
+ 
+ photofigcaption: false
+ 
+diff --git a/languages/default.yml b/languages/default.yml
+--- a/languages/default.yml
++++ b/languages/default.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: Collapse
++
++anchor:
++  permalink: Permalink to this heading
+diff --git a/languages/en.yml b/languages/en.yml
+--- a/languages/en.yml
++++ b/languages/en.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: Collapse
++
++anchor:
++  permalink: Permalink to this heading
+diff --git a/languages/ja.yml b/languages/ja.yml
+--- a/languages/ja.yml
++++ b/languages/ja.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: 閉じる
++
++anchor:
++  permalink: この見出しへのパーマリンク
+diff --git a/languages/ko.yml b/languages/ko.yml
+--- a/languages/ko.yml
++++ b/languages/ko.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: 접기
++
++anchor:
++  permalink: 이 제목의 고유 링크
+diff --git a/languages/zh-CN.yml b/languages/zh-CN.yml
+--- a/languages/zh-CN.yml
++++ b/languages/zh-CN.yml
+@@ -144,3 +144,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: 收起
++
++anchor:
++  permalink: 标题永久链接
+diff --git a/languages/zh-HK.yml b/languages/zh-HK.yml
+--- a/languages/zh-HK.yml
++++ b/languages/zh-HK.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: 收起
++
++anchor:
++  permalink: 標題永久連結
+diff --git a/languages/zh-TW.yml b/languages/zh-TW.yml
+--- a/languages/zh-TW.yml
++++ b/languages/zh-TW.yml
+@@ -143,3 +143,6 @@ blog_series:
+ 
+ tag:
+   hide_toggle_collapse: 收合
++
++anchor:
++  permalink: 標題永久連結
+diff --git a/layout/includes/additional-js.pug b/layout/includes/additional-js.pug
+--- a/layout/includes/additional-js.pug
++++ b/layout/includes/additional-js.pug
+@@ -7,6 +7,10 @@ div
+   if theme.link_target_blank
+     script(src=url_for('/js/fix-link-target.js') data-pjax)
+ 
++  //- Panda: reveal collapsed targets and copy heading permalinks
++  if theme.anchor.enable !== false
++    script(src=url_for(theme.asset.anchor) data-pjax)
++
+   if theme.translate.enable
+     script(src=url_for(theme.asset.translate))
+ 
+diff --git a/layout/includes/head/config.pug b/layout/includes/head/config.pug
+--- a/layout/includes/head/config.pug
++++ b/layout/includes/head/config.pug
+@@ -117,6 +117,10 @@ script.
+     isPhotoFigcaption: !{theme.photofigcaption},
+     islazyloadPlugin: !{theme.lazyload.enable && !theme.lazyload.native},
+     isAnchor: !{theme.anchor.auto_update || false},
++    anchor: {
++      copyLink: !{theme.anchor.copy_link !== false},
++      clickToScroll: !{theme.anchor.click_to_scroll === true}
++    },
+     percent: {
+       toc: !{theme.toc.scroll_percent},
+       rightside: !{theme.rightside_scroll_percent},
+diff --git a/scripts/common/default_config.js b/scripts/common/default_config.js
+--- a/scripts/common/default_config.js
++++ b/scripts/common/default_config.js
+@@ -234,8 +234,10 @@ module.exports = {
+   },
+   rightside_config_animation: true,
+   anchor: {
+-    auto_update: false,
+-    click_to_scroll: false
++    enable: true,
++    copy_link: true,
++    click_to_scroll: false,
++    auto_update: false
+   },
+   photofigcaption: false,
+   copy: {
+diff --git a/scripts/events/cdn.js b/scripts/events/cdn.js
+--- a/scripts/events/cdn.js
++++ b/scripts/events/cdn.js
+@@ -33,6 +33,11 @@ hexo.extend.filter.register('before_generate', () => {
+       file: 'js/tw_cn.js',
+       version
+     },
++    anchor: {
++      name: 'hexo-theme-panda',
++      file: 'js/anchor.js',
++      version
++    },
+     local_search: {
+       name: 'hexo-theme-panda',
+       file: 'js/search/local-search.js',
+diff --git a/scripts/filters/post_anchor.js b/scripts/filters/post_anchor.js
+new file mode 100644
+--- /dev/null
++++ b/scripts/filters/post_anchor.js
+@@ -0,0 +1,26 @@
++// Panda theme — heading anchor filter (Apache-2.0).
++//
++// Runs at `after_post_render`, i.e. after the renderer produced the final body
++// HTML and before layouts call `toc(page.content)`. That ordering is the point:
++// ids assigned here are the ones the TOC, permalinks and the scroll spy resolve.
++'use strict'
++
++const { addHeadingAnchors } = require('../panda/lib/anchor')
++
++function permalinkLabel (hexo) {
++  const language = hexo.config.language
++  const code = Array.isArray(language) ? language[0] : (language || 'en')
++  try {
++    const text = hexo.theme.i18n.__(code)('anchor.permalink')
++    if (text && text !== 'anchor.permalink') return text
++  } catch (_) {}
++  return 'Permalink to this heading'
++}
++
++hexo.extend.filter.register('after_post_render', data => {
++  const config = hexo.theme.config.anchor
++  if (!config || config.enable === false) return
++  if (typeof data.content !== 'string' || !data.content) return
++  data.content = addHeadingAnchors(data.content, { title: permalinkLabel(hexo) })
++  return data
++})
+diff --git a/scripts/panda/lib/anchor.js b/scripts/panda/lib/anchor.js
+new file mode 100644
+--- /dev/null
++++ b/scripts/panda/lib/anchor.js
+@@ -0,0 +1,204 @@
++// Panda theme — heading anchors (pure module: no `hexo` at module scope).
++//
++// Why a filter instead of a renderer plugin: the markdown renderer assigns ids
++// per render call, so two headings with the same text inside a hideToggle/tabs
++// block and in the main body get the same id. Duplicate ids silently bind TOC
++// links, permalinks and the scroll spy to the first element, i.e. a link can
++// land in the wrong block. This module normalises every heading once, after the
++// whole body HTML exists and before layouts build the TOC.
++//
++// Contract:
++// - every h1-h6 in the given HTML ends up with a non-empty, document-unique id
++// - an existing id is kept whenever possible (published deep links stay valid);
++//   only duplicates are suffixed `-2`, `-3`, ... in document order
++// - missing ids derive from the heading text (hexo-util slugize, CJK kept)
++// - headings without a visible renderer anchor get one canonical permalink
++//   `<a class="headerlink" href="#id" title="...">#</a>`
++// - the renderer's empty `<a class="markdownIt-Anchor"></a>` placeholders are
++//   dropped: they are 0x0, invisible, and leak a leading space into TOC text
++// - a renderer anchor with a visible symbol (custom `anchorLinkSymbol`) is kept
++//   so a site's own choice still wins
++'use strict'
++
++const { slugize, stripHTML, escapeHTML, unescapeHTML } = require('hexo-util')
++
++const HEADING_RE = /<h([1-6])((?:\s+[^>]*?)?)>([\s\S]*?)<\/h\1>/gi
++const ID_ATTR_RE = /\s+id\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/i
++const ANCHOR_RE = /<a\b((?:"[^"]*"|'[^']*'|[^>])*)>([\s\S]*?)<\/a>/gi
++const CLASS_ATTR_RE = /\s+class\s*=\s*(?:"([^"]*)"|'([^']*)')/i
++const HREF_ATTR_RE = /\s+href\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/i
++const MARKDOWN_IT_ANCHOR_RE = /\bmarkdownIt-Anchor\b/
++
++function readAttr (attrs, re) {
++  const m = re.exec(attrs)
++  if (!m) return null
++  return unescapeHTML(m[1] ?? m[2] ?? m[3] ?? '')
++}
++
++function attrValue (value) {
++  return `"${escapeHTML(value)}"`
++}
++
++// Fragment spelling used in hrefs: percent-encode like Hexo's TOC helper so
++// `#中文` and `#a b` survive copy/paste, but keep characters that browsers and
++// servers already treat as literal in fragments.
++function fragment (id) {
++  return escapeHTML(encodeURI(id).replace(/#/g, '%23'))
++}
++
++function headingText (inner) {
++  // Two passes: strip markup, decode entities, strip again. The order matters
++  // in both directions — `C++ &amp; Rust` needs the decode to slug as `c-rust`,
++  // while a renderer with `html: false` hands us `&lt;span id="x"&gt;`, whose
++  // tags only appear after decoding and must not leak their attributes into
++  // the slug.
++  const text = stripHTML(unescapeHTML(stripHTML(inner)))
++  return text.replace(/\s+/g, ' ').trim()
++}
++
++function slugOf (inner) {
++  const text = headingText(inner)
++  if (!text) return ''
++  return slugize(text, { transform: 1 })
++}
++
++function uniqueId (base, reserved) {
++  let id = base
++  let n = 2
++  while (reserved.has(id)) id = `${base}-${n++}`
++  reserved.add(id)
++  return id
++}
++
++function collectAnchors (inner) {
++  const anchors = []
++  ANCHOR_RE.lastIndex = 0
++  let m
++  while ((m = ANCHOR_RE.exec(inner))) {
++    anchors.push({
++      start: m.index,
++      end: m.index + m[0].length,
++      html: m[0],
++      attrs: m[1],
++      text: headingText(m[2])
++    })
++  }
++  return anchors
++}
++
++// The renderer writes a decoded `href="#中文"`; rewrite it to our fragment
++// spelling only when the id actually changed.
++function rewriteHashHref (anchorHtml, id) {
++  const href = readAttr(anchorHtml, HREF_ATTR_RE)
++  if (!href || href[0] !== '#') return anchorHtml
++  return anchorHtml.replace(HREF_ATTR_RE, () => ` href="#${fragment(id)}"`)
++}
++
++function renderHeading (heading, id, options) {
++  const { attrs, inner, existingId } = heading
++  const anchors = collectAnchors(inner)
++
++  let rebuilt = ''
++  let pos = 0
++  let visibleAnchor = false
++  let removed = false
++
++  for (const anchor of anchors) {
++    rebuilt += inner.slice(pos, anchor.start)
++    pos = anchor.end
++    const classes = readAttr(anchor.attrs, CLASS_ATTR_RE) || ''
++    const isRenderer = MARKDOWN_IT_ANCHOR_RE.test(classes)
++    if (!isRenderer) {
++      // Our own permalink from an earlier pass: re-running the filter must not
++      // stack a second `#`.
++      if (/\bheaderlink\b/.test(classes)) visibleAnchor = true
++      rebuilt += anchor.html
++      continue
++    }
++    if (!anchor.text) {
++      removed = true
++      continue
++    }
++    visibleAnchor = true
++    // Keep a renderer anchor that carries a visible symbol (a site's custom
++    // `anchorLinkSymbol`), but point it at the id this pass settled on.
++    rebuilt += rewriteHashHref(anchor.html, id)
++  }
++  rebuilt += inner.slice(pos)
++  // The renderer puts the anchor first and a space after it; without this the
++  // TOC entry keeps that leading space.
++  if (removed) rebuilt = rebuilt.replace(/^[ \t]+|[ \t]+$/g, '')
++
++  if (!visibleAnchor) {
++    rebuilt += `<a class="headerlink" href="#${fragment(id)}" title="${escapeHTML(options.title)}">#</a>`
++  }
++
++  let newAttrs = attrs
++  if (existingId == null) {
++    newAttrs = `${attrs} id=${attrValue(id)}`
++  } else if (existingId !== id) {
++    newAttrs = attrs.replace(ID_ATTR_RE, () => ` id=${attrValue(id)}`)
++  }
++
++  return `<h${heading.level}${newAttrs}>${rebuilt}</h${heading.level}>`
++}
++
++/**
++ * Normalise heading ids and permalinks in a rendered post/page body.
++ * @param {string} html rendered content
++ * @param {{title?: string}} [options]
++ * @returns {string}
++ */
++function addHeadingAnchors (html, options = {}) {
++  if (typeof html !== 'string' || !html) return html
++  const title = options.title || ''
++
++  const headings = []
++  HEADING_RE.lastIndex = 0
++  let m
++  while ((m = HEADING_RE.exec(html))) {
++    headings.push({
++      start: m.index,
++      end: m.index + m[0].length,
++      level: m[1],
++      attrs: m[2] || '',
++      inner: m[3],
++      existingId: readAttr(m[2] || '', ID_ATTR_RE)
++    })
++  }
++  if (!headings.length) return html
++
++  const reserved = new Set()
++  const ids = new Array(headings.length)
++  const pending = []
++
++  // Pass 1 reserves every first-occurrence existing id, so generating an id for
++  // an earlier unlabelled heading can never steal a published deep link.
++  headings.forEach((heading, i) => {
++    if (heading.existingId && !reserved.has(heading.existingId)) {
++      reserved.add(heading.existingId)
++      ids[i] = heading.existingId
++    } else {
++      pending.push(i)
++    }
++  })
++
++  // Pass 2 names the rest in document order: duplicates get `-2`, missing ids
++  // derive from text, and `section-N` is the deterministic last resort.
++  for (const i of pending) {
++    const heading = headings[i]
++    const base = heading.existingId || slugOf(heading.inner) || `section-${i + 1}`
++    ids[i] = uniqueId(base, reserved)
++  }
++
++  let out = ''
++  let last = 0
++  headings.forEach((heading, i) => {
++    out += html.slice(last, heading.start)
++    out += renderHeading(heading, ids[i], { title })
++    last = heading.end
++  })
++  return out + html.slice(last)
++}
++
++module.exports = { addHeadingAnchors }
+diff --git a/source/css/_layout/post.styl b/source/css/_layout/post.styl
+--- a/source/css/_layout/post.styl
++++ b/source/css/_layout/post.styl
+@@ -109,27 +109,46 @@ beautify()
+     line-height: 1em
+     addBorderRadius(3)
+ 
++  // --------------------------------------
++  // Heading anchors
++  // --------------------------------------
++  // The build gives every heading a stable `id` and an `a.headerlink`
++  // permalink (scripts/filters/post_anchor.js). Fragment targets reserve the
++  // fixed nav height here, so a plain `#slug` link lands below the nav even
++  // with JS disabled; source/js/anchor.js only refines the offset at runtime.
++  // Every heading carries an id, so `[id]` covers headings, `{% span %}` ids
++  // used as manual anchors, and tab/hide-toggle ids alike.
++  [id]
++    scroll-margin-top: var(--panda-anchor-offset, 70px)
++
++  a.headerlink
++    margin-left: .35em
++    color: $theme-link-color
++    font-weight: normal
++    text-decoration: none
++    opacity: .25
++    transition: opacity .2s ease-in-out
++
++    &:hover
++      text-decoration: none
++      opacity: 1
++
++  :is(h1, h2, h3, h4, h5, h6):hover > a.headerlink,
++  a.headerlink:focus-visible
++    opacity: 1
++
+   if hexo-config('anchor.click_to_scroll')
+-    h1,
+-    h2,
+-    h3,
+-    h4,
+-    h5,
+-    h6
+-      width: fit-content
++    :is(h1, h2, h3, h4, h5, h6)
++      cursor: pointer
+ 
+-      a:not(.headerlink)
+-        position: relative
+-        z-index: 10
++  // Touch screens have no hover: keep the permalink tappable without a hover.
++  @media (hover: none)
++    a.headerlink
++      opacity: .5
+ 
+-      a.headerlink
+-        position: absolute
+-        top: 0
+-        right: 0
+-        bottom: 0
+-        left: 0
+-        width: 100%
+-        height: 100%
++  @media print
++    a.headerlink
++      display: none
+ 
+   ol,
+   ul
+diff --git a/source/js/anchor.js b/source/js/anchor.js
+new file mode 100644
+--- /dev/null
++++ b/source/js/anchor.js
+@@ -0,0 +1,257 @@
++// Panda theme — heading anchor behaviour (Apache-2.0).
++//
++// The build already guarantees `id` + a visible `a.headerlink` on every heading,
++// and CSS gives in-article targets `scroll-margin-top`, so plain fragment
++// navigation lands below the fixed nav even with JS disabled. This script only
++// covers what the browser cannot do itself:
++//
++//   1. A target inside a closed <details>, an unopened hide-block/hide-inline or
++//      an inactive tab has no box: the browser sets the hash and never scrolls.
++//      Reveal the enclosing widgets, then align.
++//   2. Late layout shifts (webfonts, lazy images above the target) move the
++//      target after the first jump. Re-align for a bounded window and stop the
++//      moment the reader scrolls.
++//   3. Clicking `#` copies the absolute permalink.
++//
++// The browser keeps owning fragment navigation: no preventDefault, no history
++// rewriting, so PJAX, back/forward and TOC clicks behave exactly as before.
++;(() => {
++  if (window.__pandaAnchor) return
++  window.__pandaAnchor = true
++
++  const SETTLE_MS = 1200
++  const REVEAL_DEPTH = 40
++
++  let frame = null
++
++  const currentHash = () => {
++    const raw = window.location.hash.slice(1)
++    if (!raw) return ''
++    try {
++      return decodeURIComponent(raw)
++    } catch (_) {
++      return raw
++    }
++  }
++
++  const targetOf = id => {
++    if (!id) return null
++    return document.getElementById(id) || document.getElementsByName(id)[0] || null
++  }
++
++  const chainOf = el => {
++    const chain = []
++    let node = el
++    while (node && node !== document.body && chain.length < REVEAL_DEPTH) {
++      chain.push(node)
++      node = node.parentElement
++    }
++    return chain
++  }
++
++  const clickIfClosed = button => {
++    if (button && !button.classList.contains('open') && !button.classList.contains('active')) {
++      button.click()
++    }
++  }
++
++  // Ancestors are revealed outermost-first: a nested <details> inside a closed
++  // one reports no box until the outer block is open, so a single flat pass can
++  // miss it and the tab-bar lookup would run against an inactive tab panel.
++  const reveal = el => {
++    const chain = chainOf(el)
++    for (let i = chain.length - 1; i >= 0; i--) {
++      const node = chain[i]
++      if (node.tagName === 'DETAILS' && !node.open) node.open = true
++    }
++    for (let i = chain.length - 1; i >= 0; i--) {
++      const node = chain[i]
++      if (!node.classList) continue
++      if (node.classList.contains('hide-block') || node.classList.contains('hide-inline')) {
++        clickIfClosed(node.firstElementChild)
++      }
++      if (node.classList.contains('tab-item-content') && !node.classList.contains('active')) {
++        const contents = node.parentElement
++        const nav = contents && contents.previousElementSibling
++        const index = contents ? Array.prototype.indexOf.call(contents.children, node) : -1
++        if (nav && index >= 0) clickIfClosed(nav.children[index])
++      }
++    }
++  }
++
++  const cancelSettle = () => {
++    if (frame) cancelAnimationFrame(frame)
++    frame = null
++  }
++
++  // scrollIntoView honours `scroll-margin-top`, so the offset lives in one place
++  // (CSS) instead of being duplicated as a JS constant. `instant` is required:
++  // the theme sets `scroll-behavior: smooth`, and a smooth re-align would still
++  // be animating when the next measurement lands, so the target would stop
++  // short of the offset.
++  const align = el => el.scrollIntoView({ block: 'start', behavior: 'instant' })
++
++  const anchorOffset = el => {
++    const css = parseFloat(window.getComputedStyle(el).scrollMarginTop)
++    return Number.isFinite(css) ? css : 70
++  }
++
++  // Late webfonts and lazy images above the target keep shifting it for about a
++  // second after the first jump, each step small enough that comparing one
++  // frame with the next never trips a threshold (the drift accumulates). So
++  // compare the target's viewport position with the offset it should sit at,
++  // and give up after a bounded window. Any reader input cancels.
++  const settle = el => {
++    cancelSettle()
++    const until = Date.now() + SETTLE_MS
++    const expected = anchorOffset(el)
++
++    const tick = () => {
++      frame = null
++      if (!el.isConnected || Date.now() > until) return
++      if (Math.abs(el.getBoundingClientRect().top - expected) > 1) align(el)
++      frame = requestAnimationFrame(tick)
++    }
++    frame = requestAnimationFrame(tick)
++  }
++
++  const jump = id => {
++    const el = targetOf(id)
++    if (!el) return false
++    reveal(el)
++    align(el)
++    settle(el)
++    return true
++  }
++
++  const userMoved = () => cancelSettle()
++  ;['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(type => {
++    window.addEventListener(type, userMoved, { passive: true })
++  })
++
++  // Keep the CSS offset equal to the real nav height: 60px on desktop, taller
++  // when the mobile menu wraps onto a second line.
++  const syncOffset = () => {
++    const nav = document.getElementById('nav')
++    const height = nav ? Math.round(nav.getBoundingClientRect().height) : 0
++    document.documentElement.style.setProperty('--panda-anchor-offset', `${height > 0 ? height + 10 : 70}px`)
++  }
++
++  const anchorConfig = () => (window.GLOBAL_CONFIG && window.GLOBAL_CONFIG.anchor) || {}
++
++  const copyPermalink = async link => {
++    if (anchorConfig().copyLink === false) return
++
++    const href = link.getAttribute('href')
++    if (!href || href.charAt(0) !== '#') return
++    const url = new URL(href, window.location.href).href
++    let done = false
++
++    try {
++      if (navigator.clipboard && window.isSecureContext) {
++        await navigator.clipboard.writeText(url)
++        done = true
++      }
++    } catch (_) {}
++
++    if (!done) {
++      try {
++        const area = document.createElement('textarea')
++        area.value = url
++        area.setAttribute('readonly', '')
++        area.style.cssText = 'position:fixed;top:-1000px;opacity:0'
++        document.body.appendChild(area)
++        area.select()
++        done = document.execCommand('copy')
++        area.remove()
++      } catch (_) {}
++    }
++
++    if (done && window.btf && window.GLOBAL_CONFIG && window.GLOBAL_CONFIG.Snackbar !== undefined) {
++      const message = window.GLOBAL_CONFIG.copy && window.GLOBAL_CONFIG.copy.success
++      message && window.btf.snackbarShow(message)
++    }
++  }
++
++  // Same-document fragment reference, or null. A production URL pasted into
++  // the page still resolves to the local target: identical pathname+search is
++  // the same document regardless of host (preview vs deployed origin).
++  const fragmentRef = link => {
++    let url
++    try {
++      url = new URL(link.href, window.location.href)
++    } catch (_) {
++      return null
++    }
++    if (!url.hash || url.hash === '#') return null
++    if (url.pathname !== window.location.pathname || url.search !== window.location.search) return null
++    let id = url.hash.slice(1)
++    try {
++      id = decodeURIComponent(id)
++    } catch (_) {}
++    return { id, hash: url.hash, absolute: (link.getAttribute('href') || '').charAt(0) !== '#' }
++  }
++
++  document.addEventListener('click', event => {
++    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
++    const target = event.target
++    if (!target || !target.closest) return
++    const link = target.closest('a')
++
++    if (link) {
++      const ref = fragmentRef(link)
++      if (!ref) return
++      const el = targetOf(ref.id)
++      if (!el) return
++      // Reveal before the default action so a target inside a closed <details>,
++      // hide-block or inactive tab has a box when the fragment is resolved.
++      reveal(el)
++      if (link.classList.contains('headerlink')) copyPermalink(link)
++
++      if (ref.absolute) {
++        // fix-link-target gives in-article links target=_blank, so a pasted
++        // absolute deep link would open a tab instead of moving. Keep it here.
++        event.preventDefault()
++        window.location.hash = ref.hash
++        return
++      }
++      // Hash-only links keep native navigation (and main.js's TOC handler).
++      // Re-clicking a permalink already in the URL fires no hashchange, so the
++      // browser would not scroll by itself.
++      if (currentHash() === ref.id) jump(ref.id)
++      return
++    }
++
++    // Opt-in: treat a click anywhere on the heading as a click on its permalink.
++    if (!anchorConfig().clickToScroll) return
++    const heading = target.closest('#article-container :is(h1,h2,h3,h4,h5,h6)')
++    if (!heading || !heading.id) return
++    if (window.getSelection && window.getSelection().toString()) return
++    const permalink = heading.querySelector('a.headerlink')
++    copyPermalink(permalink || { getAttribute: () => `#${encodeURI(heading.id)}` })
++    if (currentHash() === heading.id) jump(heading.id)
++    else window.location.hash = `#${encodeURI(heading.id)}`
++  }, true)
++
++  window.addEventListener('hashchange', () => jump(currentHash()))
++  window.addEventListener('resize', syncOffset, { passive: true })
++  document.addEventListener('pjax:send', cancelSettle)
++
++  // Deferred: other pjax:complete listeners rebuild the article widgets, so the
++  // reveal must run after they attached their click handlers.
++  const onReady = () => {
++    syncOffset()
++    if (window.location.hash) jump(currentHash())
++  }
++
++  document.addEventListener('pjax:complete', () => setTimeout(onReady, 0))
++  window.addEventListener('load', () => setTimeout(onReady, 0))
++
++  if (document.readyState === 'loading') {
++    // Registered after main.js's own DOMContentLoaded handler (its script tag
++    // comes first), so tab/hide/collapse handlers already exist when we click.
++    document.addEventListener('DOMContentLoaded', () => setTimeout(onReady, 0))
++  } else {
++    setTimeout(onReady, 0)
++  }
++})()

@@ -1,0 +1,2 @@
+patchedDependencies:
+  hexo-theme-panda@1.1.9: patches/hexo-theme-panda@1.1.9.patch
