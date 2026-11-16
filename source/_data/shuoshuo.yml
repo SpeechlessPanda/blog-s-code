@@ -1,14 +1,14 @@
 - author: SpeechlessPanda
-  date: 2026-11-13 13:25
+  date: 2026-11-16 23:25
   content: |
-    很全面详细的一篇关于 agent 的文章，虽然是 AI 写的，但是反而让我觉得应该会更加事无巨细（：[AI Agent 开发](https://saurlax.com/blog/ai-agent-dev)。
+    很全面详细的一篇关于 agent 的文章，虽然是 AI 写的，但是反而让我觉得应该会更加事无巨细（：[AI Agent 开发](https://saurlax.com/blog/ai-agent-dev) 。
   tags:
     - 分享
 
 - author: SpeechlessPanda
   date: 2026-11-13 13:25
   content: |
-    kmeans 算法相信了解过机器学习的读者都知道，它居然被研究出了一个全方位更优的升级版本，叫 emeans ：[e-means: outperforming k-means in one-tenth the epochs](https://e-means.github.io/)。我大受震撼，这种古早的算法居然被人研究出了如此高效的一个版本， kmeans 在很多地方都是某种拿来即用的砖，快成为机器学习基建的一部分了，不敢想影响有多大（虽然也可能毫无波澜）。这个时代也不是没有很创新的成果，但是这种离我如此之近以至于能让我都知道具体有多厉害的成果，也是非常少见了。震撼。
+    kmeans 算法相信了解过机器学习的读者都知道，它居然被研究出了一个全方位更优的升级版本，叫 emeans ：[e-means: outperforming k-means in one-tenth the epochs](https://e-means.github.io/) 。我大受震撼，这种古早的算法居然被人研究出了如此高效的一个版本， kmeans 在很多地方都是某种拿来即用的砖，快成为机器学习基建的一部分了，不敢想影响有多大（虽然也可能毫无波澜）。这个时代也不是没有很创新的成果，但是这种离我如此之近以至于能让我都知道具体有多厉害的成果，也是非常少见了。震撼。
 
     这周比完赛之后还推进了一下 HITA 那边的事务，大家都好忙，人手上捉襟见肘。只有我这个闲人忙完手上为数不多的活之后，能比较及时且有空的推进。我们 HITA 也是人才济济啊，坐等其他开发者飞黄腾达拉我一把（幻想中）。最近突然有个想法，想了解一下手机端的 agent 是怎么工作的，我们 HITA 也要做到 agent 友好才行，面向的用户应该也包括 agent 。但是 agent 友好化改造的形式和方法还没想好，等我了解一下再看看，在这先预告一下。
 
