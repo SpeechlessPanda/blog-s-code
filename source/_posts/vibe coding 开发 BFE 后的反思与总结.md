@@ -4,9 +4,8 @@ date: 2026-4-6 11:30:00
 updated: false
 sticky: false
 tags: 
-- 项目
-- 记录
-- 思考
+- AI
+- 方法
 ---
 
 ## 项目简单介绍

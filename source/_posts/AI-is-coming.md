@@ -4,8 +4,8 @@ date: 2026-08-29 16:57:12
 updated: false
 sticky: false
 tags:
-- 思考
-- 短篇
+- AI
+- 观点
 ---
 
 本篇文章是最近看的部分博客、文章和视频之后有意识的整理以及产生的思考。在此也推荐一篇比尔·盖茨的博客 [The turbulent AI era is here. The choices we make now are critical.](https://www.gatesnotes.com/home/home-page-topic/reader/a-turbulent-ai-era-and-critical-choices-to-make)
