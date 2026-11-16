@@ -19,6 +19,17 @@ function formatStars(n) {
   return String(n);
 }
 
+// 「本次新增」的页内锚点用：项目名转 proj- slug，与博客里的 <span id> 一致。
+function slugName(name) {
+  return (
+    "proj-" +
+    String(name)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+  );
+}
+
 function parseDeleted(text) {
   const names = new Set();
   for (const line of text.split(/\r?\n/)) {
@@ -71,13 +82,19 @@ async function ghApiOnce(path) {
   const stderr = await new Response(proc.stderr).text();
   const code = await proc.exited;
   if (code !== 0) {
-    throw new Error(`gh api ${path} failed (${code}): ${stderr.trim() || stdout.trim()}`);
+    const msg = stderr.trim() || stdout.trim();
+    const status = Number((msg.match(/HTTP (\d{3})/) || [])[1]) || null;
+    throw Object.assign(new Error(`gh api ${path} failed (${code}): ${msg}`), { status });
   }
   return JSON.parse(stdout);
 }
 
 // TLS handshake timeout / EOF 是 GitHub API 偶发问题，不是条目不存在。
 // 不重试会让 blog[] 出现 null star，上游会把它当"数字没变"漏更新。
+// 重试耗尽后保留 HTTP 状态码：404/451 是仓库被删除、转私有或 DMCA 封禁，
+// 和网络错误必须分开处理（前者要从博客移除，后者要重跑）。
+const GONE_STATUS = new Set([404, 451]);
+
 async function ghApi(path) {
   let lastErr;
   for (let attempt = 1; attempt <= RETRIES; attempt++) {
@@ -85,6 +102,8 @@ async function ghApi(path) {
       return await ghApiOnce(path);
     } catch (err) {
       lastErr = err;
+      // 404/451 是确定性结果（删除、转私有、DMCA），重试只会拖慢并掩盖原因。
+      if (GONE_STATUS.has(err.status)) break;
       if (attempt === RETRIES) break;
       await sleep(attempt * 900);
     }
@@ -135,6 +154,10 @@ const blog = await mapPool(blogRepos, CONCURRENCY, async (r) => {
       description: json.description,
       homepage: json.homepage || "",
       topics: json.topics || [],
+      archived: json.archived === true,
+      pushedAt: json.pushed_at || null,
+      status: 200,
+      gone: false,
       error: null,
     };
   } catch (err) {
@@ -149,10 +172,32 @@ const blog = await mapPool(blogRepos, CONCURRENCY, async (r) => {
       description: null,
       homepage: "",
       topics: [],
+      archived: false,
+      pushedAt: null,
+      status: err.status || null,
+      gone: GONE_STATUS.has(err.status),
       error: String(err.message || err),
     };
   }
 });
+
+// 404/451 决定删除条目，值得再确认一次：排除偶发的鉴权抖动或代理拦截。
+const goneRows = blog.filter((r) => r.gone);
+for (const row of goneRows) {
+  await sleep(1200);
+  try {
+    await ghApiOnce(`repos/${row.blog}`);
+    row.gone = false;
+    row.status = 200;
+    row.error = `${row.error} (复查已存在，按瞬时错误处理)`;
+  } catch (err) {
+    if (!GONE_STATUS.has(err.status)) {
+      // 复查变成网络错误 → 无法确认，交给人工
+      row.gone = false;
+      row.error = `${row.error} (复查失败: ${err.message})`;
+    }
+  }
+}
 
 const starred = await allStarred();
 const inBlog = new Set();
@@ -179,25 +224,58 @@ for (const name of starred) {
 }
 
 const newStars = await mapPool(newStarNames, CONCURRENCY, async (full) => {
-  const json = await ghApi(`repos/${full}`);
-  return {
-    full_name: json.full_name,
-    stargazers_count: json.stargazers_count,
-    formatted: formatStars(json.stargazers_count),
-    description: json.description,
-    homepage: json.homepage || "",
-    topics: json.topics || [],
-  };
+  try {
+    const json = await ghApi(`repos/${full}`);
+    return {
+      full_name: json.full_name,
+      slug: slugName(json.name || full.split("/")[1]),
+      stargazers_count: json.stargazers_count,
+      formatted: formatStars(json.stargazers_count),
+      description: json.description,
+      homepage: json.homepage || "",
+      topics: json.topics || [],
+      status: 200,
+      gone: false,
+      error: null,
+    };
+  } catch (err) {
+    return {
+      full_name: full,
+      stargazers_count: null,
+      formatted: null,
+      description: null,
+      homepage: "",
+      topics: [],
+      status: err.status || null,
+      gone: GONE_STATUS.has(err.status),
+      error: String(err.message || err),
+    };
+  }
 });
+
+const goneBlog = blog.filter((r) => r.gone);
+const goneNewStars = newStars.filter((r) => r.gone);
+const transientErrors = [...blog, ...newStars].filter((r) => r.error && !r.gone);
+
+// 锚点体检：文首「本次新增」的 #proj-* 必须命中正文 span，且 id 不得重复。
+const anchorIds = [...blogText.matchAll(/<span id="(proj-[^"]+)"/g)].map((m) => m[1]);
+const anchorHrefs = [...blogText.matchAll(/\]\([^)\s]*#(proj-[^)\s]+)\)/g)].map((m) => m[1]);
+const dupAnchors = anchorIds.filter((id, i) => anchorIds.indexOf(id) !== i);
+const brokenAnchors = anchorHrefs.filter((h) => !anchorIds.includes(h));
 
 const payload = {
   date: new Date().toISOString().slice(0, 10),
-  ok: blog.every((r) => !r.error),
+  // ok 只反映"需要重跑"的失败；404/451 是可执行结论（删条目），不算失败。
+  ok: transientErrors.length === 0,
   blogCount: blog.length,
   starredCount: starred.length,
   starChanged: blog.filter((r) => r.starChanged).length,
   renamed: blog.filter((r) => r.renamed),
-  errors: blog.filter((r) => r.error),
+  gone: goneBlog.map((r) => ({ blog: r.blog, status: r.status })),
+  goneNewStars: goneNewStars.map((r) => ({ full_name: r.full_name, status: r.status })),
+  archived: blog.filter((r) => r.archived).map((r) => r.blog),
+  anchors: { broken: brokenAnchors, duplicated: [...new Set(dupAnchors)] },
+  errors: transientErrors,
   blog,
   newStars,
   skippedDeleted,

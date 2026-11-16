@@ -15,6 +15,7 @@ description: 当用户要求新增项目、同步 GitHub star、更新项目收�
 digraph sync {
   rankdir=TB;
   update [label="0. 更新已有项目 star 数"];
+  purge [label="0.5 移除已删库/转私有"];
   detect [label="1. 检测新增项目"];
   info [label="2. 获取项目信息"];
   verify [label="2.5 多渠道验证介绍（全部项目）"];
@@ -28,7 +29,7 @@ digraph sync {
   changelog [label="9. 文首本次新增清单"];
   done [label="完成"];
 
-  update -> detect -> info -> verify -> check -> categorize;
+  update -> purge -> detect -> info -> verify -> check -> categorize;
   categorize -> newcat [label="无合适分类"];
   categorize -> write [label="有合适分类"];
   newcat -> write;
@@ -51,9 +52,9 @@ HTTPS_PROXY= HTTP_PROXY= bun .agents/skills/sync-starred-projects/scripts/collec
 
 PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-starred-projects/scripts/collect.mjs`
 
-完成标准：stdout 一份 JSON（`ok` / `blog` / `newStars` / `skippedDeleted` / `skippedOwn`）。`blog[]` 覆盖博客里每一个 `github.com/owner/repo`，每条含 `apiStars`、`formatted`、`canonical`。缺条就是没跑完。
+完成标准：stdout 一份 JSON（`ok` / `blog` / `newStars` / `gone` / `goneNewStars` / `anchors` / `errors` / `skippedDeleted` / `skippedOwn`）。`blog[]` 覆盖博客里每一个 `github.com/owner/repo`，每条含 `apiStars`、`formatted`、`canonical`、`status`、`gone`。缺条就是没跑完。`anchors.broken` / `anchors.duplicated` 必须为空数组。
 
-`ok` 必须为 `true`。脚本对 `gh api` 做了 4 次退避重试，仍有 `errors[]` 说明是持续网络问题——重跑，不要带着 `apiStars: null` 往下走（那会被当成"star 没变"漏更新）。
+`ok` 必须为 `true`；为 `false` 时只看 `errors[]`（瞬时失败，重跑，不要带着 `apiStars: null` 往下走，那会被当成"star 没变"漏更新）。`gone[]` / `goneNewStars[]` 是 HTTP 404/451 的确定性结论，不进 `errors[]`，按第 0.5 步删除处理。脚本对 `gh api` 做 4 次退避重试，但对 404/451 不重试；每条 `gone` 命中后还会再确认一次，复查为瞬时失败也不会被误删。
 
 `gh` 失败先清代理再试（本机失效代理常连 `127.0.0.1:7897`）：`HTTPS_PROXY= HTTP_PROXY= gh api ...`
 
@@ -73,6 +74,20 @@ PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-s
 
 除 star 数字和已易主链接外，本步不改项目名、描述。
 
+## 0.5 移除已删库 / 转私有项目
+
+`collect.mjs` 的 `gone[]` 列出博客里 API 返回 404/451 的仓库——已删库、转为私有或 DMCA 封禁。这类条目在博客里已经点不开，必须当轮移除，不留到以后：
+
+1. 对 `gone[]` 每一条，整行删掉博客里对应的 bullet（含 `🆕 ` 前缀和结尾空行）。不挪到其他分类，不写"已失效"占位。
+2. 该条目若出现在「同类项目对比」表格里：先看对比组里剩下的项目是否还够两个。剩两个及以上 → 删掉该列；只剩一个 → 删掉整组对比（`###` 标题 + 表格）。
+3. 该项目的名称若出现在文首「本次新增」清单里 → 一起删掉。若因此清空，按第 9 步规则删整段。
+4. 把 `owner/repo` 追加进 `references/deleted-projects.md`，注明原因（`删除` / `转私有` / `451`），避免它以后重新出现在 starred 列表时被当新项目加回来。
+5. 汇报里单独列出本轮移除的项目和 HTTP 状态；`gone[]` 为空就明确写"无失效条目"。
+
+`goneNewStars[]` 是候选新增里已消失的仓库，直接跳过，不进博客也不进 `deleted-projects.md`（它从未被收录）。
+
+判定必须以脚本的复核后 `gone: true` 为准：网络错误、401、403 都不算消失，不要手动 curl 猜。
+
 ## 1. 检测新增项目
 
 `collect.mjs` 已分页拉 `users/SpeechlessPanda/starred`（`per_page=100` 直到空页）并与博客做差集。
@@ -80,6 +95,7 @@ PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-s
 - 用户直接给了项目 URL → 跳过检测，用该项目（仍要跑脚本刷新已有 star）。
 - `newStars[]` 即候选。`skippedOwn`（`SpeechlessPanda/*`）和 `skippedDeleted` 不入博客。
 - **同一项目只收一条**：源码仓 + 发布仓（如 `x/blog-src` 与 `x/x.github.io`）只收源码仓；纯构建产物、站点镜像不入收藏，汇报时说明跳过原因。
+- 无通用工具价值的仓库跳过并在汇报里点名：课程作业/竞赛报告、只有 PDF 产物、个人简历或私人工具。判据是"别人能不能拿它当工具或方法用"，star 数不作判据。
 
 ## 2. 获取项目信息
 
@@ -107,6 +123,8 @@ PowerShell：`$env:HTTPS_PROXY=''; $env:HTTP_PROXY=''; bun .agents/skills/sync-s
 
 权威列表：本 skill 的 [references/deleted-projects.md](references/deleted-projects.md)。再扫一遍当前 harness 的记忆（Claude `blog-deleted-projects`、OMP `memory://`、Codex memories）把多出来的名字合并进这份文件。命中则跳过并告知用户。
 
+这份文件有两个来源：用户手动删除的项目，以及第 0.5 步因删库/转私有移除的项目（写在「仓库已消失」小节并注明日期与状态码）。两者都不再恢复。
+
 ## 4. 分类决策
 
 读当前博客，按**实际用途**匹配已有 `{% hideToggle %}` 分类，不按技术栈。
@@ -129,6 +147,18 @@ star 格式与 `collect.mjs` 的 `formatted` 一致：`>=1000` → 一位小数 
 
 插入：追加到所属分类末尾；与某条功能类似则相邻排。多个新项目处理完再一次性写入。写入前再读一遍博客文件。
 
+### 页内锚点
+
+每个 🆕 条目在 bullet 前加一个空 span，供文首「本次新增」跳转：
+
+```markdown
+- <span id="proj-fly-island"></span>🆕 [Fly Island](https://github.com/flyl1u/fly-island) ⭐ 798 — ...
+```
+
+- id 规则：`proj-` + 项目名小写，非字母数字折叠成单个 `-`（`Anti-Defensive Writing` → `proj-anti-defensive-writing`）。id 在全文唯一，旧条目的 span 不清除，保证历史链接可用。
+- 折叠分类是 `<details>`，浏览器不会展开也不会滚进隐藏内容，配套脚本 `source/js/post-anchor.js` 负责展开祖先 `<details>`、按导航栏高度 71px 偏移滚动，并在 1.5s 内持续校准（字体/图片会改动上方高度）。脚本由 `_config.panda.yml` 的 `inject.bottom` 引入，带 `?v=N`；改了脚本必须递增版本号，否则浏览器继续跑旧文件。
+- 站点侧已有 `#post #article-container [id^="proj-"] { scroll-margin-top: 71px; }`，改导航栏高度时两处一起改。
+
 ## 6–7. 相似项目与对比表
 
 相似：同一类问题、用户可能二选一、功能重叠但各有特色。
@@ -150,7 +180,8 @@ star 格式与 `collect.mjs` 的 `formatted` 一致：`>=1000` → 一位小数 
 ## 8. 标记新增项目
 
 1. 清旧标：bullet 上的 `- 🆕 [` → `- [`。只匹配这个模式，别动描述里的 emoji。
-2. 本轮实际新写入的条目加 `🆕 `：`- 🆕 [项目名](...)`。
+2. 本轮实际新写入的条目加 `🆕 `，并确认前面有 `<span id="proj-{slug}">`：`- <span id="proj-x"></span>🆕 [项目名](...)`。
+3. 清旧标时保留旧 span，历史链接继续可用。
 
 本轮没有新增则清完后整篇无 🆕，正常。
 
@@ -163,6 +194,8 @@ star 格式与 `collect.mjs` 的 `formatted` 一致：`>=1000` → 一位小数 
 ```
 
 - 名字与 bullet 里 `[项目名]` 一致，顿号分隔，句号收尾
+- 每个名字写成链接指向 bullet 前的 span；用**绝对 URL**（`https://speechlesspanda.github.io/2026/06/06/项目收藏/#proj-{slug}`），因为 Atom `<content>` 里的相对 `#` 链接在阅读器里会指错页面。slug 与第 5 步的 id 一致。
+- 写完用一条命令校验：文首每个 `#proj-*` 都在正文有对应 `id`，且 id 无重复
 - 覆盖上一轮这段，不累积历史
 - 本轮零新增 → 删掉整段，不要留空「本次新增：」
 - 必须在 `<!-- more -->` 之前，让首页摘要和 Atom `<summary>` 能带到
@@ -178,7 +211,12 @@ Atom 由 Panda `node_modules/hexo-theme-panda/scripts/panda/feed.js` 写出，�
 ## 硬规则
 
 - 核对修正（须汇报）：star 实测、易主链接、验证后的介绍改写、分类移动。
+- 404/451 必删：脚本 `gone[]` 里的条目当轮从博客移除，并追加进 [references/deleted-projects.md](references/deleted-projects.md)。没有「保留失效链接」这个选项。
+- 删条目要连带清理：同类对比表里该列（剩不足两个则删整组）、文首「本次新增」里的名字。
 - `SpeechlessPanda/*` 不入收藏。
+- 新增条目必须带 `proj-*` 锚点，文首清单用 `#proj-*` 链接；改 `source/js/post-anchor.js` 必须同步递增 `_config.panda.yml` 里的 `?v=`。同名 id 只能出现一次。
 - 已删除列表里的不恢复。
 - 脚本 JSON 是 star/差集的唯一数字来源；禁止沿用博客旧值或凭印象估算。
+- 新增条目的 star 用脚本 `formatted`，不要用后续 `gh api` 的更新值——同一次同步里数字必须自洽。
+- 仓库改名（`renamed: true`）时链接改 `canonical`，条目名与描述同时按新定位重写；改名后业务性质变了（如 HTML 编辑器变成视频工具）要重写介绍，不能只换 URL。
 - 禁止改 `date:`。
