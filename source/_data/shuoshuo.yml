@@ -1,14 +1,21 @@
 - author: SpeechlessPanda
+  date: 2026-11-18 13:25
+  content: |
+    以前只知道红蓝对抗这种方式来 debug 和完善一些项目，看了这篇博客才知道有混沌工程这么一个概念，博客里借鉴混沌工程做了个混沌循环，有意思的想法，也指出了怎么操作和相关的细节，特此分享： [Using a "chaos loop" to harden the Claude Docs launch: 60 server errors across billions of requests](https://claude.dev/blog/chaos-loop-claude-docs-launch/) 。
+  tags:
+    - 分享
+
+- author: SpeechlessPanda
   date: 2026-11-16 23:25
   content: |
-    很全面详细的一篇关于 agent 的文章，虽然是 AI 写的，但是反而让我觉得应该会更加事无巨细（：[AI Agent 开发](https://saurlax.com/blog/ai-agent-dev) 。
+    很全面详细的一篇关于 agent 的文章，虽然是 AI 写的，但是反而让我觉得应该会更加事无巨细（： [AI Agent 开发](https://saurlax.com/blog/ai-agent-dev) 。
   tags:
     - 分享
 
 - author: SpeechlessPanda
   date: 2026-11-13 13:25
   content: |
-    kmeans 算法相信了解过机器学习的读者都知道，它居然被研究出了一个全方位更优的升级版本，叫 emeans ：[e-means: outperforming k-means in one-tenth the epochs](https://e-means.github.io/) 。我大受震撼，这种古早的算法居然被人研究出了如此高效的一个版本， kmeans 在很多地方都是某种拿来即用的砖，快成为机器学习基建的一部分了，不敢想影响有多大（虽然也可能毫无波澜）。这个时代也不是没有很创新的成果，但是这种离我如此之近以至于能让我都知道具体有多厉害的成果，也是非常少见了。震撼。
+    kmeans 算法相信了解过机器学习的读者都知道，它居然被研究出了一个全方位更优的升级版本，叫 emeans ： [e-means: outperforming k-means in one-tenth the epochs](https://e-means.github.io/) 。我大受震撼，这种古早的算法居然被人研究出了如此高效的一个版本， kmeans 在很多地方都是某种拿来即用的砖，快成为机器学习基建的一部分了，不敢想影响有多大（虽然也可能毫无波澜）。这个时代也不是没有很创新的成果，但是这种离我如此之近以至于能让我都知道具体有多厉害的成果，也是非常少见了。震撼。
 
     这周比完赛之后还推进了一下 HITA 那边的事务，大家都好忙，人手上捉襟见肘。只有我这个闲人忙完手上为数不多的活之后，能比较及时且有空的推进。我们 HITA 也是人才济济啊，坐等其他开发者飞黄腾达拉我一把（幻想中）。最近突然有个想法，想了解一下手机端的 agent 是怎么工作的，我们 HITA 也要做到 agent 友好才行，面向的用户应该也包括 agent 。但是 agent 友好化改造的形式和方法还没想好，等我了解一下再看看，在这先预告一下。
 
@@ -60,7 +67,7 @@
 - author: SpeechlessPanda
   date: 2026-11-3 13:25
   content: |
-    分享两篇偏技术硬核文章：[Agent World：人与 Agent 共享互联网的原则](https://clouder0.com/zh-hans/posts/agent-world-principles/)和[Agent 迷思](https://fun10165.github.io/blog/agent-myth/)。 如果水平和我一样的读者，建议辅以 AI 讲解阅读。两篇文章的落脚点不同，但都很有深度和高度，非常值得看。
+    分享两篇偏技术硬核文章： [Agent World：人与 Agent 共享互联网的原则](https://clouder0.com/zh-hans/posts/agent-world-principles/)和[Agent 迷思](https://fun10165.github.io/blog/agent-myth/)。 如果水平和我一样的读者，建议辅以 AI 讲解阅读。两篇文章的落脚点不同，但都很有深度和高度，非常值得看。
   tags:
     - 分享
 
@@ -162,7 +169,7 @@
   content: |
     今天意识到自己已经好久没更新了，所以来写条碎碎念证明自己没有放弃博客（也不是没有能写的东西，当我打算要写的时候，我就有了要写什么的想法，但我之前更倾向于自然而然的诞生这种想法，，而不是当作什么规定。但是最近可能太忙了或者其他什么的，导致这个念头难产了（
 
-    首先是分享：Dunning-Kruger effect ：能力欠缺的人，往往会高估自己的能力；而真正有能力的人，反而倾向于低估自己。然后还有一句我个人喜欢的不着调的话：居庙堂之高则高枕无忧，处江湖之远则游山玩水。
+    首先是分享： Dunning-Kruger effect ：能力欠缺的人，往往会高估自己的能力；而真正有能力的人，反而倾向于低估自己。然后还有一句我个人喜欢的不着调的话：居庙堂之高则高枕无忧，处江湖之远则游山玩水。
 
     最近又看了很多文章（注意不是论文）和博客，囫囵吞枣不记笔记地看，貌似有收获，又貌似没有。有进步的是我现在看博客和文章对术语认识的越来越多了，这算是一种收获吧，但可惜我其实完全不了解那些个术语的细节。事到如今我也想开了，这叫随缘知识获取法，有缘的自会在后面要用的时候记起来，并帮助到我（拿我自己的看想做观点来说，我还处于广泛的看阶段，所以可以被谅解的，也希望后面真能帮助到我吧。
 
@@ -177,7 +184,7 @@
 - author: SpeechlessPanda
   date: 2026-10-08 15:50
   content: |
-    分享一个系列文章，大概和人怎么在 vibe coding 中学到东西和不可替代性在哪等有关：[ AI 辅助开发下，如何保持项目一致性](https://blog.wh1isper.top/2026/02/02/AI-Assisted-Development-Consistency/)、[ AI Coding is a framework, and... ](https://blog.wh1isper.top/2026/03/13/ai-coding-is-a-framework/)和[ AI 编程中，人的理解从哪里来](https://blog.wh1isper.top/2026/10/07/ai-coding-understanding-through-practice/)。同样推荐写这个系列的这个佬，对 harness 和 agent 有很深的见解，博客文章也有很多相关的内容。
+    分享一个系列文章，大概和人怎么在 vibe coding 中学到东西和不可替代性在哪等有关： [AI 辅助开发下，如何保持项目一致性](https://blog.wh1isper.top/2026/02/02/AI-Assisted-Development-Consistency/)、[ AI Coding is a framework, and... ](https://blog.wh1isper.top/2026/03/13/ai-coding-is-a-framework/)和[ AI 编程中，人的理解从哪里来](https://blog.wh1isper.top/2026/10/07/ai-coding-understanding-through-practice/)。同样推荐写这个系列的这个佬，对 harness 和 agent 有很深的见解，博客文章也有很多相关的内容。
   tags:
     - 分享
 
