@@ -207,9 +207,10 @@ ai_readable:
     contact: mailto:zhoushimingyu@qq.com
   portal:
     path: /ai/
+    # 机器人图标固定排在作者卡片社交图标行的末位（Follow Me 按钮下方），
+    # 首页是否开启侧边栏都能看到。1.2.0 已删除 show_on_home / row_title。
     social_icon:
       enable: true
-      show_on_home: true
       show_in_author_card: true
       icon: fas fa-robot
       label: AI 阅读入口
