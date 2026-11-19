@@ -119,9 +119,8 @@ feed:
   content: true
 
 # Search Engine Indexing
-sitemap:
-  path: sitemap.xml
-
+# sitemap.xml 由 hexo-theme-panda 内置生成器输出，参数在 _config.panda.yml 的
+# site_discovery.sitemap 里配置；hexo-generator-sitemap 已移除（两者会争同名路由）。
 baidusitemap:
   path: baidusitemap.xml
 

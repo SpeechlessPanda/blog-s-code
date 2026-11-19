@@ -12,7 +12,7 @@
     "server": "hexo server",
     "publish": "hexo clean && hexo g && hexo d",
     "verify": "node tools/verify-feed.js",
-    "verify:ai": "node tools/verify-ai-assets.js"
+    "verify:ai": "npx hexo panda verify-ai"
   },
   "hexo": {
     "version": "8.1.2"
@@ -25,16 +25,14 @@
     "hexo-generator-baidu-sitemap": "^0.1.9",
     "hexo-generator-category": "^2.0.0",
     "hexo-generator-index": "^4.0.0",
-    "hexo-generator-robotstxt": "^0.2.0",
     "hexo-generator-searchdb": "^1.5.0",
-    "hexo-generator-sitemap": "^3.0.1",
     "hexo-generator-tag": "^2.0.0",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-markdown-it-plus": "^1.0.6",
     "hexo-renderer-pug": "^3.0.0",
     "hexo-renderer-stylus": "^3.0.1",
     "hexo-server": "^3.0.0",
-    "hexo-theme-panda": "^1.1.9",
+    "hexo-theme-panda": "^1.1.10",
     "hexo-util": "^4.0.0",
     "hexo-wordcount": "^6.0.1",
     "moment-timezone": "^0.6.0"

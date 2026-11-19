@@ -26,7 +26,6 @@ social:
   fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
   fas fa-envelope: mailto:zhoushimingyu@qq.com || Email || '#4a7dbe'
   fas fa-rss: /atom.xml || RSS || '#ff6600'
-  fas fa-robot: /ai/ || AI 阅读入口 || '#49B1F5'
 
 # 头像
 avatar:
@@ -182,3 +181,36 @@ gradient:
 
 # 正文/碎碎念链接新标签页打开(主题自动注入脚本)
 link_target_blank: true
+
+# ── AI 可读与内容发现（主题原生能力） ────────────────────────────────────────
+# 由 hexo-theme-panda >= 1.2.0 提供；机器人图标、/ai/、/rights/、llms.txt、
+# Markdown 镜像、robots.txt 与 sitemap.xml 全部在主题里生成，博客不写脚本。
+# 个性内容（精选、主题说明、项目）放在 source/_data/ai.yml。
+site_discovery:
+  robots:
+    provider: panda
+    policy: balanced
+    # 碎碎念时间线是前端渲染且逐条 noindex，对爬虫没有价值。
+    disallow:
+      - /memos/
+  sitemap:
+    provider: panda
+    include_tags: true
+    include_categories: false
+
+ai_readable:
+  enable: true
+  # /rights/ 由博客自己的 source/rights/index.md 提供，主题检测到后会让位。
+  rights:
+    respect_existing_pages: true
+    ai_training: deny
+    contact: mailto:zhoushimingyu@qq.com
+  portal:
+    path: /ai/
+    social_icon:
+      enable: true
+      show_on_home: true
+      show_in_author_card: true
+      icon: fas fa-robot
+      label: AI 阅读入口
+      color: '#49B1F5'

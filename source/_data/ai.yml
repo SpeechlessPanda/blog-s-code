@@ -5,7 +5,7 @@
 # 由 Hexo 数据在构建时自动提取,不需要手工维护。
 #
 # 只有 `source` 指错、或条目被删除/取消发布时,才需要改这里;
-# tools/verify-ai-assets.js 会在构建后校验每个 source 都存在。
+# `hexo panda verify-ai` 会在构建后校验产物；source 指错时会打印警告。
 
 site:
   tagline: "SpeechlessPanda 的个人博客,记录编程、技术与生活。"

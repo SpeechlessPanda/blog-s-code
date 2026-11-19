@@ -80,9 +80,10 @@ jobs:
         run: node tools/verify-feed.js
 
       - name: Verify AI-readable assets
-        # robots.txt / sitemap.xml / llms.txt / Markdown 镜像 / /ai/ 的产物校验：
-        # 规范 URL 与 canonical 一致、lastmod 非构建时间、镜像未丢正文、发现链接齐全。失败即中断部署。
-        run: node tools/verify-ai-assets.js
+        # robots.txt / sitemap.xml / llms.txt / Markdown 镜像 / /ai/ / /rights/ 的产物校验：
+        # 每个 URL 与 <link rel="canonical"> 一致、lastmod 非构建时间、镜像未丢正文与结构、
+        # 发现链接齐全、碎碎念不泄漏。校验由主题提供，博客不再维护一份私有脚本。
+        run: npx hexo panda verify-ai
 
 
       - name: Sync README to publish directory
