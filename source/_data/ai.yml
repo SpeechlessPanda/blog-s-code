@@ -1,0 +1,85 @@
+# AI 可读体系的精选与人工描述。
+#
+# 用途:llms.txt 与 /ai/ 页面的「精选文章」「主题索引」「项目与开源项目」都从这里
+# 读取人工挑选的条目与一句话说明;其余数据(标题、日期、URL、标签、系列关系)
+# 由 Hexo 数据在构建时自动提取,不需要手工维护。
+#
+# 只有 `source` 指错、或条目被删除/取消发布时,才需要改这里;
+# tools/verify-ai-assets.js 会在构建后校验每个 source 都存在。
+
+site:
+  tagline: "SpeechlessPanda 的个人博客,记录编程、技术与生活。"
+  description: >-
+    这是一个以中文写作的个人博客,作者是在读计算机专业学生。内容以独立文章和系列两种形式组织:
+    独立文章按发布时间归档,主题覆盖 AI、编程、成长、观点、方法与生活;系列以文件夹归组,
+    有聚合页与按写作顺序排列的章节。碎碎念是短动态时间线,保持 noindex,不进入对外索引。
+  about: "作者是计算机专业在读学生,写作侧重个人成长、技术实践与阅读思考。"
+
+# 主题索引:顺序即页面展示顺序;未列出的标签仍会出现在标签页与 sitemap 中。
+topics:
+  - name: AI
+    description: AI 工具、agent 工程与行业观察。
+  - name: 编程
+    description: C++ / Rust 语言实践、架构与设计模式、vibe coding 复盘。
+  - name: 成长
+    description: 大学阶段的学习路径、选择与信息差。
+  - name: 观点
+    description: 对技术与社会变化的个人判断。
+  - name: 方法
+    description: 可复用的做事方式与思考框架。
+  - name: 知识
+    description: 整理型长文与速查资料。
+  - name: 生活
+    description: 阅读、比赛与日常记录。
+  - name: 叙事
+    description: 以故事形式写下的经历。
+
+# 精选文章:8 篇,按展示顺序;summary 为人工撰写的一句话说明。
+# 挑满 8 篇(作者明确要求);按主题覆盖而非日期堆叠。
+featured:
+  - source: _posts/练习时长一年半大学生有感.md
+    summary: 大二寒假对 FOMO、技术焦虑与大学选择的复盘,写给同样处在选择边缘的人。
+  - source: _posts/大学道路入门/大学道路入门（一）.md
+    summary: 保研、就业等方向入门时的术语与信息差整理,面向刚起步的读者。
+  - source: _posts/代码品味与架构设计.md
+    summary: 借一次 vibe coding 经历,讨论设计模式、代码品味与架构设计如何培养。
+  - source: _posts/对 BFE 构建思路的重思考.md
+    summary: 把"适配十个主题"的难需求改写成"重写主题"的易需求,一次需求转化的复盘。
+  - source: _posts/cpp-bestpractice.md
+    summary: 从 learncpp 摘录的 218 条规则与最佳实践,按 31 个主题分组整理。
+  - source: _posts/AI-is-coming.md
+    summary: 关于 AI 冲击就业、抽走入门的阶梯,以及个人该如何准备的思考。
+  - source: _posts/项目收藏.md
+    summary: 按类别整理的 GitHub 优质开源项目清单,持续更新。
+  - source: _posts/hello world.md
+    summary: 用不同语言各写一遍 hello world,记录对编程最初的好奇。
+
+latest_count: 5
+
+# 项目与开源项目:只列公开仓库,描述取自关于页的既有措辞,不引入下载量等指标。
+projects:
+  - name: hexo-theme-panda
+    url: https://github.com/SpeechlessPanda/hexo-theme-panda
+    description: 基于 Butterfly 二开并独立维护的卡片式 Hexo 主题,本站即演示站。
+  - name: BlogForEveryone
+    url: https://github.com/SpeechlessPanda/BlogForEveryone
+    description: 面向新手的博客搭建与管理桌面应用(Electron + Vue 3),可视化替代命令行。
+  - name: HITA_Android
+    url: https://github.com/HIT-A/HITA_Android
+    description: 面向哈工大三校区的开源校园工具 App,参与课表数据刷新与合并策略。
+  - name: hitsz-resume-typst
+    url: https://github.com/SpeechlessPanda/hitsz-resume-typst
+    description: 哈工深中文简历的 Typst 模板,模板与个人信息分离,防止隐私误提交。
+  - name: AircraftWar
+    url: https://github.com/SpeechlessPanda/AircraftWar
+    description: Java Swing 桌面射击游戏,集中实践多种设计模式并附 JUnit 5 测试。
+  - name: EnvironmentalMonitoringInstrument
+    url: https://github.com/SpeechlessPanda/EnvironmentalMonitoringInstrument
+    description: 手持多传感器环境监测装置,含固件采集与 Web Bluetooth 实时面板。
+  - name: blog-s-code
+    url: https://github.com/SpeechlessPanda/blog-s-code
+    description: 本站 Hexo 源码仓库,push 即自动构建并发布到 GitHub Pages。
+
+notes:
+  featureSelection: 精选条目由作者人工挑选,覆盖不同主题而非单纯按时间排序;摘要为人工撰写。
+  projectsSource: 项目列表只包含公开仓库;描述复用关于页措辞,不引入无法核验的指标。

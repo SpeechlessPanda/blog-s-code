@@ -1,4 +1,9 @@
 name: Deploy Blog From Source
+      - name: Verify AI-readable assets
+        # robots.txt / sitemap.xml / llms.txt / Markdown 镜像 / /ai/ 的产物校验：
+        # 规范 URL 与 canonical 一致、lastmod 非构建时间、镜像未丢正文、发现链接齐全。失败即中断部署。
+        run: node tools/verify-ai-assets.js
+
 
 on:
   push:

@@ -11,7 +11,8 @@
     "deploy": "hexo deploy",
     "server": "hexo server",
     "publish": "hexo clean && hexo g && hexo d",
-    "verify": "node tools/verify-feed.js"
+    "verify": "node tools/verify-feed.js",
+    "verify:ai": "node tools/verify-ai-assets.js"
   },
   "hexo": {
     "version": "8.1.2"

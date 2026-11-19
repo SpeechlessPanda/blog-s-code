@@ -26,6 +26,7 @@ social:
   fab fa-github: https://github.com/SpeechlessPanda || GitHub || '#ffffff'
   fas fa-envelope: mailto:zhoushimingyu@qq.com || Email || '#4a7dbe'
   fas fa-rss: /atom.xml || RSS || '#ff6600'
+  fas fa-robot: /ai/ || AI 阅读入口 || '#49B1F5'
 
 # 头像
 avatar:
