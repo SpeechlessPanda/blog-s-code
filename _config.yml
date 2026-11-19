@@ -125,12 +125,6 @@ sitemap:
 baidusitemap:
   path: baidusitemap.xml
 
-robotstxt:
-  useragent: "*"
-  allow:
-    - /
-  sitemap: https://speechlesspanda.github.io/sitemap.xml
-
 # Markdown renderer with built-in KaTeX math support
 markdown_it_plus:
   highlight: true
