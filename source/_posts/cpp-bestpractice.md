@@ -2,6 +2,8 @@
 title: cpp bestpractice
 date: 2026-08-25 11:42:22
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags:
 - 编程

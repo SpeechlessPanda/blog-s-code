@@ -2,6 +2,8 @@
 title: 多看之后，有关idea
 date: 2026-03-19 13:35:56
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags:
 - 成长

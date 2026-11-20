@@ -2,6 +2,8 @@
 title: 初谈从 rust 到 cpp
 date: 2026-04-16 13:39:37
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags:
 - 编程

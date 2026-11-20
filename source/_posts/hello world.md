@@ -2,6 +2,8 @@
 title: hello world!
 date: 2026-03-08 10:44:15
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags: 
 - 编程

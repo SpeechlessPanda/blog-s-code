@@ -2,6 +2,8 @@
 title: vibe coding 开发 BFE 后的反思与总结
 date: 2026-4-6 11:30:00
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags: 
 - AI

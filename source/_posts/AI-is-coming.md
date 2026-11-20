@@ -2,6 +2,8 @@
 title: AI is coming!
 date: 2026-08-29 16:57:12
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags:
 - AI

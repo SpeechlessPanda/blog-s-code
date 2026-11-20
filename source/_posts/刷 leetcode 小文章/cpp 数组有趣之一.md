@@ -2,6 +2,8 @@
 title: cpp 数组有趣之一
 date: 2026-07-13 15:36:34
 updated: false
+ai_readable: true
+markdown: true
 sticky: false
 tags:
 - 编程
