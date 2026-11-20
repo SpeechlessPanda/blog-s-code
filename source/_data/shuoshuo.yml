@@ -1,7 +1,7 @@
 - author: SpeechlessPanda
   date: 2026-11-20 18:25
   content: |
-    [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda) 1.2.1版本发布，更新了很多和 agent 有关的内容（以及其它内容），我觉得还挺有意思的（细心的朋友应该发现了我现在首页多了个机器人的 icon ）。
+    [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda) 1.2.1版本发布，更新了很多和 agent 有关的内容（以及其它内容），我觉得还挺有意思的（细心的朋友应该发现了我现在首页多了个机器人的 icon ）。就是做的时候太烧心了，我本来以为 deepseek 就足以完成这次更新，结果硬是把期望工期从一下午搞成了一天半，哎，国模。搞得我不敢完全放手，都不敢并行做其他的了，精疲力竭，效率低下。虽然这和我的开发流程不规范也有关系，下次注意吧。
   tags:
     - 博客更新
 
