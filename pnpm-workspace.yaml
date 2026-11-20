@@ -1,2 +1,4 @@
 minimumReleaseAgeExclude:
   - hexo-theme-panda@1.2.0
+patchedDependencies:
+  hexo-theme-panda@1.2.1: patches/hexo-theme-panda@1.2.1.patch
