@@ -1,4 +1,11 @@
 - author: SpeechlessPanda
+  date: 2026-11-20 18:25
+  content: |
+    [Panda](https://github.com/SpeechlessPanda/hexo-theme-panda) 1.2.1版本发布，更新了很多和 agent 有关的内容（以及其它内容），我觉得还挺有意思的（细心的朋友应该发现了我现在首页多了个机器人的 icon ）。
+  tags:
+    - 博客更新
+
+- author: SpeechlessPanda
   date: 2026-11-18 13:25
   content: |
     以前只知道红蓝对抗这种方式来 debug 和完善一些项目，看了这篇博客才知道有混沌工程这么一个概念，博客里借鉴混沌工程做了个混沌循环，有意思的想法，也指出了怎么操作和相关的细节，特此分享： [Using a "chaos loop" to harden the Claude Docs launch: 60 server errors across billions of requests](https://claude.dev/blog/chaos-loop-claude-docs-launch/) 。
